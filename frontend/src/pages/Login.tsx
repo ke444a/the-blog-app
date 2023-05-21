@@ -24,7 +24,7 @@ const Login = () => {
         mutationFn: (formData: any) => loginUser(formData),
         onSuccess: (data: any) => {
             dispatch(setCredentials(data));
-            localStorage.setItem("userId", JSON.stringify(data.user._id));
+            localStorage.setItem("userId", data.user._id);
             navigate("/home", { replace: true });
         },
     });

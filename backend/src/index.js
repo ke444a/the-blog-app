@@ -21,7 +21,7 @@ const corsOptions = {
 app.use(express.json());
 app.use(cookieParser());
 app.use(cors(corsOptions));
-app.use("/uploads/posts", express.static(path.join(process.cwd(), "/uploads/posts")));
+app.use("/uploads/", express.static(path.join(process.cwd(), "/uploads/")));
 app.use("/posts", postsRoutes);
 app.use("/users", usersRoutes);
 app.use("/auth", authRoutes);

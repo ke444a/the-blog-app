@@ -7,3 +7,7 @@ export const loginUser = (data: any) => {
 export const refreshToken = () => {
     return customAxios.get("/auth/refresh/").then((response) => response.data);
 };
+
+export const logoutUser = () => {
+    return customAxios.get("/auth/logout/");
+};

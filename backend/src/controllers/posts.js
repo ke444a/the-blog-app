@@ -24,9 +24,14 @@ export const getSinglePost = async (req, res) => {
 
 export const createPost = async (req, res) => {
     try {
+        let postImg = "";
+        if (req?.file) {
+            postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
+        }
+
         const newPost = new Post({
             ...req.body,
-            postImg: req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename
+            postImg
         });
         await newPost.save();
         res.status(201).json(newPost);
@@ -52,6 +57,15 @@ export const deletePost = async (req, res) => {
         }
 
         res.status(200).json({ message: "Post deleted successfully" });
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
+export const getPostsByAuthor = async (req, res) => {
+    try {
+        const postsByUser = await Post.find({ authorId: req.params.id });
+        res.status(200).json(postsByUser);
     } catch (error) {
         res.status(400).json({ message: error.message });
     }
