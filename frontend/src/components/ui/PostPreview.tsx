@@ -2,6 +2,7 @@ import Box from "@mui/material/Box";
 import { NavLink } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import Stack from "@mui/material/Stack";
 import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
@@ -14,8 +15,7 @@ import { useCheckUserLike } from "../../hooks/likes/useCheckUserLike";
 import { useLikePost } from "../../hooks/likes/useLikePost";
 import { useDislikePost } from "../../hooks/likes/useDislikePost";
 
-
-type PostProps = Omit<Post, "_id"> & {id: string, accessToken: string};
+type PostProps = Omit<Post, "_id"> & {id: string, accessToken: string, userId: string};
 
 const PostPreview = (props: PostProps) => {
     const context = useContext(PostContext);
@@ -28,12 +28,12 @@ const PostPreview = (props: PostProps) => {
     const onCheckUserLikeSuccess = (data: { isLiked: boolean }) => {
         setIsLikedPost(data.isLiked);
     };
-    const checkUserLike = useCheckUserLike(props.authorId, props.id, props.accessToken, onCheckUserLikeSuccess);
+    const checkUserLike = useCheckUserLike(props.userId, props.id, props.accessToken, onCheckUserLikeSuccess);
 
     const handleLikePost = async () => {
         const data = {
             postId: props.id,
-            userId: props.authorId
+            userId: props.userId
         };
         const isLiked: boolean = isLikedPost;
         setIsLikedPost((prevState) => !prevState);
@@ -144,43 +144,39 @@ const PostPreview = (props: PostProps) => {
                 >
                     {props.preview}
                 </Typography>
-                <Button
-                    sx={{
-                        marginRight: "10px",
-                    }}
-                    variant="outlined"
-                    startIcon={
-                        isLikedPost ? (
-                            <FavoriteOutlinedIcon />
-                        ) : (
-                            <FavoriteBorderOutlinedIcon />
-                        )
-                    }
-                    size={context === "homepage" ? "medium" : "small"}
-                    onClick={handleLikePost}
-                >
-                    {likesNumber}
-                </Button>
-                <Button
-                    sx={{
-                        marginRight: "10px",
-                    }}
-                    variant="outlined"
-                    startIcon={<ChatBubbleOutlineIcon />}
-                    size={context === "homepage" ? "medium" : "small"}
-                >
-                    {props.comments.length}
-                </Button>
-                <Button
-                    variant="contained"
-                    color="info"
-                    endIcon={<ArrowForwardIosIcon />}
-                    component={NavLink}
-                    to={`/post/${props.id}`}
-                    size={context === "homepage" ? "medium" : "small"}
-                >
-            Read More
-                </Button>
+                <Stack direction="row" spacing={1}>
+                    <Button
+                        variant="text"
+                        startIcon={
+                            isLikedPost ? (
+                                <FavoriteOutlinedIcon />
+                            ) : (
+                                <FavoriteBorderOutlinedIcon />
+                            )
+                        }
+                        size={context === "homepage" ? "medium" : "small"}
+                        onClick={handleLikePost}
+                    >
+                        {likesNumber}
+                    </Button>
+                    <Button
+                        variant="text"
+                        startIcon={<ChatBubbleOutlineIcon />}
+                        size={context === "homepage" ? "medium" : "small"}
+                    >
+                        {props.comments.length}
+                    </Button>
+                    <Button
+                        variant="outlined"
+                        color="info"
+                        endIcon={<ArrowForwardIosIcon />}
+                        component={NavLink}
+                        to={`/post/${props.id}`}
+                        size={context === "homepage" ? "medium" : "small"}
+                    >
+              Read More
+                    </Button>
+                </Stack>
             </Box>
         </Box>
     );

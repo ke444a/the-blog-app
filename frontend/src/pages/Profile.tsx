@@ -5,9 +5,7 @@ import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
-import { useQuery } from "@tanstack/react-query";
 import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
-import { getPostsByAuthor } from "../services/posts";
 import CustomContainer from "../components/ui/CustomContainer";
 import { PostContext } from "../context/PostContext";
 import { useGetUser } from "../hooks/users/useGetUser";
@@ -128,26 +126,8 @@ const Profile = () => {
                 </Typography>
                 <PostContext.Provider value="profile">
                     <PostList 
-                        userId={userInfoQuery.data?._id}
+                        userProfileId={userInfoQuery.data?._id}
                     />
-                    {/* {postsByUserQuery.data?.map((post: Post, index: number) => {
-                        return (
-                            <PostPreview
-                                key={index}
-                                id={post._id}
-                                title={post.title}
-                                content={post.content}
-                                preview={post.preview}
-                                createdAt={post.createdAt}
-                                authorId={post.authorId}
-                                updatedAt={post.updatedAt}
-                                postImg={post.postImg}
-                                likesNumber={post.likesNumber}
-                                comments={post.comments}
-                                accessToken={accessToken}
-                            />
-                        );
-                    })} */}
                 </PostContext.Provider>
             </CustomContainer>
         </Box>

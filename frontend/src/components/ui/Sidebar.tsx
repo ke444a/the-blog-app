@@ -17,6 +17,7 @@ import { logout, selectCurrentUser } from "../../features/auth/authSlice";
 import { useState } from "react";
 import Fade from "@mui/material/Fade";
 import { useLogout } from "../../hooks/auth/useLogout";
+import { AppDispatch } from "../../app/store";
 
 interface SidebarLinkProps extends NavLinkProps {
     color?: string;
@@ -40,7 +41,7 @@ const Sidebar = () => {
     const user: User = useSelector(selectCurrentUser);
     const location = useLocation();
     const [isLogoutOption, setIsLogoutOption] = useState<boolean>(false);
-    const dispatch = useDispatch();
+    const dispatch = useDispatch<AppDispatch>();
 
     const onLogoutSuccess = () => {
         localStorage.removeItem("userId");

@@ -7,6 +7,7 @@ import Profile from "./pages/Profile";
 import Writing from "./pages/Writing";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
+import Signup from "./pages/Signup";
 import { useSelector } from "react-redux";
 import { ProtectedRoute } from "./components/features/ProtectedRoute";
 import { selectCurrentToken } from "./features/auth/authSlice";
@@ -29,6 +30,10 @@ const App = () => {
                         <Route
                             path="/login"
                             element={<Login />}
+                        />
+                        <Route
+                            path="/register"
+                            element={<Signup />}
                         />
 
                         <Route element={<PersistentLogin />}>

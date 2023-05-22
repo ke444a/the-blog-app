@@ -11,7 +11,7 @@ const postStorage = multer.diskStorage({
     }
 });
 
-const userStorage = multer.diskStorage({
+const editUserStorage = multer.diskStorage({
     destination(req, file, cb) {
         cb(null, "./uploads/users/");
     },
@@ -21,5 +21,15 @@ const userStorage = multer.diskStorage({
     }
 });
 
+const createUserStorage = multer.diskStorage({
+    destination(req, file, cb) {
+        cb(null, "./uploads/users/");
+    },
+    filename(req, file, cb) {
+        cb(null, `user-${req.body.username}${path.extname(file.originalname)}`);
+    }
+});
+
 export const postUpload = multer({ storage: postStorage });
-export const userUpload = multer({ storage: userStorage });
+export const editUserUpload = multer({ storage: editUserStorage });
+export const createUserUpload = multer({ storage: createUserStorage });

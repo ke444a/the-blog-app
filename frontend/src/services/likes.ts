@@ -16,13 +16,13 @@ export const dislikePost = (data: { userId: string, postId: string}, accessToken
     }).then((response) => response.data);
 };
 
-export const getPostLikesNumber = (postId: string, accessToken: string) => {
-    return customAxios.get(`/posts/likes/${postId}`, {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }).then((response) => response.data);
-};
+// export const getPostLikesNumber = (postId: string, accessToken: string) => {
+//     return customAxios.get(`/posts/likes/${postId}`, {
+//         headers: {
+//             "Authorization": `Bearer ${accessToken}`
+//         }
+//     }).then((response) => response.data);
+// };
 
 export const checkUserLike = (userId: string, postId: string, accessToken: string) => {
     return customAxios.get(`/posts/user/likes/?userId=${userId}&postId=${postId}`, {

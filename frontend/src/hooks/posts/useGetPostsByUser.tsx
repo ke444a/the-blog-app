@@ -7,6 +7,5 @@ export const useGetPostsByUser = (authorId: string, accessToken: string) => {
     return useQuery({
         queryKey: QUERY_KEYS,
         queryFn: () => getPostsByAuthor(authorId, accessToken),
-        enabled: !!authorId
     });
 };

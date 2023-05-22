@@ -47,12 +47,13 @@ const Login = () => {
                     variant="h2" align="center" 
                     sx={{
                         marginTop: 6,
-                    }}>
+                    }}
+                    gutterBottom
+                >
                     Welcome to the Blogging App!
                 </Typography>
                 <Box
                     sx={{
-                        marginTop: 8,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -69,7 +70,7 @@ const Login = () => {
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit(data => loginMutation.mutate(data as UserCredentials))}
+                        onSubmit={handleSubmit(data => loginMutation.mutate(data as UserLoginCredentials))}
                         noValidate
                         sx={{ mt: 1 }}
                     >
@@ -117,7 +118,7 @@ const Login = () => {
                                 textUnderlineOffset: "0.2em",
                             }}
                         >
-                            Sign Up
+                            Sign up
                         </Box>
                     </Box>
                 </Box>

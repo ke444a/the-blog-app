@@ -5,11 +5,11 @@ import {
 } from "../controllers/users.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import express from "express";
-import { userUpload } from "../middleware/imageMiddleware.js"; 
+import { editUserUpload } from "../middleware/imageMiddleware.js"; 
 
 const router = express.Router();
 router.get("/:id", authMiddleware, getUserById);
 router.get("/username/:username", authMiddleware, getUserByUsername);
-router.put("/:id", authMiddleware, userUpload.single("avatar"), updateUser);
+router.put("/:id", authMiddleware, editUserUpload.single("avatar"), updateUser);
 
 export default router;
