@@ -2,23 +2,52 @@ import Box from "@mui/material/Box";
 import { NavLink } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
+import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { formatDate } from "../../utils/formatDate";
-import { useQuery } from "@tanstack/react-query";
-import { getUserById } from "../../services/users";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import { PostContext } from "../../context/PostContext";
+import { useGetAuthor } from "../../hooks/users/useGetAuthor";
+import { useCheckUserLike } from "../../hooks/likes/useCheckUserLike";
+import { useLikePost } from "../../hooks/likes/useLikePost";
+import { useDislikePost } from "../../hooks/likes/useDislikePost";
 
-const PostPreview = (props: Omit<Post, "_id"> & {id: string, accessToken: string}) => {
-    const { data: author, isSuccess } = useQuery({
-        queryKey: ["author", props.authorId],
-        queryFn: () => getUserById(props.authorId, props.accessToken),
-    });
+
+type PostProps = Omit<Post, "_id"> & {id: string, accessToken: string};
+
+const PostPreview = (props: PostProps) => {
     const context = useContext(PostContext);
+    const [likesNumber, setLikesNumber] = useState<number>(props.likesNumber);
+    const [isLikedPost, setIsLikedPost] = useState<boolean>(false);
 
-    if (!isSuccess) {
+    const likeMutation = useLikePost(props.accessToken);
+    const dislikeMutation = useDislikePost(props.accessToken);
+    const authorQuery = useGetAuthor(props.authorId, props.accessToken);
+    const onCheckUserLikeSuccess = (data: { isLiked: boolean }) => {
+        setIsLikedPost(data.isLiked);
+    };
+    const checkUserLike = useCheckUserLike(props.authorId, props.id, props.accessToken, onCheckUserLikeSuccess);
+
+    const handleLikePost = async () => {
+        const data = {
+            postId: props.id,
+            userId: props.authorId
+        };
+        const isLiked: boolean = isLikedPost;
+        setIsLikedPost((prevState) => !prevState);
+
+        if (isLiked) {
+            setLikesNumber((prevNum) => prevNum - 1);
+            dislikeMutation.mutate(data);
+        } else {
+            setLikesNumber((prevNum) => prevNum + 1);
+            likeMutation.mutate(data);
+        }
+    };
+
+    if (!authorQuery.isSuccess || !checkUserLike.isSuccess) {
         return null;
     }
 
@@ -92,14 +121,14 @@ const PostPreview = (props: Omit<Post, "_id"> & {id: string, accessToken: string
                         }}
                     >
                         <Box
-                            to={`/profile/${author.username}`}
+                            to={`/profile/${authorQuery.data.username}`}
                             component={NavLink}
                             sx={{
                                 color: "inherit",
                                 textUnderlineOffset: "2px",
                             }}
                         >
-                            {author.fullName}
+                            {authorQuery.data.fullName}
                         </Box>{" "}
               | {formatDate(props.createdAt)}
                     </Box>
@@ -111,10 +140,6 @@ const PostPreview = (props: Omit<Post, "_id"> & {id: string, accessToken: string
                         textAlign: "justify",
                         maxWidth: "90%",
                         fontSize: context === "homepage" ? "inherit" : "16px",
-
-                        // "@media (min-width: 1024px)": {
-                        //     maxWidth: "80%",
-                        // },
                     }}
                 >
                     {props.preview}
@@ -124,10 +149,17 @@ const PostPreview = (props: Omit<Post, "_id"> & {id: string, accessToken: string
                         marginRight: "10px",
                     }}
                     variant="outlined"
-                    startIcon={<FavoriteBorderOutlinedIcon />}
+                    startIcon={
+                        isLikedPost ? (
+                            <FavoriteOutlinedIcon />
+                        ) : (
+                            <FavoriteBorderOutlinedIcon />
+                        )
+                    }
                     size={context === "homepage" ? "medium" : "small"}
+                    onClick={handleLikePost}
                 >
-                    {props.likesNumber}
+                    {likesNumber}
                 </Button>
                 <Button
                     sx={{

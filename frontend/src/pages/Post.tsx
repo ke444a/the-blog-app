@@ -1,21 +1,17 @@
 import { useLocation } from "react-router-dom";
-import { getSinglePost } from "../services/posts";
-import { useQuery } from "@tanstack/react-query";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../features/auth/authSlice";
 import CustomContainer from "../components/ui/CustomContainer";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ReactMarkdown from "react-markdown";
+import { useGetSinglePost } from "../hooks/posts/useGetSinglePost";
 
 const Post = () => {
     const postId: string = useLocation().pathname.split("/")[2];
     const accessToken: string = useSelector(selectCurrentToken);
 
-    const { data: post, isSuccess } = useQuery({
-        queryFn: () => getSinglePost(postId, accessToken),
-        queryKey: ["posts", postId]
-    });
+    const { data: post, isSuccess } = useGetSinglePost(postId, accessToken);
 
     if (!isSuccess) {
         return null;

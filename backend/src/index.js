@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import usersRoutes from "./routes/users.js";
 import postsRoutes from "./routes/posts.js";
 import authRoutes from "./routes/auth.js";
+import likesRoutes from "./routes/likes.js";
 import path from "path";
 
 dotenv.config({ path: "../.env" });
@@ -19,10 +20,12 @@ const corsOptions = {
 };
 
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors(corsOptions));
 app.use("/uploads/", express.static(path.join(process.cwd(), "/uploads/")));
 app.use("/posts", postsRoutes);
+app.use("/posts", likesRoutes);
 app.use("/users", usersRoutes);
 app.use("/auth", authRoutes);
 

@@ -16,8 +16,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout, selectCurrentUser } from "../../features/auth/authSlice";
 import { useState } from "react";
 import Fade from "@mui/material/Fade";
-import { useQuery } from "@tanstack/react-query";
-import { logoutUser } from "../../services/auth";
+import { useLogout } from "../../hooks/auth/useLogout";
 
 interface SidebarLinkProps extends NavLinkProps {
     color?: string;
@@ -43,15 +42,11 @@ const Sidebar = () => {
     const [isLogoutOption, setIsLogoutOption] = useState<boolean>(false);
     const dispatch = useDispatch();
 
-    const logoutQuery = useQuery({
-        queryKey: ["auth", "logout"],
-        queryFn: logoutUser,
-        onSuccess: () => {
-            localStorage.removeItem("userId");
-            dispatch(logout());
-        },
-        enabled: false,
-    });
+    const onLogoutSuccess = () => {
+        localStorage.removeItem("userId");
+        dispatch(logout());    
+    };
+    const logoutQuery = useLogout(onLogoutSuccess);
 
     return (
         <Paper

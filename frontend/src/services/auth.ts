@@ -1,6 +1,6 @@
 import { customAxios } from "./api/customAxios";
 
-export const loginUser = (data: any) => {
+export const loginUser = (data: UserCredentials) => {
     return customAxios.post("/auth/login/", data).then((response) => response.data);
 };
 

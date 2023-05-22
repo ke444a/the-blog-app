@@ -7,30 +7,19 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useQuery } from "@tanstack/react-query";
 import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
-import { getUserByUsername } from "../services/users";
 import { getPostsByAuthor } from "../services/posts";
-import PostPreview from "../components/ui/PostPreview";
 import CustomContainer from "../components/ui/CustomContainer";
+import { PostContext } from "../context/PostContext";
+import { useGetUser } from "../hooks/users/useGetUser";
+import PostList from "../components/ui/PostList";
 
 const Profile = () => {
     const username: string = useLocation().pathname.split("/")[2];
     const accessToken: string = useSelector(selectCurrentToken);
     const user: User = useSelector(selectCurrentUser);
 
-    const userInfoQuery = useQuery({
-        queryKey: ["users", username],
-        queryFn: () => getUserByUsername(username, accessToken)
-    });
-
-    const authorId = userInfoQuery.data?._id;
-
-    const postsByUserQuery = useQuery({
-        queryKey: ["posts", authorId],
-        queryFn: () => getPostsByAuthor(authorId, accessToken),
-        enabled: !!authorId,
-    });
-
-    if (!userInfoQuery.isSuccess || !postsByUserQuery?.isSuccess) {
+    const userInfoQuery = useGetUser(username, accessToken);
+    if (!userInfoQuery.isSuccess) {
         return null;
     }
 
@@ -137,24 +126,29 @@ const Profile = () => {
                 <Typography variant="h3" gutterBottom>
             Published Blogs
                 </Typography>
-                {postsByUserQuery.data?.map((post: Post, index: number) => {
-                    return (
-                        <PostPreview
-                            key={index}
-                            id={post._id}
-                            title={post.title}
-                            content={post.content}
-                            preview={post.preview}
-                            createdAt={post.createdAt}
-                            authorId={post.authorId}
-                            updatedAt={post.updatedAt}
-                            postImg={post.postImg}
-                            likesNumber={post.likesNumber}
-                            comments={post.comments}
-                            accessToken={accessToken}
-                        />
-                    );
-                })}
+                <PostContext.Provider value="profile">
+                    <PostList 
+                        userId={userInfoQuery.data?._id}
+                    />
+                    {/* {postsByUserQuery.data?.map((post: Post, index: number) => {
+                        return (
+                            <PostPreview
+                                key={index}
+                                id={post._id}
+                                title={post.title}
+                                content={post.content}
+                                preview={post.preview}
+                                createdAt={post.createdAt}
+                                authorId={post.authorId}
+                                updatedAt={post.updatedAt}
+                                postImg={post.postImg}
+                                likesNumber={post.likesNumber}
+                                comments={post.comments}
+                                accessToken={accessToken}
+                            />
+                        );
+                    })} */}
+                </PostContext.Provider>
             </CustomContainer>
         </Box>
     );
