@@ -1,48 +1,22 @@
 import Box from "@mui/material/Box";
-import Container from "@mui/material/Container";
-import Post from "../components/ui/Post";
-import { useQuery } from "@tanstack/react-query";
-import { getAllPosts } from "../services/posts";
-import { sortByDate } from "../utils/sortByDate";
-import { useSelector } from "react-redux";
-import { selectCurrentToken } from "../features/auth/authSlice";
+import CustomContainer from "../components/ui/CustomContainer";
+import { PostContext } from "../context/PostContext";
+import PostList from "../components/ui/PostList";
 
-const Home = () => {
-    const accessToken: string = useSelector(selectCurrentToken);
-
-    const { data: posts, isSuccess } = useQuery({
-        queryKey: ["posts"],
-        queryFn: () => getAllPosts(accessToken),
-    });          
-
+const Home = () => {    
     return (
-        <Container maxWidth="xl">
-            <Box
-                color="primary.main"
-                sx={{
-                    margin: "15px 0",
-                }}
-            >
-                {
-                    isSuccess && sortByDate(posts).map((post: Post) => (
-                        <Post
-                            key={post._id}
-                            id={post._id}
-                            accessToken={accessToken}
-                            title={post.title}
-                            content={post.content}
-                            preview={post.preview}
-                            createdAt={post.createdAt}
-                            authorId={post.authorId}
-                            updatedAt={post.updatedAt}
-                            postImg={post.postImg}
-                            likesNumber={post.likesNumber}
-                            comments={post.comments}
-                        />
-                    ))
-                }
-            </Box>
-        </Container>
+        <PostContext.Provider value="homepage">
+            <CustomContainer>
+                <Box
+                    sx={{
+                        margin: "15px 0",
+                        padding: "20px"
+                    }}
+                >
+                    <PostList />
+                </Box>
+            </CustomContainer>
+        </PostContext.Provider>
     );
 };
 

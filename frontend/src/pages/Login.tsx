@@ -5,8 +5,6 @@ import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import { useMutation } from "@tanstack/react-query";
-import { loginUser } from "../services/auth";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { FormInputField } from "../components/form/FormInputField";
@@ -14,20 +12,19 @@ import loginBg from "../assets/loginBg.jpeg";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/authSlice";
 import type { AppDispatch } from "../app/store";
+import { useLogin } from "../hooks/auth/useLogin";
 
 const Login = () => {
     const { handleSubmit, control } = useForm();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const loginMutation = useMutation({
-        mutationFn: (formData: any) => loginUser(formData),
-        onSuccess: (data: any) => {
-            dispatch(setCredentials(data));
-            localStorage.setItem("userId", JSON.stringify(data.user._id));
-            navigate("/home", { replace: true });
-        },
-    });
+    const onLoginSuccess = (data: UserReturnData) => {
+        dispatch(setCredentials(data));
+        localStorage.setItem("userId", data.user._id);
+        navigate("/home", { replace: true });
+    };
+    const loginMutation = useLogin(onLoginSuccess);
 
     return (
         <Grid container component="main" sx={{ height: "100vh" }}>
@@ -50,12 +47,13 @@ const Login = () => {
                     variant="h2" align="center" 
                     sx={{
                         marginTop: 6,
-                    }}>
+                    }}
+                    gutterBottom
+                >
                     Welcome to the Blogging App!
                 </Typography>
                 <Box
                     sx={{
-                        marginTop: 8,
                         display: "flex",
                         flexDirection: "column",
                         alignItems: "center",
@@ -72,7 +70,7 @@ const Login = () => {
                     </Typography>
                     <Box
                         component="form"
-                        onSubmit={handleSubmit(data => loginMutation.mutate(data))}
+                        onSubmit={handleSubmit(data => loginMutation.mutate(data as UserLoginCredentials))}
                         noValidate
                         sx={{ mt: 1 }}
                     >
@@ -120,7 +118,7 @@ const Login = () => {
                                 textUnderlineOffset: "0.2em",
                             }}
                         >
-                            Sign Up
+                            Sign up
                         </Box>
                     </Box>
                 </Box>

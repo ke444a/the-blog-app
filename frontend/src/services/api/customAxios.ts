@@ -8,18 +8,18 @@ export const customAxios = axios.create({
     withCredentials: true
 });
 
-customAxios.interceptors.request.use(
-    (config) => {
-        const accessToken = store.getState().auth.token;
-        if (accessToken) {
-            config.headers["Authorization"] = `Bearer ${accessToken}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
-    }
-);
+// customAxios.interceptors.request.use(
+//     (config) => {
+//         const accessToken = store.getState().auth.token;
+//         if (accessToken) {
+//             config.headers["Authorization"] = `Bearer ${accessToken}`;
+//         }
+//         return config;
+//     },
+//     (error) => {
+//         return Promise.reject(error);
+//     }
+// );
 
 customAxios.interceptors.response.use(
     (response) => {

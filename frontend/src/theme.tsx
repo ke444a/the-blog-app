@@ -13,6 +13,10 @@ const theme = createTheme({
             fontWeight: 700,
             fontSize: "1.8em",
         },
+        h3: {
+            fontWeight: 700,
+            fontSize: "1.5em"
+        }, 
         body2: {
             fontSize: 14,
         },

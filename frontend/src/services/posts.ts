@@ -16,3 +16,19 @@ export const getAllPosts = (accessToken: string) => {
         }
     }).then((response) => response.data);
 };
+
+export const getSinglePost = (postId: string, accessToken: string) => {
+    return customAxios.get(`/posts/${postId}`, {
+        headers: {
+            "Authorization": `Bearer ${accessToken}`
+        }
+    }).then((response) => response.data);
+};
+
+export const getPostsByAuthor = (authorId: string, accessToken: string) => {
+    return customAxios.get(`/posts/author/${authorId}`, {
+        headers: {
+            "Authorization": `Bearer ${accessToken}`
+        }
+    }).then((response) => response.data);
+};

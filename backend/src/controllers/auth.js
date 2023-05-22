@@ -23,22 +23,27 @@ export const register = async (req, res) => {
 
     try {
         const refreshToken = generateJwtToken(registeringUser._id, process.env.REFRESH_TOKEN_SECRET, "1d");
-        const accessToken = generateJwtToken(registeringUser._id, process.env.ACCESS_TOKEN_SECRET, "5s");
+        const accessToken = generateJwtToken(registeringUser._id, process.env.ACCESS_TOKEN_SECRET, "5m");
         
         const hashedPassword = await bcrypt.hash(registeringUser.password, 10);
         registeringUser.refreshToken = refreshToken;
+        
+        let avatar = "";
+        if (req?.file) {
+            avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
+        }
+
         const newUser = new User({
             ...registeringUser,
+            avatar,
             password: hashedPassword
         });
         await newUser.save();
         
         res.cookie("jwt", refreshToken, { httpOnly:true, secure: true, sameSite: "None", maxAge: 24*60*60*1000});
         res.status(201).json({
-            _id: newUser._id,
-            username: newUser.username,
-            fullName: newUser.fullName,
-            accessToken: accessToken
+            user: newUser,
+            accessToken
         });
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -62,7 +67,7 @@ export const login = async (req, res) => {
     }
 
     try {
-        const accessToken = generateJwtToken(user._id, process.env.ACCESS_TOKEN_SECRET, "5s");
+        const accessToken = generateJwtToken(user._id, process.env.ACCESS_TOKEN_SECRET, "5m");
         const refreshToken = generateJwtToken(user._id, process.env.REFRESH_TOKEN_SECRET, "1d");
         user.refreshToken = refreshToken;
         const result = await user.save();
@@ -112,7 +117,7 @@ export const handleRefreshToken = async (req, res) => {
             if (err) {
                 return res.status(403).json({ message: err.message });
             }
-            const accessToken = generateJwtToken(decoded.id, process.env.ACCESS_TOKEN_SECRET, "5s");
+            const accessToken = generateJwtToken(decoded.id, process.env.ACCESS_TOKEN_SECRET, "5m");
             res.status(201).json({ accessToken });
         }
     );

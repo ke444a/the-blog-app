@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { refreshToken } from "../../services/auth";
-import { getUser } from "../../services/users";
+import { getUserById } from "../../services/users";
 import { store } from "../../app/store";
 import { setCredentials } from "../../features/auth/authSlice";
 
@@ -12,9 +12,8 @@ export const PersistentLogin = () => {
         const verifyRefreshToken = async () => {
             try {
                 const newAccessToken = (await refreshToken())?.accessToken;
-                const userId: string = (localStorage.getItem("userId") || "").replace(/"/g, "");
-                const userInfo = await getUser(userId, newAccessToken);
-                console.log(userInfo, newAccessToken);
+                const userId: string = (localStorage.getItem("userId") || "");
+                const userInfo = await getUserById(userId, newAccessToken);
                 store.dispatch(setCredentials({ user: userInfo, accessToken: newAccessToken }));
             } catch (err) {
                 console.log(err);
