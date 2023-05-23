@@ -42,15 +42,19 @@ export const getUserByUsername = async (req, res) => {
 
 export const updateUser = async (req, res) => {
     try {
+        if (!req.body?.username || !req.body?.fullName) {
+            return res.send(400).json({ message: "Username and full name are required"});
+        }
+
         let avatar = "";
         if (req?.file) {
             avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
         }
+
         const updatedInfo = {
-            ...req.body, 
+            ...req.body,
             avatar
         };
-
         const foundUser = await User.findByIdAndUpdate(req.params.id, updatedInfo, { new: true });
         res.status(200).json(foundUser);
     } catch (error) {

@@ -38,15 +38,6 @@ export const dislikePost = async (req, res) => {
     }
 };
 
-export const getPostLikesNumber = async (req, res) => {
-    try {
-        const post = await Post.findById(req.params.id);
-        res.status(200).json(post.likesNumber);
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-};
-
 export const checkUserLike = async (req, res) => {
     try {
         const { userId, postId } = req.query;

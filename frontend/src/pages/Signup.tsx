@@ -10,7 +10,8 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
-import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";import Button from "@mui/material/Button";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import { FormInputField } from "../components/form/FormInputField";
 import { Link } from "react-router-dom";
@@ -37,8 +38,11 @@ const Signup = () => {
         formData.append("username", registerData.username);
         formData.append("password", registerData.password);
         formData.append("fullName", registerData.firstName + " " + registerData.lastName);
-        if (registerData?.avatar) {
-            formData.append("avatar", registerData.avatar[0]);
+        // if (registerData?.avatar) {
+        //     formData.append("avatar", registerData.avatar[0]);
+        // }
+        if (avatarImg) {
+            formData.append("avatar", avatarImg);
         }
         if (registerData?.bio) {
             formData.append("bio", registerData.bio);
@@ -95,7 +99,7 @@ const Signup = () => {
                     }}
                 >
                     {preview ? 
-                        <Box
+                        <Avatar
                             component="img"
                             src={preview as string}
                             onClick={() => setAvatarImg(null)}
@@ -189,6 +193,7 @@ const Signup = () => {
                             placeholder="Tell us about yourself..."
                             multiline
                             rows={2}
+                            maxLength={150}
                         />
                         {!preview &&
                         (<Button

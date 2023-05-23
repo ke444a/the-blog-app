@@ -77,8 +77,8 @@ const Sidebar = () => {
                     <HomeOutlinedIcon sx={{ fontSize: 32 }} />
                 )}
             </SidebarLink>
-            <SidebarLink to={`/profile/${user.username}`}>
-                {location.pathname === `/profile/${user.username}` ? (
+            <SidebarLink to={`/profile/${user._id}`}>
+                {location.pathname === `/profile/${user._id}` ? (
                     <PersonIcon sx={{ fontSize: 32 }} />
                 ) : (
                     <PersonOutlineOutlinedIcon sx={{ fontSize: 32 }} />

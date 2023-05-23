@@ -4,22 +4,60 @@ import Stack from "@mui/material/Stack";
 import Button from "@mui/material/Button";
 import Paper from "@mui/material/Paper";
 import { useLocation } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
 import CustomContainer from "../components/ui/CustomContainer";
 import { PostContext } from "../context/PostContext";
-import { useGetUser } from "../hooks/users/useGetUser";
 import PostList from "../components/ui/PostList";
+import { useLogout } from "../hooks/auth/useLogout";
+import { AppDispatch } from "../app/store";
+import { logout } from "../features/auth/authSlice";
+import { useRef, useState } from "react";
+import EditForm from "../components/form/EditForm";
+import { setCredentials } from "../features/auth/authSlice";
+import { useUpdateUser } from "../hooks/users/useUpdateUser";
+import { useQueryClient } from "@tanstack/react-query";
+import defaultAvatar from "../assets/profile.png";
+import { useGetUser } from "../hooks/users/useGetUser";
 
 const Profile = () => {
-    const username: string = useLocation().pathname.split("/")[2];
+    const userId: string = useLocation().pathname.split("/")[2];
     const accessToken: string = useSelector(selectCurrentToken);
     const user: User = useSelector(selectCurrentUser);
+    const dispatch = useDispatch<AppDispatch>();
+    const [isEditMode, setIsEditMode] = useState<boolean>(false);
+    const editFormRef = useRef<HTMLFormElement | null>(null);
+    const queryClient = useQueryClient();
 
-    const userInfoQuery = useGetUser(username, accessToken);
+    const onEditSuccess = (data: User) => {
+        dispatch(setCredentials({ user: data, accessToken }));
+        queryClient.invalidateQueries(["users", "user"]);
+    };
+    const updateUserMutation = useUpdateUser(user._id, accessToken, onEditSuccess);
+    const handleProfileEdit = () => {
+        if (isEditMode) {
+            if (editFormRef.current) {
+                const formData = new FormData(editFormRef.current);
+                formData.append("fullName", formData.get("firstName") + " " + formData.get("lastName"));
+                updateUserMutation.mutate(formData);
+            }
+            setIsEditMode(false);
+        } else {
+            setIsEditMode(true);
+        }
+    };
+
+    const onLogoutSuccess = () => {
+        localStorage.removeItem("userId");
+        dispatch(logout());
+    };
+    const logoutQuery = useLogout(onLogoutSuccess);
+
+    const userInfoQuery = useGetUser(userId, accessToken);
     if (!userInfoQuery.isSuccess) {
         return null;
     }
+
 
     return (
         <Box
@@ -42,10 +80,10 @@ const Profile = () => {
                 <CustomContainer
                     sx={{
                         display: "flex",
-                        flexDirection: "row",
+                        flexDirection: "row"
                     }}
                 >
-                    {userInfoQuery.data?.avatar && (
+                    {!isEditMode && (
                         <Box
                             component="img"
                             sx={{
@@ -54,7 +92,7 @@ const Profile = () => {
                                 borderRadius: "50%",
                                 marginRight: "25px",
                             }}
-                            src={userInfoQuery.data?.avatar}
+                            src={userInfoQuery.data?.avatar ? userInfoQuery.data.avatar : defaultAvatar}
                             alt=""
                         />
                     )}
@@ -62,46 +100,57 @@ const Profile = () => {
                         sx={{
                             display: "flex",
                             justifyContent: "space-between",
+                            width: "100%"
                         }}
                     >
-                        <Box>
-                            <Typography variant="h2">
-                                {userInfoQuery.data?.fullName}
-                            </Typography>
-                            <Typography
-                                variant="h4"
-                                sx={{
-                                    opacity: 0.5,
-                                    marginBottom: "20px",
-                                    fontSize: ".9em",
-                                    fontWeight: 500,
-                                }}
-                            >
+                        { isEditMode ? 
+                            <EditForm 
+                                user={user}
+                                accessToken={accessToken}
+                                ref={editFormRef}
+                            />
+                            :
+                            <Box>
+                                <Typography variant="h2">
+                                    {userInfoQuery.data?.fullName}
+                                </Typography>
+                                <Typography
+                                    variant="h4"
+                                    sx={{
+                                        opacity: 0.5,
+                                        marginBottom: "20px",
+                                        fontSize: ".9em",
+                                        fontWeight: 500,
+                                    }}
+                                >
                   @{userInfoQuery.data?.username}
-                            </Typography>
-                            <Typography
-                                variant="body1"
-                                sx={{
-                                    fontWeight: 500,
-                                    maxWidth: "95%",
-                                }}
-                            >
-                                {userInfoQuery.data?.bio}
-                            </Typography>
-                        </Box>
-                        {user.username === username && (
-                            <Stack spacing={1} sx={{ marginLeft: 2 }}>
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    sx={{
+                                        fontWeight: 500,
+                                        width: "100%",
+                                    }}
+                                >
+                                    {userInfoQuery.data?.bio}
+                                </Typography>
+                            </Box>
+                        }
+                        {user._id === userId && (
+                            <Stack spacing={1} sx={{ marginLeft: 1 }}>
                                 <Button
                                     size="medium"
-                                    color="info"
+                                    color={isEditMode ? "success" : "info"}
                                     variant="outlined"
                                     sx={{
                                         fontWeight: 500,
                                         borderRadius: "10px",
                                         textTransform: "initial",
                                     }}
+                                    type="submit"
+                                    onClick={handleProfileEdit}
                                 >
-                                    Edit
+                                    {isEditMode ? "Save" : "Edit"}
                                 </Button>
                                 <Button
                                     size="medium"
@@ -112,6 +161,7 @@ const Profile = () => {
                                         borderRadius: "10px",
                                         textTransform: "initial",
                                     }}
+                                    onClick={() => logoutQuery.refetch()}
                                 >
                                     Logout
                                 </Button>
