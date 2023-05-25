@@ -1,7 +1,7 @@
 import {
     getUserById,
-    getUserByUsername,
-    updateUser
+    updateUser,
+    // getUserByUsername
 } from "../controllers/users.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import express from "express";
@@ -9,7 +9,7 @@ import { editUserUpload } from "../middleware/imageMiddleware.js";
 
 const router = express.Router();
 router.get("/:id", authMiddleware, getUserById);
-router.get("/username/:username", authMiddleware, getUserByUsername);
+// router.get("/username/:username", authMiddleware, getUserByUsername);
 router.put("/:id", authMiddleware, editUserUpload.single("avatar"), updateUser);
 
 export default router;

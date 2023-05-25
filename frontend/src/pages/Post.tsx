@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import ReactMarkdown from "react-markdown";
 import { useGetSinglePost } from "../hooks/posts/useGetSinglePost";
+import CommentSection from "../components/ui/CommentSection";
 
 const Post = () => {
     const postId: string = useLocation().pathname.split("/")[2];
@@ -49,6 +50,9 @@ const Post = () => {
                 <ReactMarkdown>
                     {post.content}
                 </ReactMarkdown>
+                <CommentSection
+                    postId={postId}
+                />
             </Box>
         </CustomContainer>
     );
