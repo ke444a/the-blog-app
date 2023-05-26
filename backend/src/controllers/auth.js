@@ -46,24 +46,24 @@ export const register = async (req, res) => {
             accessToken
         });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: "Unsuccessful registration" });
     }
 };
 
 export const login = async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-        return res.status(400).json({ message: "Username and password are required." });
+        return res.status(400).json({ message: "Username and password are required!" });
     }
 
     const user = await User.findOne({ username });
     if (!user) {
-        return res.status(404).json({ message: "User with given username is not found." });
+        return res.status(404).json({ message: "Invalid username!" });
     }
 
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
     if (!isPasswordCorrect) {
-        return res.status(400).json({ message: "Invalid password." });
+        return res.status(400).json({ message: "Invalid password!" });
     }
 
     try {
@@ -74,7 +74,7 @@ export const login = async (req, res) => {
         res.cookie("jwt", refreshToken, { httpOnly:true, secure: true, sameSite: "None", maxAge: 24*60*60*1000});
         res.status(200).json({ user: result, accessToken });
     } catch (error) {
-        res.status(400).json({ message: error.message });
+        res.status(400).json({ message: "Unsuccessful login" });
     }
 };
 

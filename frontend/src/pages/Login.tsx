@@ -19,9 +19,9 @@ const Login = () => {
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const onLoginSuccess = (data: UserReturnData) => {
+    const onLoginSuccess = (data: UserStoreData) => {
         dispatch(setCredentials(data));
-        localStorage.setItem("userId", data.user._id);
+        localStorage.setItem("userId", data.user?._id || "");
         navigate("/home", { replace: true });
     };
     const loginMutation = useLogin(onLoginSuccess);

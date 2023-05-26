@@ -7,6 +7,7 @@ import usersRoutes from "./routes/users.js";
 import postsRoutes from "./routes/posts.js";
 import authRoutes from "./routes/auth.js";
 import likesRoutes from "./routes/likes.js";
+import commentsRoutes from "./routes/comments.js";
 import path from "path";
 
 dotenv.config({ path: "../.env" });
@@ -28,6 +29,7 @@ app.use("/posts", postsRoutes);
 app.use("/posts", likesRoutes);
 app.use("/users", usersRoutes);
 app.use("/auth", authRoutes);
+app.use("/comments", commentsRoutes);
 
 mongoose.connect(MONGODB).then(() => {
     console.log("Connected to MongoDB");

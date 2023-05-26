@@ -9,9 +9,11 @@ import Login from "./pages/Login";
 import Post from "./pages/Post";
 import Signup from "./pages/Signup";
 import { useSelector } from "react-redux";
-import { ProtectedRoute } from "./components/features/ProtectedRoute";
+import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { selectCurrentToken } from "./features/auth/authSlice";
-import { PersistentLogin } from "./components/features/PersistentLogin";
+import { PersistentLogin } from "./components/routes/PersistentLogin";
+import "react-toastify/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
     const token: string = useSelector(selectCurrentToken);
@@ -19,6 +21,7 @@ const App = () => {
     return (
         <>
             <CssBaseline />
+            <ToastContainer limit={1} />
             <Box>
                 {token && <Sidebar />}
                 <Box
@@ -40,7 +43,7 @@ const App = () => {
                             <Route element={<ProtectedRoute />}>
                                 <Route path="/home" element={<Home />} />
                                 <Route
-                                    path="/profile/:username"
+                                    path="/profile/:id"
                                     element={<Profile />}
                                 />
                                 <Route path="/writing" element={<Writing />} />

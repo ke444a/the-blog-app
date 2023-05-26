@@ -38,7 +38,7 @@ const SidebarLink = styled(NavLink)<SidebarLinkProps>((props) => ({
 }));
 
 const Sidebar = () => {
-    const user: User = useSelector(selectCurrentUser);
+    const user = useSelector(selectCurrentUser);
     const location = useLocation();
     const [isLogoutOption, setIsLogoutOption] = useState<boolean>(false);
     const dispatch = useDispatch<AppDispatch>();
@@ -77,8 +77,8 @@ const Sidebar = () => {
                     <HomeOutlinedIcon sx={{ fontSize: 32 }} />
                 )}
             </SidebarLink>
-            <SidebarLink to={`/profile/${user.username}`}>
-                {location.pathname === `/profile/${user.username}` ? (
+            <SidebarLink to={`/profile/${user?._id}`}>
+                {location.pathname === `/profile/${user?._id}` ? (
                     <PersonIcon sx={{ fontSize: 32 }} />
                 ) : (
                     <PersonOutlineOutlinedIcon sx={{ fontSize: 32 }} />
@@ -140,7 +140,7 @@ const Sidebar = () => {
                             cursor: "pointer",
                             transition: "background-color 0.2s ease-in-out",
                         }}
-                        src={user.avatar ? user.avatar : profile}
+                        src={user?.avatar ? user.avatar : profile}
                         alt=""
                     />
                 </Box>

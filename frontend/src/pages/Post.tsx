@@ -2,42 +2,38 @@ import { useLocation } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../features/auth/authSlice";
 import CustomContainer from "../components/ui/CustomContainer";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import ReactMarkdown from "react-markdown";
 import { useGetSinglePost } from "../hooks/posts/useGetSinglePost";
+import CommentSection from "../components/ui/CommentSection";
+import RenderedPost from "../components/ui/RenderedPost";
+import { Spinner } from "../components/ui/Spinner";
 
 const Post = () => {
-    const postId: string = useLocation().pathname.split("/")[2];
-    const accessToken: string = useSelector(selectCurrentToken);
+    const postId = useLocation().pathname.split("/")[2];
+    const accessToken = useSelector(selectCurrentToken);
 
-    const { data: post, isSuccess } = useGetSinglePost(postId, accessToken);
+    const { data: post, isSuccess, isLoading } = useGetSinglePost(postId, accessToken);
 
     if (!isSuccess) {
         return null;
     }
 
+    if (isLoading) {
+        return <Spinner />;
+    }
+
     return (
-        <CustomContainer 
+        <CustomContainer
             maxWidth="xl"
             sx={{
-                padding: "25px"
+                padding: "25px",
             }}
-        >            
-            <Typography 
-                variant="h1"
-                sx={{
-                    marginBottom: "15px"
-                }}
-            >
-                {post.title}
-            </Typography>
-            <Box
-                sx={{
-                    // fontSize: "16px"
-                }}
-            >
-                <Box 
+        >
+            <RenderedPost 
+                title={post.title}
+                content={post.content} 
+            />
+            <CommentSection postId={postId} />
+            {/* <Box 
                     component="img"
                     src={post.postImg}
                     sx={{
@@ -45,11 +41,7 @@ const Post = () => {
                         marginRight: "15px",
                         borderRadius: "10px"
                     }}
-                />
-                <ReactMarkdown>
-                    {post.content}
-                </ReactMarkdown>
-            </Box>
+                /> */}
         </CustomContainer>
     );
 };

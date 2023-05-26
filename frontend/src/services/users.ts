@@ -8,10 +8,11 @@ export const getUserById = (userId: string, accessToken: string) => {
     }).then((response) => response.data);
 };
 
-export const getUserByUsername = (username: string, accessToken: string) => {
-    return customAxios.get(`/users/username/${username}/`, {
+export const updateUser = (data: FormData, userId: string, accessToken: string) => {
+    return customAxios.put(`/users/${userId}/`, data, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`
+            "Authorization": `Bearer ${accessToken}`,
+            "Content-Type": "multipart/form-data",
         }
     }).then((response) => response.data);
 };

@@ -10,7 +10,7 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import { formatDate } from "../../utils/formatDate";
 import { useContext, useState } from "react";
 import { PostContext } from "../../context/PostContext";
-import { useGetAuthor } from "../../hooks/users/useGetAuthor";
+import { useGetUser } from "../../hooks/users/useGetUser";
 import { useCheckUserLike } from "../../hooks/likes/useCheckUserLike";
 import { useLikePost } from "../../hooks/likes/useLikePost";
 import { useDislikePost } from "../../hooks/likes/useDislikePost";
@@ -24,7 +24,7 @@ const PostPreview = (props: PostProps) => {
 
     const likeMutation = useLikePost(props.accessToken);
     const dislikeMutation = useDislikePost(props.accessToken);
-    const authorQuery = useGetAuthor(props.authorId, props.accessToken);
+    const authorQuery = useGetUser(props.authorId, props.accessToken);
     const onCheckUserLikeSuccess = (data: { isLiked: boolean }) => {
         setIsLikedPost(data.isLiked);
     };
@@ -121,7 +121,7 @@ const PostPreview = (props: PostProps) => {
                         }}
                     >
                         <Box
-                            to={`/profile/${authorQuery.data.username}`}
+                            to={`/profile/${authorQuery.data._id}`}
                             component={NavLink}
                             sx={{
                                 color: "inherit",

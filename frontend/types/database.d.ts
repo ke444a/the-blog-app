@@ -12,7 +12,7 @@ interface Post {
 }
 
 interface Comment {
-    id: string;
+    _id: string;
     content: string;
     createdAt: string;
     updatedAt: string;
