@@ -4,6 +4,7 @@ import { refreshToken } from "../../services/auth";
 import { getUserById } from "../../services/users";
 import { store } from "../../app/store";
 import { setCredentials } from "../../features/auth/authSlice";
+import { Spinner } from "../ui/Spinner";
 
 export const PersistentLogin = () => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -27,11 +28,11 @@ export const PersistentLogin = () => {
 
     return (
         <>
-            {
-                isLoading ?
-                    <p> Loading... </p> :
-                    <Outlet />
-            }
+            {isLoading ? (
+                <Spinner />
+            ) : (
+                <Outlet />
+            )}
         </>
     );
 };

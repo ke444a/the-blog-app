@@ -5,6 +5,6 @@ export const useUpdateUser = (userId: string, accessToken: string, onSuccessFunc
     return useMutation({
         mutationFn: (postData: FormData) =>
             updateUser(postData, userId, accessToken),
-        onSuccess: onSuccessFunc
+        onSuccess: onSuccessFunc,
     });
 };

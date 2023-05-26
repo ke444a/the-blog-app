@@ -10,16 +10,13 @@ interface IInputField extends React.ComponentProps<typeof TextField> {
 }
 
 export const FormInputField = (props: IInputField) => {
-    const { name, control, required, maxLength, ...other } = props;
-
     return (
         <Controller
-            name={name}
-            control={control}
-            {...other}
+            name={props.name}
+            control={props.control}
             render={({ field }) => <TextField {...field} {...props} />}
             defaultValue=""
-            rules={{ required: required, maxLength: maxLength }}
+            rules={{ required: props.required, maxLength: props.maxLength }}
         />
     );
 };

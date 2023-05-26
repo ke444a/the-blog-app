@@ -1,5 +1,4 @@
 import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import CustomContainer from "../components/ui/CustomContainer";
@@ -9,7 +8,7 @@ import { PublishPostForm } from "../components/form/PublishPostForm";
 import { useState } from "react";
 import RenderedPost from "../components/ui/RenderedPost";
 
-type TabPanelProps = {
+interface TabPanelProps {
   children?: React.ReactNode;
   index: number;
   value: number;
@@ -57,7 +56,7 @@ const Writing = () => {
                 <TabPanel value={value} index={0}>
                     <PublishPostForm
                         user={useSelector(selectCurrentUser)}
-                        accessToken={useSelector(selectCurrentToken)}
+                        accessToken={useSelector(selectCurrentToken) || ""}
                         setTitle={setTitle}
                         setContent={setContent}
                     />

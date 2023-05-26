@@ -6,9 +6,11 @@ import { FieldValues, useForm } from "react-hook-form";
 import SendSharpIcon from "@mui/icons-material/SendSharp";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 import { FormInputField } from "./FormInputField";
+import { Spinner } from "../ui/Spinner";
+import { toast } from "react-toastify";
 
 interface PostFormProps {
-    user: User;
+    user: User | null;
     accessToken: string;
     setTitle: (title: string) => void;
     setContent: (content: string) => void;
@@ -16,11 +18,20 @@ interface PostFormProps {
 
 export const PublishPostForm = (props: PostFormProps) => {
     const { handleSubmit, control, register, reset, watch } = useForm();
-
-    props.setTitle(watch("title"));
-    props.setContent(watch("content"));
-
-    const createPostMutation = useCreatePost(props.accessToken, reset);
+    const onCreateSuccess = () => {
+        reset();
+        toast.success("Post has been created", {
+            position: "top-center",
+            autoClose: 4000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "dark",
+        });
+    };
+    const createPostMutation = useCreatePost(props.accessToken, onCreateSuccess);
 
     const publishPost = (postData: FieldValues) => {
         const formData = new FormData();
@@ -28,12 +39,21 @@ export const PublishPostForm = (props: PostFormProps) => {
         formData.append("preview", postData.preview);
         formData.append("content", postData.content);
         formData.append("postImg", postData.postImg[0]);
-        formData.append("authorId", props.user._id);
+        formData.append("authorId", props.user?._id || "");
         createPostMutation.mutate(formData);
     };
 
+    const handleFormChange = () => {
+        props.setTitle(watch("title"));
+        props.setContent(watch("content"));
+    };
+
+    if (createPostMutation.isLoading) {
+        return <Spinner />;
+    } 
+
     return (
-        <Box component="form" onSubmit={handleSubmit(publishPost)}>
+        <Box component="form" onSubmit={handleSubmit(publishPost)} onChange={handleFormChange}>
             <FormInputField
                 name="title"
                 control={control}

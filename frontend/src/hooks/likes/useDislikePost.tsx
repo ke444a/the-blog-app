@@ -1,7 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { dislikePost } from "../../services/likes";
 
-type DislikeData = { userId: string; postId: string };
+interface DislikeData { 
+    userId: string; 
+    postId: string 
+}
 
 export const useDislikePost = (accessToken: string) => {
     const queryClient = useQueryClient();

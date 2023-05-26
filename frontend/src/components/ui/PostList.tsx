@@ -6,19 +6,24 @@ import { sortByDate } from "../../utils/sortByDate";
 import { useContext } from "react";
 import { PostContext } from "../../context/PostContext";
 import { useGetPostsByUser } from "../../hooks/posts/useGetPostsByUser";
+import { Spinner } from "./Spinner";
 
-type PostListProps = {
+interface PostListProps {
     userProfileId?: string;
 }
 
 const PostList = ({ userProfileId = "" }: PostListProps) => {
     const context = useContext(PostContext);
-    const currentUserId: string = useSelector(selectCurrentUser)._id;
-    const accessToken: string = useSelector(selectCurrentToken);
+    const currentUserId = useSelector(selectCurrentUser)?._id;
+    const accessToken = useSelector(selectCurrentToken);
     const postsQuery = (context === "homepage") ? useGetAllPosts(accessToken) : useGetPostsByUser(userProfileId, accessToken);
     
     if (!postsQuery.isSuccess) {
         return null;
+    }
+
+    if (postsQuery.isLoading) {
+        return <Spinner />;
     }
 
     return (
@@ -37,7 +42,7 @@ const PostList = ({ userProfileId = "" }: PostListProps) => {
                     likesNumber={post.likesNumber}
                     comments={post.comments}
                     accessToken={accessToken}
-                    userId={currentUserId}
+                    userId={currentUserId || ""}
                 />
             ))}
         </>

@@ -26,9 +26,9 @@ const Signup = () => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
     const [avatarImg, setAvatarImg] = useState<File | null>(null);
 
-    const onRegisterSuccess = (data: UserReturnData) => {
+    const onRegisterSuccess = (data: UserStoreData) => {
         dispatch(setCredentials(data));
-        localStorage.setItem("userId", data.user._id);
+        localStorage.setItem("userId", data.user?._id || "");
         navigate("/home", { replace: true });
     };
     const registerMutation = useRegister(onRegisterSuccess);
@@ -38,9 +38,6 @@ const Signup = () => {
         formData.append("username", registerData.username);
         formData.append("password", registerData.password);
         formData.append("fullName", registerData.firstName + " " + registerData.lastName);
-        // if (registerData?.avatar) {
-        //     formData.append("avatar", registerData.avatar[0]);
-        // }
         if (avatarImg) {
             formData.append("avatar", avatarImg);
         }

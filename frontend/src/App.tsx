@@ -12,6 +12,8 @@ import { useSelector } from "react-redux";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { selectCurrentToken } from "./features/auth/authSlice";
 import { PersistentLogin } from "./components/routes/PersistentLogin";
+import "react-toastify/ReactToastify.css";
+import { ToastContainer } from "react-toastify";
 
 const App = () => {
     const token: string = useSelector(selectCurrentToken);
@@ -19,6 +21,7 @@ const App = () => {
     return (
         <>
             <CssBaseline />
+            <ToastContainer limit={1} />
             <Box>
                 {token && <Sidebar />}
                 <Box

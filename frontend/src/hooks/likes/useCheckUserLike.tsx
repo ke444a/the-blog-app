@@ -1,7 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
 import { checkUserLike } from "../../services/likes";
 
-type isLikedType = { isLiked: boolean }
+interface isLikedType { 
+    isLiked: boolean;
+}
 
 export const useCheckUserLike = (authorId: string, postId: string, accessToken: string, onSucessFunc: (data: isLikedType) => void) => {
     const QUERY_KEYS = ["likes", authorId, postId]; 

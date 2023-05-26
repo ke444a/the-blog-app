@@ -4,7 +4,7 @@ import Stack from "@mui/material/Stack";
 import { useGetUser } from "../../hooks/users/useGetUser";
 import { formatDate } from "../../utils/formatDate";
 
-type CommentProps = {
+interface CommentProps {
     authorId: string;
     createdAt: string;
     content: string;

@@ -8,29 +8,35 @@ import { FormInputField } from "./FormInputField";
 import { useState, useEffect, forwardRef, ForwardedRef } from "react";
 import defaultAvatar from "../../assets/profile.png";
 
-const EditForm = forwardRef((props: UserReturnData, ref: ForwardedRef<HTMLFormElement>) => {
-    const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar);
-    const [avatarImg, setAvatarImg] = useState<File | null>(null);
-    const { register, control } = useForm();
+const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | null, setAvatarImg: (avatar: File | null | Blob) => void }, ref: ForwardedRef<HTMLFormElement>) => {
+    const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar || "");
+    const { register, control, setValue } = useForm();
+    
+    useEffect( () => {
+        setValue("firstName", props.user?.fullName.split(" ")[0]);
+        setValue("lastName", props.user?.fullName.split(" ")[1]);
+        setValue("username", props.user?.username);
+        setValue("bio", props.user?.bio);
+    }, []);
 
     useEffect(() => {
-        if (avatarImg) {
+        if (props.avatarImg) {
             const reader = new FileReader();
             reader.onloadend = () => {
                 setPreview(reader.result);
             };
-            reader.readAsDataURL(avatarImg);
-        } else if (preview!==props.user.avatar) {
+            reader.readAsDataURL(props.avatarImg);
+        } else if (preview!==props.user?.avatar) {
             setPreview(null);
         }
-    }, [avatarImg]);
+    }, [props.avatarImg]);
 
     return (
         <Box component="form" ref={ref}>
             <Stack direction="row" spacing={1}>
                 <Avatar
                     src={preview ? (preview as string) : defaultAvatar}
-                    onClick={() => (preview ? setAvatarImg(null) : null)}
+                    onClick={() => (preview ? props.setAvatarImg(null) : null)}
                     alt=""
                     sx={{
                         width: "200px",
@@ -105,9 +111,9 @@ const EditForm = forwardRef((props: UserReturnData, ref: ForwardedRef<HTMLFormEl
                             type="file"
                             onChange={(e) => {
                                 if (!e.target.files) {
-                                    setAvatarImg(null);
+                                    props.setAvatarImg(null);
                                 } else {
-                                    setAvatarImg(e.target.files[0]);
+                                    props.setAvatarImg(e.target.files[0]);
                                 }
                             }}
                         />

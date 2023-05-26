@@ -2,7 +2,6 @@ import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Comment from "./Comment";
 import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { usePostComments } from "../../hooks/comments/usePostComments";
@@ -15,15 +14,15 @@ import IconButton from "@mui/material/IconButton";
 
 const CommentSection = (props: { postId: string }) => {
     const [commentContent, setCommentContent] = useState<string>("");
-    const user: User = useSelector(selectCurrentUser);
-    const accessToken: string = useSelector(selectCurrentToken);
+    const user = useSelector(selectCurrentUser);
+    const accessToken = useSelector(selectCurrentToken);
     const postCommentsQuery = usePostComments(props.postId, accessToken);
     const createPostMutation = useCreateComment(accessToken);
     
-    const publishComment = (event: any) => {
+    const publishComment = (event: React.SyntheticEvent) => {
         event.preventDefault();
         const commentData = {
-            authorId: user._id,
+            authorId: user?._id || "",
             postId: props.postId,
             content: commentContent    
         };
@@ -35,6 +34,7 @@ const CommentSection = (props: { postId: string }) => {
     if (!postCommentsQuery.isSuccess) {
         return null;
     }
+
     return (
         <Box mt={5}>
             <Typography variant="body1" fontWeight={500} mb={2}>
@@ -51,7 +51,7 @@ const CommentSection = (props: { postId: string }) => {
             >
                 <Box
                     component="img"
-                    src={user.avatar}
+                    src={user?.avatar}
                     alt=""
                     sx={{
                         borderRadius: "50%",

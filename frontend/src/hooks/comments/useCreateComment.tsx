@@ -1,7 +1,8 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createComment } from "../../services/comments";
+import { toast } from "react-toastify";
 
-type CommentData = {
+interface CommentData {
     content: string;
     postId: string;
     authorId: string;
@@ -14,6 +15,7 @@ export const useCreateComment = (accessToken: string) => {
         mutationFn: (comment: CommentData) => createComment(comment, accessToken),
         onSuccess: () => {
             queryClient.invalidateQueries(["comments", "post"]);
+            toast.success("Comment has been created");
         },
     });    
 };
