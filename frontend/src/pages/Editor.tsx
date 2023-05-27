@@ -27,7 +27,7 @@ const TabPanel = (props: TabPanelProps) => {
     );
 };
 
-const Writing = () => {
+const Editor = () => {
     const [value, setValue] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
@@ -76,4 +76,4 @@ const Writing = () => {
     );
 };
 
-export default Writing;
+export default Editor;

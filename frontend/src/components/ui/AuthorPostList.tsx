@@ -1,34 +1,24 @@
-import { useGetAllPosts } from "../../hooks/posts/useGetAllPosts";
 import { useSelector } from "react-redux";
-import { selectCurrentToken, selectCurrentUser } from "../../features/auth/authSlice";
-import PostPreview from "./PostPreview";
-import { sortByDate } from "../../utils/sortByDate";
-import { useContext } from "react";
-import { PostContext } from "../../context/PostContext";
+import { selectCurrentToken } from "../../features/auth/authSlice";
 import { useGetPostsByUser } from "../../hooks/posts/useGetPostsByUser";
+import { sortByDate } from "../../utils/sortByDate";
 import { Spinner } from "./Spinner";
+import PostPreview from "./PostPreview";
 
-interface PostListProps {
-    userProfileId?: string;
-}
-
-const PostList = ({ userProfileId = "" }: PostListProps) => {
-    const context = useContext(PostContext);
-    const currentUserId = useSelector(selectCurrentUser)?._id;
+const AuthorPostList = ({ userProfileId }: { userProfileId: string }) => {
     const accessToken = useSelector(selectCurrentToken);
-    const postsQuery = (context === "homepage") ? useGetAllPosts(accessToken) : useGetPostsByUser(userProfileId, accessToken);
-    
-    if (!postsQuery.isSuccess) {
+    const authorPostsQuery = useGetPostsByUser(userProfileId, accessToken);
+    if (!authorPostsQuery.isSuccess) {
         return null;
     }
 
-    if (postsQuery.isLoading) {
+    if (authorPostsQuery?.isLoading) {
         return <Spinner />;
     }
 
     return (
         <>
-            {sortByDate(postsQuery.data).map((post: Post) => (
+            {sortByDate(authorPostsQuery.data).map((post: Post) => (
                 <PostPreview
                     key={post._id}
                     id={post._id}
@@ -42,11 +32,11 @@ const PostList = ({ userProfileId = "" }: PostListProps) => {
                     likesNumber={post.likesNumber}
                     comments={post.comments}
                     accessToken={accessToken}
-                    userId={currentUserId || ""}
+                    userId={userProfileId}
                 />
             ))}
         </>
     );
 };
 
-export default PostList;
+export default AuthorPostList;

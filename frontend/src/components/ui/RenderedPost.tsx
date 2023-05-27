@@ -1,7 +1,18 @@
 import ReactMarkdown from "react-markdown";
 import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
+import EditIcon from "@mui/icons-material/Edit";
+import { Dispatch, SetStateAction } from "react";
 
-const RenderedPost = (props: { title: string, content: string }) => {
+interface IRenderedPostProps {
+  title: string;
+  content: string;
+  isEdit?: boolean;
+  setIsEdit?: Dispatch<SetStateAction<boolean>>;
+  isEditAllowed?: boolean;
+}
+
+const RenderedPost = (props: IRenderedPostProps) => {
     return (
         <>
             <Typography
@@ -12,9 +23,18 @@ const RenderedPost = (props: { title: string, content: string }) => {
             >
                 {props.title}
             </Typography>
-            <ReactMarkdown>
-                {props.content}
-            </ReactMarkdown>
+            {props?.isEditAllowed && !props?.isEdit && 
+                <Button
+                    variant="outlined"
+                    endIcon={<EditIcon />}
+                    size="large"
+                    color="info"
+                    onClick={() => props.setIsEdit ? props.setIsEdit(prevState => !prevState) : null}
+                >
+                    Edit
+                </Button>
+            }
+            <ReactMarkdown>{props.content}</ReactMarkdown>
         </>
     );
 };

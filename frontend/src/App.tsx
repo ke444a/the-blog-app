@@ -4,7 +4,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Home from "./pages/Home";
 import Profile from "./pages/Profile";
-import Writing from "./pages/Writing";
+import Editor from "./pages/Editor";
 import Login from "./pages/Login";
 import Post from "./pages/Post";
 import Signup from "./pages/Signup";
@@ -46,7 +46,7 @@ const App = () => {
                                     path="/profile/:id"
                                     element={<Profile />}
                                 />
-                                <Route path="/writing" element={<Writing />} />
+                                <Route path="/editor" element={<Editor />} />
                                 <Route path="/post/:id" element={<Post />} />
                             </Route>
                         </Route>

@@ -84,7 +84,7 @@ const Sidebar = () => {
                     <PersonOutlineOutlinedIcon sx={{ fontSize: 32 }} />
                 )}
             </SidebarLink>
-            <SidebarLink to="/writing" color="#3066BE">
+            <SidebarLink to="/editor" color="#3066BE">
                 <CreateIcon sx={{ fontSize: 32 }} />
             </SidebarLink>
             <Stack

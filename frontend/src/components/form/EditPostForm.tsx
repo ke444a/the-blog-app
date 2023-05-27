@@ -1,27 +1,38 @@
-import { useCreatePost } from "../../hooks/posts/useCreatePost";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
-import Stack from "@mui/material/Stack";
-import { FieldValues, useForm } from "react-hook-form";
-import SendSharpIcon from "@mui/icons-material/SendSharp";
-import AttachFileIcon from "@mui/icons-material/AttachFile";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
+import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { FormInputField } from "./FormInputField";
-import { Spinner } from "../ui/Spinner";
+import { FieldValues, useForm } from "react-hook-form";
+import { useEffect } from "react";
+import { Stack } from "@mui/material";
+import { useSelector } from "react-redux";
+import { selectCurrentToken } from "../../features/auth/authSlice";
+import { useUpdatePost } from "../../hooks/posts/useUpdatePost";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 
-interface PublishPostFormProps {
-  user: User | null;
-  accessToken: string;
-  setTitle: Dispatch<SetStateAction<string>>;
-  setContent: Dispatch<SetStateAction<string>>;
+interface IEditPostForm {
+    postId: string;
+    title: string;
+    preview: string;
+    content: string;
+    setIsEdit: Dispatch<SetStateAction<boolean>>;
 }
 
-export const PublishPostForm = (props: PublishPostFormProps) => {
-    const { handleSubmit, control, register, reset, watch } = useForm();
-    const onCreateSuccess = () => {
-        reset();
-        toast.success("Post has been created", {
+export const EditPostForm = (props: IEditPostForm) => {
+    const queryClient = useQueryClient();
+    const accessToken = useSelector(selectCurrentToken);
+    const { register, control, setValue, handleSubmit } = useForm();
+    useEffect(() => {
+        setValue("title", props.title);
+        setValue("preview", props.preview);
+        setValue("content", props.content);
+    }, []);
+
+    const onEditSuccess = () => {
+        toast.success("Post has been updated", {
             position: "top-center",
             autoClose: 4000,
             hideProgressBar: false,
@@ -31,34 +42,23 @@ export const PublishPostForm = (props: PublishPostFormProps) => {
             progress: undefined,
             theme: "dark",
         });
+        queryClient.invalidateQueries(["posts", "single"]);
+        props.setIsEdit(false);
     };
-    const createPostMutation = useCreatePost(props.accessToken, onCreateSuccess);
-
-    const publishPost = (postData: FieldValues) => {
+    const updatePostMutation = useUpdatePost(props.postId, accessToken, onEditSuccess);
+    const editPost = (newPostData: FieldValues) => {
         const formData = new FormData();
-        formData.append("title", postData.title);
-        formData.append("preview", postData.preview);
-        formData.append("content", postData.content);
-        formData.append("postImg", postData.postImg[0]);
-        formData.append("authorId", props.user?._id || "");
-        createPostMutation.mutate(formData);
+        formData.append("title", newPostData.title);
+        formData.append("preview", newPostData.preview);
+        formData.append("content", newPostData.content);
+        if (newPostData?.postImg.length!==0) {
+            formData.append("postImg", newPostData.postImg[0]);
+        }
+        updatePostMutation.mutate(formData);
     };
-
-    const handleFormChange = () => {
-        props.setTitle(watch("title"));
-        props.setContent(watch("content"));
-    };
-
-    if (createPostMutation.isLoading) {
-        return <Spinner />;
-    }
 
     return (
-        <Box
-            component="form"
-            onSubmit={handleSubmit(publishPost)}
-            onChange={handleFormChange}
-        >
+        <Box component="form" onSubmit={handleSubmit(editPost)}>
             <FormInputField
                 name="title"
                 control={control}
@@ -99,10 +99,10 @@ export const PublishPostForm = (props: PublishPostFormProps) => {
                 <Button
                     variant="outlined"
                     component="label"
-                    endIcon={<AttachFileIcon />}
+                    endIcon={<AddAPhotoIcon />}
                     size="large"
                 >
-          Upload
+            New preview
                     <input
                         {...register("postImg")}
                         name="postImg"
@@ -116,10 +116,10 @@ export const PublishPostForm = (props: PublishPostFormProps) => {
                     type="submit"
                     variant="contained"
                     color="primary"
-                    endIcon={<SendSharpIcon />}
+                    endIcon={<SaveAsIcon />}
                     size="large"
                 >
-          Publish
+            Save
                 </Button>
             </Stack>
         </Box>

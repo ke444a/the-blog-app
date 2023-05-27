@@ -1,7 +1,7 @@
 import Box from "@mui/material/Box";
 import CustomContainer from "../components/ui/CustomContainer";
 import { PostContext } from "../context/PostContext";
-import PostList from "../components/ui/PostList";
+import PostFeed from "../components/ui/PostFeed";
 
 const Home = () => {    
     return (
@@ -13,7 +13,7 @@ const Home = () => {
                         padding: "20px"
                     }}
                 >
-                    <PostList />
+                    <PostFeed />
                 </Box>
             </CustomContainer>
         </PostContext.Provider>

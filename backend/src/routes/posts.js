@@ -15,7 +15,7 @@ router.get("/", authMiddleware, getAllPosts);
 router.get("/:id", authMiddleware, getSinglePost);
 router.get("/author/:id", authMiddleware, getPostsByAuthor);
 router.post("/", authMiddleware, postUpload.single("postImg"), createPost);
-router.patch("/:id", authMiddleware, updatePost);
+router.put("/:id", authMiddleware, postUpload.single("postImg"), updatePost);
 router.delete("/:id", authMiddleware, deletePost);
 
 export default router;

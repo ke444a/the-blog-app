@@ -2,7 +2,6 @@ import axios from "axios";
 import { refreshToken } from "../auth";
 import { store } from "../../app/store";
 import { setCredentials } from "../../features/auth/authSlice";
-import { toast } from "react-toastify";
 
 export const customAxios = axios.create({
     baseURL: "http://localhost:5000",

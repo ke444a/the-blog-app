@@ -5,10 +5,15 @@ import Button from "@mui/material/Button";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useForm } from "react-hook-form";
 import { FormInputField } from "./FormInputField";
-import { useState, useEffect, forwardRef, ForwardedRef } from "react";
+import { useState, useEffect, forwardRef, ForwardedRef, Dispatch, SetStateAction } from "react";
 import defaultAvatar from "../../assets/profile.png";
 
-const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | null, setAvatarImg: (avatar: File | null | Blob) => void }, ref: ForwardedRef<HTMLFormElement>) => {
+interface IUserFormProps extends UserStoreData {
+    avatarImg: Blob | File | null;
+    setAvatarImg: Dispatch<SetStateAction<File | null | Blob>>;
+}
+
+const UserEditForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFormElement>) => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar || "");
     const { register, control, setValue } = useForm();
     
@@ -124,4 +129,4 @@ const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | n
     );
 });
 
-export default EditForm;
+export default UserEditForm;

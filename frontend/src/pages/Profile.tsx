@@ -8,12 +8,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
 import CustomContainer from "../components/ui/CustomContainer";
 import { PostContext } from "../context/PostContext";
-import PostList from "../components/ui/PostList";
 import { useLogout } from "../hooks/auth/useLogout";
 import { AppDispatch } from "../app/store";
 import { logout } from "../features/auth/authSlice";
 import { useRef, useState } from "react";
-import EditForm from "../components/form/EditForm";
+import UserEditForm from "../components/form/UserEditForm";
 import { setCredentials } from "../features/auth/authSlice";
 import { useUpdateUser } from "../hooks/users/useUpdateUser";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,6 +20,7 @@ import defaultAvatar from "../assets/profile.png";
 import { useGetUser } from "../hooks/users/useGetUser";
 import { Spinner } from "../components/ui/Spinner";
 import { toast } from "react-toastify";
+import AuthorPostList from "../components/ui/AuthorPostList";
 
 const Profile = () => {
     const userId: string = useLocation().pathname.split("/")[2];
@@ -113,7 +113,7 @@ const Profile = () => {
                             }}
                         >
                             { isEditMode ? 
-                                <EditForm 
+                                <UserEditForm 
                                     user={user}
                                     accessToken={accessToken}
                                     ref={editFormRef}
@@ -186,7 +186,7 @@ const Profile = () => {
             Published Blogs
                     </Typography>
                     <PostContext.Provider value="profile">
-                        <PostList 
+                        <AuthorPostList 
                             userProfileId={userInfoQuery.data?._id}
                         />
                     </PostContext.Provider>
