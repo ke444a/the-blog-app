@@ -8,10 +8,13 @@ const Home = () => {
         <PostContext.Provider value="homepage">
             <CustomContainer>
                 <Box
-                    sx={{
-                        margin: "15px 0",
-                        padding: "20px"
-                    }}
+                    sx={(theme) => ({
+                        [theme.breakpoints.up("sm")]: {
+                            paddingX: "20px",
+                            margin: "15px 0",
+                        },
+                        padding: "20px 0",
+                    })}
                 >
                     <PostFeed />
                 </Box>

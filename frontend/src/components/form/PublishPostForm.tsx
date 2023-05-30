@@ -9,6 +9,7 @@ import { FormInputField } from "./FormInputField";
 import { Spinner } from "../ui/Spinner";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
+import { useMediaQuery, Theme } from "@mui/material";
 
 interface PublishPostFormProps {
   user: User | null;
@@ -19,6 +20,8 @@ interface PublishPostFormProps {
 
 export const PublishPostForm = (props: PublishPostFormProps) => {
     const { handleSubmit, control, register, reset, watch } = useForm();
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+
     const onCreateSuccess = () => {
         reset();
         toast.success("Post has been created", {
@@ -100,9 +103,9 @@ export const PublishPostForm = (props: PublishPostFormProps) => {
                     variant="outlined"
                     component="label"
                     endIcon={<AttachFileIcon />}
-                    size="large"
+                    size={isSmallScreen ? "small" : "large"}
                 >
-          Upload
+            Upload
                     <input
                         {...register("postImg")}
                         name="postImg"
@@ -117,9 +120,9 @@ export const PublishPostForm = (props: PublishPostFormProps) => {
                     variant="contained"
                     color="primary"
                     endIcon={<SendSharpIcon />}
-                    size="large"
+                    size={isSmallScreen ? "small" : "large"}
                 >
-          Publish
+            Publish
                 </Button>
             </Stack>
         </Box>

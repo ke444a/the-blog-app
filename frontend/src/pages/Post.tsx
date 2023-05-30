@@ -24,12 +24,7 @@ const Post = () => {
     }
 
     return (
-        <CustomContainer
-            maxWidth="xl"
-            sx={{
-                padding: "25px",
-            }}
-        >
+        <CustomContainer maxWidth="xl">
             {isEdit ?
                 <EditPostForm 
                     postId={post._id}

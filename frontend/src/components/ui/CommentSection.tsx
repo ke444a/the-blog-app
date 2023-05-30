@@ -11,6 +11,7 @@ import { useCreateComment } from "../../hooks/comments/useCreateComment";
 import SendIcon from "@mui/icons-material/Send";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import { useMediaQuery, Theme } from "@mui/material";
 
 const CommentSection = (props: { postId: string }) => {
     const [commentContent, setCommentContent] = useState<string>("");
@@ -18,6 +19,7 @@ const CommentSection = (props: { postId: string }) => {
     const accessToken = useSelector(selectCurrentToken);
     const postCommentsQuery = usePostComments(props.postId, accessToken);
     const createPostMutation = useCreateComment(accessToken);
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
     
     const publishComment = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -36,7 +38,7 @@ const CommentSection = (props: { postId: string }) => {
     }
 
     return (
-        <Box mt={5}>
+        <Box mt={5} >
             <Typography variant="body1" fontWeight={500} mb={2}>
                 {postCommentsQuery.data.length} comments
             </Typography>
@@ -73,10 +75,13 @@ const CommentSection = (props: { postId: string }) => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={publishComment}>
-                                    <SendIcon />
+                                    <SendIcon fontSize={isSmallScreen ? "small" : "inherit"} />
                                 </IconButton>
                             </InputAdornment>
                         ),
+                        style: {
+                            fontSize: isSmallScreen ? ".85em" : "1.2em"
+                        },
                     }}
                 />
             </Box>

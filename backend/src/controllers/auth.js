@@ -22,22 +22,20 @@ export const register = async (req, res) => {
     }
 
     try {
-        const refreshToken = generateJwtToken(registeringUser._id, process.env.REFRESH_TOKEN_SECRET, "1d");
-        const accessToken = generateJwtToken(registeringUser._id, process.env.ACCESS_TOKEN_SECRET, "5m");
-        
         const hashedPassword = await bcrypt.hash(registeringUser.password, 10);
-        registeringUser.refreshToken = refreshToken;
-        
         let avatar = "";
         if (req?.file) {
             avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
         }
-
+        
         const newUser = new User({
             ...registeringUser,
             avatar,
             password: hashedPassword
         });
+        const refreshToken = generateJwtToken(newUser._id, process.env.REFRESH_TOKEN_SECRET, "1d");
+        const accessToken = generateJwtToken(newUser._id, process.env.ACCESS_TOKEN_SECRET, "5m");
+        newUser.refreshToken = refreshToken;
         await newUser.save();
         
         res.cookie("jwt", refreshToken, { httpOnly:true, secure: true, sameSite: "None", maxAge: 24*60*60*1000});

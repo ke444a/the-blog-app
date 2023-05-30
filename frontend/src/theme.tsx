@@ -1,6 +1,15 @@
 import { createTheme } from "@mui/material/styles";
 
 const theme = createTheme({
+    breakpoints: {
+        values: {
+            xs: 0,
+            sm: 640,
+            md: 768,
+            lg: 1024,
+            xl: 1280,
+        },
+    },
     typography: {
         fontFamily: ["Open Sans", "Poppins"].join(","),
         h1: {
@@ -15,8 +24,8 @@ const theme = createTheme({
         },
         h3: {
             fontWeight: 700,
-            fontSize: "1.5em"
-        }, 
+            fontSize: "1.5em",
+        },
         body2: {
             fontSize: 14,
         },

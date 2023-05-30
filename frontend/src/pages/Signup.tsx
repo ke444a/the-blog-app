@@ -93,6 +93,7 @@ const Signup = () => {
                         alignItems: "center",
                         color: "primary.main",
                         padding: "0 20px",
+                        justifyContent: "center"
                     }}
                 >
                     {preview ? 
@@ -234,6 +235,7 @@ const Signup = () => {
                     <Box
                         sx={{
                             fontWeight: 500,
+                            textAlign: "center"
                         }}
                     >
               Already have an account?
@@ -242,7 +244,6 @@ const Signup = () => {
                             to="/login"
                             sx={{
                                 color: "info.light",
-                                marginLeft: "0.5em",
                                 textUnderlineOffset: "0.2em",
                             }}
                         >

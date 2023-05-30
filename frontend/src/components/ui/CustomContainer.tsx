@@ -1,11 +1,15 @@
-import { styled } from "@mui/material";
+import { styled, ContainerProps } from "@mui/material";
 import Container from "@mui/material/Container";
 
-const CustomContainer = styled(Container)({
-    "@media (min-width: 640px)": {
-        maxWidth: "85%"
+const CustomContainer = styled(Container)<ContainerProps>(({theme}) => ({
+    [theme.breakpoints.up("sm")]: {
+        maxWidth: "90%"
     },
+    [theme.breakpoints.down("sm")]: {
+        padding: 0,
+    },
+    maxWidth: "95%",
     width: "100%"
-});
+}));
 
 export default CustomContainer;

@@ -7,6 +7,7 @@ import { useForm } from "react-hook-form";
 import { FormInputField } from "./FormInputField";
 import { useState, useEffect, forwardRef, ForwardedRef, Dispatch, SetStateAction } from "react";
 import defaultAvatar from "../../assets/profile.png";
+import { useMediaQuery, Theme } from "@mui/material";
 
 interface IUserFormProps extends UserStoreData {
     avatarImg: Blob | File | null;
@@ -16,7 +17,8 @@ interface IUserFormProps extends UserStoreData {
 const UserEditForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFormElement>) => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar || "");
     const { register, control, setValue } = useForm();
-    
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
+
     useEffect( () => {
         setValue("firstName", props.user?.fullName.split(" ")[0]);
         setValue("lastName", props.user?.fullName.split(" ")[1]);
@@ -38,17 +40,25 @@ const UserEditForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFo
 
     return (
         <Box component="form" ref={ref}>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="column" spacing={1}>
                 <Avatar
                     src={preview ? (preview as string) : defaultAvatar}
                     onClick={() => (preview ? props.setAvatarImg(null) : null)}
                     alt=""
-                    sx={{
-                        width: "200px",
-                        height: "200px",
+                    sx={(theme) => ({
+                        [theme.breakpoints.up("lg")]: {
+                            width: "200px",
+                            height: "200px",
+                        },
+                        [theme.breakpoints.up("sm")]: {
+                            width: "120px",
+                            height: "120px",
+                        },
                         borderRadius: "50%",
-                        marginRight: "25px",
-                    }}
+                        width: "70px",
+                        height: "70px",
+                        margin: "0 auto 10px",
+                    })}
                 />
                 <Box>
                     <Stack
@@ -99,8 +109,8 @@ const UserEditForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFo
                         variant="outlined"
                         component="label"
                         endIcon={<AddAPhotoIcon />}
-                        size="large"
                         fullWidth
+                        size={isSmallScreen ? "small" : "large"}
                         sx={{
                             marginTop: "8px",
                             marginBottom: "4px",

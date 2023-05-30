@@ -18,7 +18,7 @@ const RenderedPost = (props: IRenderedPostProps) => {
             <Typography
                 variant="h1"
                 sx={{
-                    marginBottom: "15px",
+                    marginY: "15px"
                 }}
             >
                 {props.title}
@@ -27,7 +27,7 @@ const RenderedPost = (props: IRenderedPostProps) => {
                 <Button
                     variant="outlined"
                     endIcon={<EditIcon />}
-                    size="large"
+                    size="medium"
                     color="info"
                     onClick={() => props.setIsEdit ? props.setIsEdit(prevState => !prevState) : null}
                 >

@@ -9,6 +9,8 @@ import { Provider } from "react-redux";
 import { store } from "./app/store";
 import { toast } from "react-toastify";
 import { AxiosError } from "axios";
+// import "./styles/styles.css";
+
 
 const queryClient = new QueryClient({
     defaultOptions: {

@@ -53,6 +53,11 @@ const Comment = (props: CommentProps) => {
                 </Stack>
                 <Typography
                     variant="body1"
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("sm")]: {
+                            fontSize: "1em"
+                        }
+                    })}
                 >
                     {props.content}
                 </Typography>

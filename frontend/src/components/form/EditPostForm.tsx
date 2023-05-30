@@ -5,7 +5,8 @@ import SaveAsIcon from "@mui/icons-material/SaveAs";
 import { FormInputField } from "./FormInputField";
 import { FieldValues, useForm } from "react-hook-form";
 import { useEffect } from "react";
-import { Stack } from "@mui/material";
+import Stack from "@mui/material/Stack";
+import { useMediaQuery, Theme } from "@mui/material";
 import { useSelector } from "react-redux";
 import { selectCurrentToken } from "../../features/auth/authSlice";
 import { useUpdatePost } from "../../hooks/posts/useUpdatePost";
@@ -24,6 +25,7 @@ interface IEditPostForm {
 export const EditPostForm = (props: IEditPostForm) => {
     const queryClient = useQueryClient();
     const accessToken = useSelector(selectCurrentToken);
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
     const { register, control, setValue, handleSubmit } = useForm();
     useEffect(() => {
         setValue("title", props.title);
@@ -100,7 +102,7 @@ export const EditPostForm = (props: IEditPostForm) => {
                     variant="outlined"
                     component="label"
                     endIcon={<AddAPhotoIcon />}
-                    size="large"
+                    size={isSmallScreen ? "small" : "large"}
                 >
             New preview
                     <input
@@ -117,7 +119,7 @@ export const EditPostForm = (props: IEditPostForm) => {
                     variant="contained"
                     color="primary"
                     endIcon={<SaveAsIcon />}
-                    size="large"
+                    size={isSmallScreen ? "small" : "large"}
                 >
             Save
                 </Button>
