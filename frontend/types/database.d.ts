@@ -1,4 +1,4 @@
-interface Post {
+interface IPost {
     _id: string;
     title: string;
     content: string;
@@ -11,7 +11,7 @@ interface Post {
     updatedAt: string;
 }
 
-interface Comment {
+interface IComment {
     _id: string;
     content: string;
     createdAt: string;
@@ -20,7 +20,7 @@ interface Comment {
     postId: string;
 }
 
-interface User {
+interface IUser {
     _id: string;
     username: string;
     fullName: string;

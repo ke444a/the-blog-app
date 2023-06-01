@@ -16,20 +16,20 @@ import { useLikePost } from "../../hooks/likes/useLikePost";
 import { useDislikePost } from "../../hooks/likes/useDislikePost";
 import { Theme, useMediaQuery } from "@mui/material";
 
-type PostProps = Omit<Post, "_id"> & {id: string, accessToken: string, userId: string};
+type PostProps = Omit<IPost, "_id"> & {id: string, userId: string};
 
 const PostPreview = (props: PostProps) => {
     const context = useContext(PostContext);
     const [likesNumber, setLikesNumber] = useState<number>(props.likesNumber);
     const [isLikedPost, setIsLikedPost] = useState<boolean>(false);
     const navigate = useNavigate();
-    const likeMutation = useLikePost(props.accessToken);
-    const dislikeMutation = useDislikePost(props.accessToken);
-    const authorQuery = useGetUser(props.authorId, props.accessToken);
+    const likeMutation = useLikePost();
+    const dislikeMutation = useDislikePost();
+    const authorQuery = useGetUser(props.authorId);
     const onCheckUserLikeSuccess = (data: { isLiked: boolean }) => {
         setIsLikedPost(data.isLiked);
     };
-    const checkUserLike = useCheckUserLike(props.userId, props.id, props.accessToken, onCheckUserLikeSuccess);
+    const checkUserLike = useCheckUserLike(props.userId, props.id, onCheckUserLikeSuccess);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
     const handleLikePost = async () => {

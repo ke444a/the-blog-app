@@ -7,8 +7,6 @@ import { FieldValues, useForm } from "react-hook-form";
 import { useEffect } from "react";
 import Stack from "@mui/material/Stack";
 import { useMediaQuery, Theme } from "@mui/material";
-import { useSelector } from "react-redux";
-import { selectCurrentToken } from "../../features/auth/authSlice";
 import { useUpdatePost } from "../../hooks/posts/useUpdatePost";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
@@ -24,7 +22,6 @@ interface IEditPostForm {
 
 export const EditPostForm = (props: IEditPostForm) => {
     const queryClient = useQueryClient();
-    const accessToken = useSelector(selectCurrentToken);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
     const { register, control, setValue, handleSubmit } = useForm();
     useEffect(() => {
@@ -34,20 +31,11 @@ export const EditPostForm = (props: IEditPostForm) => {
     }, []);
 
     const onEditSuccess = () => {
-        toast.success("Post has been updated", {
-            position: "top-center",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
+        toast.success("Post has been updated");
         queryClient.invalidateQueries(["posts", "single"]);
         props.setIsEdit(false);
     };
-    const updatePostMutation = useUpdatePost(props.postId, accessToken, onEditSuccess);
+    const updatePostMutation = useUpdatePost(props.postId, onEditSuccess);
     const editPost = (newPostData: FieldValues) => {
         const formData = new FormData();
         formData.append("title", newPostData.title);

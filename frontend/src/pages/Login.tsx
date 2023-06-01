@@ -1,137 +1,108 @@
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
-import Grid from "@mui/material/Grid";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import Paper from "@mui/material/Paper";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { FormInputField } from "../components/form/FormInputField";
-import loginBg from "../assets/loginBg.jpeg";
 import { useDispatch } from "react-redux";
 import { setCredentials } from "../features/auth/authSlice";
 import type { AppDispatch } from "../app/store";
 import { useLogin } from "../hooks/auth/useLogin";
+import AuthLayout from "../components/ui/AuthLayout";
 
 const Login = () => {
     const { handleSubmit, control } = useForm();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
-    const onLoginSuccess = (data: UserStoreData) => {
+    const onLoginSuccess = (data: IUserStoreData) => {
         dispatch(setCredentials(data));
-        localStorage.setItem("userId", data.user?._id || "");
         navigate("/home", { replace: true });
     };
     const loginMutation = useLogin(onLoginSuccess);
 
     return (
-        <Grid container component="main" sx={{ height: "100vh" }}>
-            <Grid
-                item
-                xs={false}
-                sm={4}
-                md={7}
+        <AuthLayout>
+            <Box
                 sx={{
-                    backgroundImage: `url(${loginBg})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    filter: "blur(1.5px)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    color: "primary.main",
+                    padding: "0 20px",
+                    justifyContent: "center",
                 }}
-            />
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            >
+                <Avatar sx={{ m: 1, bgcolor: "info.light" }}>
+                    <LockOutlinedIcon />
+                </Avatar>
                 <Typography
-                    component="h1"
                     variant="h2"
-                    align="center"
                     sx={{
-                        marginTop: 6,
+                        color: "info.light",
                     }}
-                    gutterBottom
                 >
-            Welcome to the Blogging App!
+            Login
                 </Typography>
                 <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        color: "primary.main",
-                        padding: "0 20px",
-                        justifyContent: "center"
-                    }}
+                    component="form"
+                    onSubmit={handleSubmit((data) =>
+                        loginMutation.mutate(data as IUserLoginCredentials)
+                    )}
+                    noValidate
+                    sx={{ mt: 1 }}
                 >
-                    <Avatar sx={{ m: 1, bgcolor: "info.light" }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                    <Typography
-                        variant="h2"
-                        sx={{
-                            color: "info.light",
-                        }}
+                    <FormInputField
+                        name="username"
+                        control={control}
+                        label="Username"
+                        fullWidth
+                        required
+                        margin="normal"
+                        autoFocus
+                        type="text"
+                    />
+                    <FormInputField
+                        name="password"
+                        control={control}
+                        label="Password"
+                        fullWidth
+                        required
+                        margin="normal"
+                        type="password"
+                    />
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 3, mb: 2 }}
                     >
               Login
-                    </Typography>
+                    </Button>
+                </Box>
+                <Box
+                    sx={{
+                        fontWeight: 500,
+                    }}
+                >
+            Don't have an account?{" "}
                     <Box
-                        component="form"
-                        onSubmit={handleSubmit((data) =>
-                            loginMutation.mutate(data as UserLoginCredentials)
-                        )}
-                        noValidate
-                        sx={{ mt: 1 }}
-                    >
-                        <FormInputField
-                            name="username"
-                            control={control}
-                            label="Username"
-                            fullWidth
-                            required
-                            margin="normal"
-                            autoFocus
-                            type="text"
-                        />
-                        <FormInputField
-                            name="password"
-                            control={control}
-                            label="Password"
-                            fullWidth
-                            required
-                            margin="normal"
-                            type="password"
-                        />
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
-                Login
-                        </Button>
-                    </Box>
-                    <Box
+                        component={Link}
+                        to="/register"
                         sx={{
-                            fontWeight: 500,
+                            color: "info.light",
+                            textUnderlineOffset: "0.2em",
+                            textAlign: "center",
                         }}
                     >
-              Don't have an account?
-                        <Box
-                            component={Link}
-                            to="/register"
-                            sx={{
-                                color: "info.light",
-                                textUnderlineOffset: "0.2em",
-                                textAlign: "center"
-                            }}
-                        >
-                Sign up
-                        </Box>
+              Sign up
                     </Box>
                 </Box>
-            </Grid>
-        </Grid>
+            </Box>
+        </AuthLayout>
     );
 };
 

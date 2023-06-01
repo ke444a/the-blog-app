@@ -7,7 +7,6 @@ import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Avatar from "@mui/material/Avatar";
-import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import { useState } from "react";
@@ -17,7 +16,7 @@ import { NavLink } from "react-router-dom";
 import { AppDispatch } from "../../app/store";
 import { logout } from "../../features/auth/authSlice";
 import { useLogout } from "../../hooks/auth/useLogout";
-import defaultAvatar from "../../assets/profile.png";
+import defaultAvatar from "../../assets/default.webp";
 
 
 const Navbar = () => {
@@ -42,7 +41,6 @@ const Navbar = () => {
     };
 
     const onLogoutSuccess = () => {
-        localStorage.removeItem("userId");
         dispatch(logout());
     };
     const logoutQuery = useLogout(onLogoutSuccess);
@@ -55,14 +53,13 @@ const Navbar = () => {
                     <Typography
                         variant="h2"
                         noWrap
-                        component="a"
-                        href="/"
                         sx={{
                             mr: 3,
                             display: { xs: "none", md: "flex" },
                             letterSpacing: ".05rem",
                             color: "inherit",
                             textDecoration: "none",
+                            padding: "5px 0",
                         }}
                     >
               Blog
@@ -149,6 +146,7 @@ const Navbar = () => {
                             color: "inherit",
                             textDecoration: "none",
                             flexGrow: 1,
+                            padding: "5px 0",
                         }}
                     >
               Blog
@@ -202,11 +200,12 @@ const Navbar = () => {
                     </Box>
 
                     <Box sx={{ flexGrow: 0 }}>
-                        <Tooltip title="Open settings">
-                            <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-                                <Avatar alt="" src={user?.avatar ? user.avatar : defaultAvatar} />
-                            </IconButton>
-                        </Tooltip>
+                        <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
+                            <Avatar
+                                alt=""
+                                src={user?.avatar ? user.avatar : defaultAvatar}
+                            />
+                        </IconButton>
                         <Menu
                             sx={{ mt: "45px" }}
                             id="menu-appbar"
@@ -228,7 +227,7 @@ const Navbar = () => {
                                     onClick={() => logoutQuery.refetch()}
                                     textAlign="center"
                                 >
-                                    Logout
+                    Logout
                                 </Typography>
                             </MenuItem>
                         </Menu>

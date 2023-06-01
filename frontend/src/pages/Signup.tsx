@@ -4,8 +4,6 @@ import { AppDispatch } from "../app/store";
 import { useNavigate } from "react-router-dom";
 import { useRegister } from "../hooks/auth/useRegister";
 import { setCredentials } from "../features/auth/authSlice";
-import Grid from "@mui/material/Grid";
-import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
@@ -15,8 +13,8 @@ import Button from "@mui/material/Button";
 import Avatar from "@mui/material/Avatar";
 import { FormInputField } from "../components/form/FormInputField";
 import { Link } from "react-router-dom";
-import loginBg from "../assets/loginBg.jpeg";
 import { useState, useEffect } from "react";
+import AuthLayout from "../components/ui/AuthLayout";
 
 const Signup = () => {
     const { handleSubmit, control, register } = useForm();
@@ -26,9 +24,8 @@ const Signup = () => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(null);
     const [avatarImg, setAvatarImg] = useState<File | null>(null);
 
-    const onRegisterSuccess = (data: UserStoreData) => {
+    const onRegisterSuccess = (data: IUserStoreData) => {
         dispatch(setCredentials(data));
-        localStorage.setItem("userId", data.user?._id || "");
         navigate("/home", { replace: true });
     };
     const registerMutation = useRegister(onRegisterSuccess);
@@ -60,140 +57,114 @@ const Signup = () => {
     }, [avatarImg]);
 
     return (
-        <Grid container component="main" sx={{ height: "100vh" }}>
-            <Grid
-                item
-                xs={false}
-                sm={4}
-                md={7}
+        <AuthLayout>
+            <Box
                 sx={{
-                    backgroundImage: `url(${loginBg})`,
-                    backgroundRepeat: "no-repeat",
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    filter: "blur(1.5px)",
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                    color: "primary.main",
+                    padding: "0 20px",
+                    justifyContent: "center"
                 }}
-            />
-            <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
+            >
+                {preview ? 
+                    <Avatar
+                        src={preview as string}
+                        onClick={() => setAvatarImg(null)}
+                        sx={{
+                            width: "90px",
+                            height: "90px",
+                            borderRadius: "50%",
+                            margin: "4px",
+                            cursor: "pointer"
+                        }}
+                    />
+                    : 
+                    <Avatar sx={{ m: 1, bgcolor: "info.light" }}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                }
+
                 <Typography
-                    component="h1"
                     variant="h2"
-                    align="center"
                     sx={{
-                        marginTop: 6,
+                        color: "info.light",
                     }}
-                    gutterBottom
                 >
-            Welcome to the Blogging App!
+              Sign Up
                 </Typography>
                 <Box
-                    sx={{
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        color: "primary.main",
-                        padding: "0 20px",
-                        justifyContent: "center"
-                    }}
+                    component="form"
+                    onSubmit={handleSubmit(handleRegister)}
+                    sx={{ mt: 1 }}
                 >
-                    {preview ? 
-                        <Avatar
-                            component="img"
-                            src={preview as string}
-                            onClick={() => setAvatarImg(null)}
-                            sx={{
-                                width: "90px",
-                                height: "90px",
-                                borderRadius: "50%",
-                                margin: "4px",
-                                cursor: "pointer"
-                            }}
-                        />
-                        : 
-                        <Avatar sx={{ m: 1, bgcolor: "info.light" }}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                    }
-
-                    <Typography
-                        variant="h2"
+                    <FormInputField
+                        name="username"
+                        control={control}
+                        label="Username"
+                        fullWidth
+                        required
+                        margin="dense"
+                        autoFocus
+                        type="text"
+                    />
+                    <FormInputField
+                        name="password"
+                        control={control}
+                        label="Password"
+                        fullWidth
+                        required
+                        margin="dense"
+                        type="password"
+                    />
+                    <FormInputField
+                        name="password2"
+                        control={control}
+                        label="Confirm password"
+                        fullWidth
+                        required
+                        margin="dense"
+                        type="password"
+                    />
+                    <Stack
+                        direction="row"
+                        spacing={2}
                         sx={{
-                            color: "info.light",
+                            marginTop: "8px",
+                            marginBottom: "4px",
                         }}
                     >
-              Sign Up
-                    </Typography>
-                    <Box
-                        component="form"
-                        onSubmit={handleSubmit(handleRegister)}
-                        sx={{ mt: 1 }}
-                    >
                         <FormInputField
-                            name="username"
+                            name="firstName"
                             control={control}
-                            label="Username"
+                            label="First Name"
                             fullWidth
                             required
-                            margin="dense"
-                            autoFocus
                             type="text"
                         />
                         <FormInputField
-                            name="password"
+                            name="lastName"
                             control={control}
-                            label="Password"
+                            label="Last Name"
                             fullWidth
                             required
-                            margin="dense"
-                            type="password"
-                        />
-                        <FormInputField
-                            name="password2"
-                            control={control}
-                            label="Confirm password"
-                            fullWidth
-                            required
-                            margin="dense"
-                            type="password"
-                        />
-                        <Stack
-                            direction="row"
-                            spacing={2}
-                            sx={{
-                                marginTop: "8px",
-                                marginBottom: "4px",
-                            }}
-                        >
-                            <FormInputField
-                                name="firstName"
-                                control={control}
-                                label="First Name"
-                                fullWidth
-                                required
-                                type="text"
-                            />
-                            <FormInputField
-                                name="lastName"
-                                control={control}
-                                label="Last Name"
-                                fullWidth
-                                required
-                                type="text"
-                            />
-                        </Stack>
-                        <FormInputField
-                            name="bio"
-                            control={control}
-                            label="Bio"
-                            fullWidth
                             type="text"
-                            margin="dense"
-                            placeholder="Tell us about yourself..."
-                            multiline
-                            rows={2}
-                            maxLength={150}
                         />
-                        {!preview &&
+                    </Stack>
+                    <FormInputField
+                        name="bio"
+                        control={control}
+                        label="Bio"
+                        fullWidth
+                        type="text"
+                        margin="dense"
+                        placeholder="Tell us about yourself..."
+                        multiline
+                        rows={2}
+                        maxLength={150}
+                    />
+                    {!preview &&
                         (<Button
                             variant="outlined"
                             component="label"
@@ -222,37 +193,36 @@ const Signup = () => {
                                 }}
                             />
                         </Button>)}
-                        <Button
-                            type="submit"
-                            fullWidth
-                            variant="contained"
-                            color="primary"
-                            sx={{ mt: 3, mb: 2 }}
-                        >
+                    <Button
+                        type="submit"
+                        fullWidth
+                        variant="contained"
+                        color="primary"
+                        sx={{ mt: 3, mb: 2 }}
+                    >
                 Sign Up
-                        </Button>
-                    </Box>
+                    </Button>
+                </Box>
+                <Box
+                    sx={{
+                        fontWeight: 500,
+                        textAlign: "center"
+                    }}
+                >
+              Already have an account?{" "}
                     <Box
+                        component={Link}
+                        to="/login"
                         sx={{
-                            fontWeight: 500,
-                            textAlign: "center"
+                            color: "info.light",
+                            textUnderlineOffset: "0.2em",
                         }}
                     >
-              Already have an account?
-                        <Box
-                            component={Link}
-                            to="/login"
-                            sx={{
-                                color: "info.light",
-                                textUnderlineOffset: "0.2em",
-                            }}
-                        >
                 Login
-                        </Box>
                     </Box>
                 </Box>
-            </Grid>
-        </Grid>
+            </Box>
+        </AuthLayout>
     );
 };
 

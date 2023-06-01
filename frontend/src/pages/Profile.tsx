@@ -13,11 +13,11 @@ import { useLogout } from "../hooks/auth/useLogout";
 import { AppDispatch } from "../app/store";
 import { logout } from "../features/auth/authSlice";
 import { useRef, useState } from "react";
-import UserEditForm from "../components/form/UserEditForm";
+import { EditUserForm } from "../components/form/EditUserForm";
 import { setCredentials } from "../features/auth/authSlice";
 import { useUpdateUser } from "../hooks/users/useUpdateUser";
 import { useQueryClient } from "@tanstack/react-query";
-import defaultAvatar from "../assets/profile.png";
+import defaultAvatar from "../assets/default.webp";
 import { useGetUser } from "../hooks/users/useGetUser";
 import { Spinner } from "../components/ui/Spinner";
 import { toast } from "react-toastify";
@@ -35,18 +35,18 @@ const Profile = () => {
     const [avatarImg, setAvatarImg] = useState<File | Blob | null>(null);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
-    const onEditSuccess = (data: User) => {
+    const onEditSuccess = (data: IUser) => {
         dispatch(setCredentials({ user: data, accessToken }));
         queryClient.invalidateQueries(["users", "user"]);
         toast.success("User has been updated");
     };
-    const updateUserMutation = useUpdateUser(user?._id || "", accessToken, onEditSuccess);
+    const updateUserMutation = useUpdateUser(user?._id || "", onEditSuccess);
     const handleProfileEdit = () => {
         if (isEditMode) {
             if (editFormRef.current) {
                 const formData = new FormData(editFormRef.current);
                 formData.append("fullName", formData.get("firstName") + " " + formData.get("lastName"));
-                if(avatarImg) {
+                if (avatarImg) {
                     formData.delete("avatar");
                     formData.append("avatar", avatarImg);
                 }
@@ -59,12 +59,11 @@ const Profile = () => {
     };
 
     const onLogoutSuccess = () => {
-        localStorage.removeItem("userId");
         dispatch(logout());
     };
     const logoutQuery = useLogout(onLogoutSuccess);
 
-    const userInfoQuery = useGetUser(userId, accessToken);
+    const userInfoQuery = useGetUser(userId);
 
     if (userInfoQuery.isLoading || updateUserMutation.isLoading) {
         return <Spinner />;
@@ -128,9 +127,8 @@ const Profile = () => {
                             }}
                         >
                             {isEditMode ? (
-                                <UserEditForm
+                                <EditUserForm
                                     user={user}
-                                    accessToken={accessToken}
                                     ref={editFormRef}
                                     avatarImg={avatarImg}
                                     setAvatarImg={setAvatarImg}

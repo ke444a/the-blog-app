@@ -6,20 +6,21 @@ import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useForm } from "react-hook-form";
 import { FormInputField } from "./FormInputField";
 import { useState, useEffect, forwardRef, ForwardedRef, Dispatch, SetStateAction } from "react";
-import defaultAvatar from "../../assets/profile.png";
+import defaultAvatar from "../../assets/default.webp";
 import { useMediaQuery, Theme } from "@mui/material";
 
-interface IUserFormProps extends UserStoreData {
+interface IUserFormProps {
     avatarImg: Blob | File | null;
     setAvatarImg: Dispatch<SetStateAction<File | null | Blob>>;
+    user: IUser | null;
 }
 
-const UserEditForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFormElement>) => {
+export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFormElement>) => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar || "");
     const { register, control, setValue } = useForm();
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
 
-    useEffect( () => {
+    useEffect(() => {
         setValue("firstName", props.user?.fullName.split(" ")[0]);
         setValue("lastName", props.user?.fullName.split(" ")[1]);
         setValue("username", props.user?.username);
@@ -138,5 +139,3 @@ const UserEditForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFo
         </Box>
     );
 });
-
-export default UserEditForm;

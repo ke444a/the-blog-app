@@ -3,11 +3,11 @@ import { likePost } from "../../services/likes";
 
 type LikeData = { userId: string, postId: string}
 
-export const useLikePost = (accessToken: string) => {
+export const useLikePost = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: LikeData) => likePost(data, accessToken),
+        mutationFn: (data: LikeData) => likePost(data),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["posts"], refetchType: "all"});
             queryClient.invalidateQueries({ queryKey: ["likes"] });

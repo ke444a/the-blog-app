@@ -3,8 +3,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import CustomContainer from "../components/ui/CustomContainer";
 import { useSelector } from "react-redux";
-import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
-import { PublishPostForm } from "../components/form/PublishPostForm";
+import { selectCurrentUser } from "../features/auth/authSlice";
+import { CreatePostForm } from "../components/form/CreatePostForm";
 import { useState } from "react";
 import RenderedPost from "../components/ui/RenderedPost";
 
@@ -33,6 +33,7 @@ const Editor = () => {
     const [content, setContent] = useState<string>("");
 
     const handleSwitch = (event: React.SyntheticEvent, newValue: number) => {
+        event.preventDefault();
         setValue(newValue);
     };
 
@@ -43,9 +44,6 @@ const Editor = () => {
                     margin: "1.5em 0",
                 }}
             >
-                {/* <Typography gutterBottom variant="h1">
-            Creating a Fresh Blog Entry
-                </Typography> */}
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs value={value} onChange={handleSwitch}>
                         <Tab label="Write" />
@@ -54,9 +52,8 @@ const Editor = () => {
                 </Box>
 
                 <TabPanel value={value} index={0}>
-                    <PublishPostForm
+                    <CreatePostForm
                         user={useSelector(selectCurrentUser)}
-                        accessToken={useSelector(selectCurrentToken) || ""}
                         setTitle={setTitle}
                         setContent={setContent}
                     />

@@ -10,32 +10,28 @@ import { Spinner } from "../ui/Spinner";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
 import { useMediaQuery, Theme } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-interface PublishPostFormProps {
-  user: User | null;
-  accessToken: string;
+interface CreatehPostFormProps {
+  user: IUser | null;
   setTitle: Dispatch<SetStateAction<string>>;
   setContent: Dispatch<SetStateAction<string>>;
 }
 
-export const PublishPostForm = (props: PublishPostFormProps) => {
+export const CreatePostForm = (props: CreatehPostFormProps) => {
     const { handleSubmit, control, register, reset, watch } = useForm();
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
+    const navigate = useNavigate();
 
-    const onCreateSuccess = () => {
+    const onPostCreateSuccess = () => {
         reset();
-        toast.success("Post has been created", {
-            position: "top-center",
-            autoClose: 4000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "dark",
-        });
+        toast.success("Post has been created");
+        navigate("/home");
     };
-    const createPostMutation = useCreatePost(props.accessToken, onCreateSuccess);
+    // const onPostCreateError = () => {
+        
+    // };
+    const createPostMutation = useCreatePost(onPostCreateSuccess);
 
     const publishPost = (postData: FieldValues) => {
         const formData = new FormData();

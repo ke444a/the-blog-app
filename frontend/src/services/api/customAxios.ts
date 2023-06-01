@@ -9,14 +9,11 @@ export const customAxios = axios.create({
 });
 
 customAxios.interceptors.request.use(
-    // (config) => {
-    //     const accessToken = store.getState().auth.token;
-    //     if (accessToken) {
-    //         config.headers["Authorization"] = `Bearer ${accessToken}`;
-    //     }
-    //     return config;
-    // },
     (config) => {
+        const accessToken = store.getState().auth.token;
+        if (accessToken) {
+            config.headers["Authorization"] = `Bearer ${accessToken}`;
+        }
         return config;
     },
     (error) => {

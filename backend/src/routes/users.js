@@ -9,6 +9,6 @@ import { editUserUpload } from "../middleware/imageMiddleware.js";
 
 const router = express.Router();
 router.get("/:id", authMiddleware, getUserById);
-router.put("/:id", authMiddleware, editUserUpload.single("avatar"), updateUser);
+router.patch("/:id", authMiddleware, editUserUpload.single("avatar"), updateUser);
 
 export default router;

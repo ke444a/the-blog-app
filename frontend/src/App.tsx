@@ -1,4 +1,3 @@
-import Sidebar from "./components/ui/Sidebar";
 import { Routes, Route } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
@@ -11,7 +10,6 @@ import Signup from "./pages/Signup";
 import { useSelector } from "react-redux";
 import { ProtectedRoute } from "./components/routes/ProtectedRoute";
 import { selectCurrentToken } from "./features/auth/authSlice";
-import { PersistentLogin } from "./components/routes/PersistentLogin";
 import "react-toastify/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { globalStyles } from "./styles/globalStyles";
@@ -24,20 +22,24 @@ const App = () => {
         <>
             <CssBaseline />
             {globalStyles}
-            <ToastContainer limit={1} />
+            <ToastContainer 
+                limit={1} 
+                position="top-center"
+                autoClose={3000}
+                theme="dark"
+            />
             {token && <Navbar />}
             <Box>
                 <Routes>
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<Signup />} />
 
-                    <Route element={<PersistentLogin />}>
-                        <Route element={<ProtectedRoute />}>
-                            <Route path="/home" element={<Home />} />
-                            <Route path="/profile/:id" element={<Profile />} />
-                            <Route path="/editor" element={<Editor />} />
-                            <Route path="/post/:id" element={<Post />} />
-                        </Route>
+                    <Route element={<ProtectedRoute />}>
+                        <Route path="/" index element={<Home />} />
+                        <Route path="/home" element={<Home />} />
+                        <Route path="/profile/:id" element={<Profile />} />
+                        <Route path="/editor" element={<Editor />} />
+                        <Route path="/post/:id" element={<Post />} />
                     </Route>
                 </Routes>
             </Box>

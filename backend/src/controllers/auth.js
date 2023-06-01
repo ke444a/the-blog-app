@@ -34,7 +34,7 @@ export const register = async (req, res) => {
             password: hashedPassword
         });
         const refreshToken = generateJwtToken(newUser._id, process.env.REFRESH_TOKEN_SECRET, "1d");
-        const accessToken = generateJwtToken(newUser._id, process.env.ACCESS_TOKEN_SECRET, "5m");
+        const accessToken = generateJwtToken(newUser._id, process.env.ACCESS_TOKEN_SECRET, "30s");
         newUser.refreshToken = refreshToken;
         await newUser.save();
         
@@ -65,7 +65,7 @@ export const login = async (req, res) => {
     }
 
     try {
-        const accessToken = generateJwtToken(user._id, process.env.ACCESS_TOKEN_SECRET, "5m");
+        const accessToken = generateJwtToken(user._id, process.env.ACCESS_TOKEN_SECRET, "30s");
         const refreshToken = generateJwtToken(user._id, process.env.REFRESH_TOKEN_SECRET, "1d");
         user.refreshToken = refreshToken;
         const result = await user.save();
@@ -115,7 +115,7 @@ export const handleRefreshToken = async (req, res) => {
             if (err) {
                 return res.status(403).json({ message: err.message });
             }
-            const accessToken = generateJwtToken(decoded.id, process.env.ACCESS_TOKEN_SECRET, "5m");
+            const accessToken = generateJwtToken(decoded.id, process.env.ACCESS_TOKEN_SECRET, "30s");
             res.status(201).json({ accessToken });
         }
     );
