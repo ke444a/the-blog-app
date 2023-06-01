@@ -1,34 +1,29 @@
 import { customAxios } from "./api/customAxios";
 
-export const createNewPost = (data: FormData, accessToken: string) => {
+export const createNewPost = (data: FormData) => {
     return customAxios.post("/posts/", data, {
         headers: {
-            "Content-Type": "multipart/form-data",
-            "Authorization": `Bearer ${accessToken}`
+            "Content-Type": "multipart/form-data"
         }
     }).then((response) => response.data);
 };
 
-export const getAllPosts = (accessToken: string) => {
-    return customAxios.get("/posts/",{
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }).then((response) => response.data);
+export const getAllPosts = (page: number) => {
+    return customAxios.get(`/posts/?page=${page}`).then((response) => response.data);
 };
 
-export const getSinglePost = (postId: string, accessToken: string) => {
-    return customAxios.get(`/posts/${postId}`, {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }).then((response) => response.data);
+export const getSinglePost = (postId: string) => {
+    return customAxios.get(`/posts/${postId}`).then((response) => response.data);
 };
 
-export const getPostsByAuthor = (authorId: string, accessToken: string) => {
-    return customAxios.get(`/posts/author/${authorId}`, {
+export const getPostsByAuthor = (authorId: string) => {
+    return customAxios.get(`/posts/author/${authorId}`).then((response) => response.data);
+};
+
+export const updatePost = (postId: string, data: FormData) => {
+    return customAxios.patch(`/posts/${postId}`, data, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`
+            "Content-Type": "multipart/form-data"
         }
     }).then((response) => response.data);
 };

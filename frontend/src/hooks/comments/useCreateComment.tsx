@@ -8,11 +8,11 @@ interface CommentData {
     authorId: string;
 }
 
-export const useCreateComment = (accessToken: string) => {
+export const useCreateComment = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (comment: CommentData) => createComment(comment, accessToken),
+        mutationFn: (comment: CommentData) => createComment(comment),
         onSuccess: () => {
             queryClient.invalidateQueries(["comments", "post"]);
             toast.success("Comment has been created");

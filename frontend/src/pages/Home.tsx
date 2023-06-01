@@ -1,19 +1,22 @@
 import Box from "@mui/material/Box";
 import CustomContainer from "../components/ui/CustomContainer";
 import { PostContext } from "../context/PostContext";
-import PostList from "../components/ui/PostList";
+import PostFeed from "../components/ui/PostFeed";
 
 const Home = () => {    
     return (
         <PostContext.Provider value="homepage">
             <CustomContainer>
                 <Box
-                    sx={{
-                        margin: "15px 0",
-                        padding: "20px"
-                    }}
+                    sx={(theme) => ({
+                        [theme.breakpoints.up("sm")]: {
+                            paddingX: "20px",
+                            margin: "15px 0",
+                        },
+                        padding: "20px 0",
+                    })}
                 >
-                    <PostList />
+                    <PostFeed />
                 </Box>
             </CustomContainer>
         </PostContext.Provider>

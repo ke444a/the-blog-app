@@ -3,16 +3,16 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import { useGetUser } from "../../hooks/users/useGetUser";
 import { formatDate } from "../../utils/formatDate";
+import defaultAvatar from "../../assets/default.webp";
 
 interface CommentProps {
     authorId: string;
     createdAt: string;
     content: string;
-    accessToken: string;
 }
 
 const Comment = (props: CommentProps) => {
-    const authorQuery = useGetUser(props.authorId, props.accessToken);
+    const authorQuery = useGetUser(props.authorId);
 
     if (!authorQuery.isSuccess) {
         return null;
@@ -22,7 +22,7 @@ const Comment = (props: CommentProps) => {
         <Stack direction="row">
             <Box 
                 component="img" 
-                src={authorQuery.data.avatar}
+                src={authorQuery.data.avatar || defaultAvatar}
                 alt="" 
                 sx={{
                     width: "50px",
@@ -53,6 +53,11 @@ const Comment = (props: CommentProps) => {
                 </Stack>
                 <Typography
                     variant="body1"
+                    sx={(theme) => ({
+                        [theme.breakpoints.down("sm")]: {
+                            fontSize: "1em"
+                        }
+                    })}
                 >
                     {props.content}
                 </Typography>

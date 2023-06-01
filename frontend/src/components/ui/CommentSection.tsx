@@ -6,18 +6,20 @@ import Stack from "@mui/material/Stack";
 import { useState } from "react";
 import { usePostComments } from "../../hooks/comments/usePostComments";
 import { useSelector } from "react-redux";
-import { selectCurrentToken, selectCurrentUser } from "../../features/auth/authSlice";
+import { selectCurrentUser } from "../../features/auth/authSlice";
 import { useCreateComment } from "../../hooks/comments/useCreateComment";
 import SendIcon from "@mui/icons-material/Send";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
+import { useMediaQuery, Theme } from "@mui/material";
+import defaultAvatar from "../../assets/default.webp";
 
 const CommentSection = (props: { postId: string }) => {
     const [commentContent, setCommentContent] = useState<string>("");
     const user = useSelector(selectCurrentUser);
-    const accessToken = useSelector(selectCurrentToken);
-    const postCommentsQuery = usePostComments(props.postId, accessToken);
-    const createPostMutation = useCreateComment(accessToken);
+    const postCommentsQuery = usePostComments(props.postId);
+    const createPostMutation = useCreateComment();
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
     
     const publishComment = (event: React.SyntheticEvent) => {
         event.preventDefault();
@@ -36,7 +38,7 @@ const CommentSection = (props: { postId: string }) => {
     }
 
     return (
-        <Box mt={5}>
+        <Box mt={5} >
             <Typography variant="body1" fontWeight={500} mb={2}>
                 {postCommentsQuery.data.length} comments
             </Typography>
@@ -51,7 +53,7 @@ const CommentSection = (props: { postId: string }) => {
             >
                 <Box
                     component="img"
-                    src={user?.avatar}
+                    src={user?.avatar || defaultAvatar}
                     alt=""
                     sx={{
                         borderRadius: "50%",
@@ -73,21 +75,23 @@ const CommentSection = (props: { postId: string }) => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={publishComment}>
-                                    <SendIcon />
+                                    <SendIcon fontSize={isSmallScreen ? "small" : "inherit"} />
                                 </IconButton>
                             </InputAdornment>
                         ),
+                        style: {
+                            fontSize: isSmallScreen ? ".85em" : "1.2em"
+                        },
                     }}
                 />
             </Box>
             <Stack spacing={3} p={1}>
-                {postCommentsQuery.data.map((comment: Comment) => (
+                {postCommentsQuery.data.map((comment: IComment) => (
                     <Comment
                         key={comment._id}
                         authorId={comment.authorId}
                         createdAt={comment.createdAt}
                         content={comment.content}
-                        accessToken={accessToken}
                     />
                 ))}
             </Stack>

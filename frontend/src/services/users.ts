@@ -1,18 +1,13 @@
 import { customAxios } from "./api/customAxios";
 
-export const getUserById = (userId: string, accessToken: string) => {
-    return customAxios.get(`/users/${userId}/`, {
-        headers: {
-            "Authorization": `Bearer ${accessToken}`
-        }
-    }).then((response) => response.data);
+export const getUserById = (userId: string) => {
+    return customAxios.get(`/users/${userId}/`).then((response) => response.data);
 };
 
-export const updateUser = (data: FormData, userId: string, accessToken: string) => {
-    return customAxios.put(`/users/${userId}/`, data, {
+export const updateUser = (data: FormData, userId: string) => {
+    return customAxios.patch(`/users/${userId}/`, data, {
         headers: {
-            "Authorization": `Bearer ${accessToken}`,
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "multipart/form-data"
         }
     }).then((response) => response.data);
 };

@@ -1,9 +1,9 @@
-interface UserLoginCredentials {
+interface IUserLoginCredentials {
     username: string;
     password: string;
 }
 
-interface UserStoreData {
+interface IUserStoreData {
     user: User | null;
     accessToken: string;
 }

@@ -11,7 +11,7 @@ export const likePost = async (req, res) => {
 
         const existingPost = await Post.findById(postId);
         existingPost.likesNumber += 1;
-        await Post.findByIdAndUpdate(postId, existingPost, { new: true });
+        await Post.findByIdAndUpdate(postId, {$inc: { likesNumber: 1} }, { new: true, timestamps: false });
         
         const like = new Like({
             postId,
@@ -29,7 +29,7 @@ export const dislikePost = async (req, res) => {
         const { postId, userId } = req.body;
         const existingPost = await Post.findById(postId);
         existingPost.likesNumber -= 1;
-        await Post.findByIdAndUpdate(postId, existingPost, { new: true });
+        await Post.findByIdAndUpdate(postId, {$inc: { likesNumber: -1} }, { new: true, timestamps: false });
         
         await Like.findOneAndDelete({ postId, userId });
         res.status(200).json({ message: "Post disliked successfully"});

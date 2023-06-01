@@ -2,7 +2,6 @@ import axios from "axios";
 import { refreshToken } from "../auth";
 import { store } from "../../app/store";
 import { setCredentials } from "../../features/auth/authSlice";
-import { toast } from "react-toastify";
 
 export const customAxios = axios.create({
     baseURL: "http://localhost:5000",
@@ -10,14 +9,11 @@ export const customAxios = axios.create({
 });
 
 customAxios.interceptors.request.use(
-    // (config) => {
-    //     const accessToken = store.getState().auth.token;
-    //     if (accessToken) {
-    //         config.headers["Authorization"] = `Bearer ${accessToken}`;
-    //     }
-    //     return config;
-    // },
     (config) => {
+        const accessToken = store.getState().auth.token;
+        if (accessToken) {
+            config.headers["Authorization"] = `Bearer ${accessToken}`;
+        }
         return config;
     },
     (error) => {

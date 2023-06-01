@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon src/index.js"
+    "server": "nodemon src/index.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -3,8 +3,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import CustomContainer from "../components/ui/CustomContainer";
 import { useSelector } from "react-redux";
-import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
-import { PublishPostForm } from "../components/form/PublishPostForm";
+import { selectCurrentUser } from "../features/auth/authSlice";
+import { CreatePostForm } from "../components/form/CreatePostForm";
 import { useState } from "react";
 import RenderedPost from "../components/ui/RenderedPost";
 
@@ -27,12 +27,13 @@ const TabPanel = (props: TabPanelProps) => {
     );
 };
 
-const Writing = () => {
+const Editor = () => {
     const [value, setValue] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
 
     const handleSwitch = (event: React.SyntheticEvent, newValue: number) => {
+        event.preventDefault();
         setValue(newValue);
     };
 
@@ -43,9 +44,6 @@ const Writing = () => {
                     margin: "1.5em 0",
                 }}
             >
-                {/* <Typography gutterBottom variant="h1">
-            Creating a Fresh Blog Entry
-                </Typography> */}
                 <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
                     <Tabs value={value} onChange={handleSwitch}>
                         <Tab label="Write" />
@@ -54,9 +52,8 @@ const Writing = () => {
                 </Box>
 
                 <TabPanel value={value} index={0}>
-                    <PublishPostForm
+                    <CreatePostForm
                         user={useSelector(selectCurrentUser)}
-                        accessToken={useSelector(selectCurrentToken) || ""}
                         setTitle={setTitle}
                         setContent={setContent}
                     />
@@ -76,4 +73,4 @@ const Writing = () => {
     );
 };
 
-export default Writing;
+export default Editor;

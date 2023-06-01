@@ -5,14 +5,22 @@ import Button from "@mui/material/Button";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import { useForm } from "react-hook-form";
 import { FormInputField } from "./FormInputField";
-import { useState, useEffect, forwardRef, ForwardedRef } from "react";
-import defaultAvatar from "../../assets/profile.png";
+import { useState, useEffect, forwardRef, ForwardedRef, Dispatch, SetStateAction } from "react";
+import defaultAvatar from "../../assets/default.webp";
+import { useMediaQuery, Theme } from "@mui/material";
 
-const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | null, setAvatarImg: (avatar: File | null | Blob) => void }, ref: ForwardedRef<HTMLFormElement>) => {
+interface IUserFormProps {
+    avatarImg: Blob | File | null;
+    setAvatarImg: Dispatch<SetStateAction<File | null | Blob>>;
+    user: IUser | null;
+}
+
+export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFormElement>) => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar || "");
     const { register, control, setValue } = useForm();
-    
-    useEffect( () => {
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
+
+    useEffect(() => {
         setValue("firstName", props.user?.fullName.split(" ")[0]);
         setValue("lastName", props.user?.fullName.split(" ")[1]);
         setValue("username", props.user?.username);
@@ -33,17 +41,25 @@ const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | n
 
     return (
         <Box component="form" ref={ref}>
-            <Stack direction="row" spacing={1}>
+            <Stack direction="column" spacing={1}>
                 <Avatar
                     src={preview ? (preview as string) : defaultAvatar}
                     onClick={() => (preview ? props.setAvatarImg(null) : null)}
                     alt=""
-                    sx={{
-                        width: "200px",
-                        height: "200px",
+                    sx={(theme) => ({
+                        [theme.breakpoints.up("lg")]: {
+                            width: "200px",
+                            height: "200px",
+                        },
+                        [theme.breakpoints.up("sm")]: {
+                            width: "120px",
+                            height: "120px",
+                        },
                         borderRadius: "50%",
-                        marginRight: "25px",
-                    }}
+                        width: "70px",
+                        height: "70px",
+                        margin: "0 auto 10px",
+                    })}
                 />
                 <Box>
                     <Stack
@@ -94,8 +110,8 @@ const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | n
                         variant="outlined"
                         component="label"
                         endIcon={<AddAPhotoIcon />}
-                        size="large"
                         fullWidth
+                        size={isSmallScreen ? "small" : "large"}
                         sx={{
                             marginTop: "8px",
                             marginBottom: "4px",
@@ -123,5 +139,3 @@ const EditForm = forwardRef((props: UserStoreData & { avatarImg: Blob | File | n
         </Box>
     );
 });
-
-export default EditForm;

@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
@@ -14,21 +14,23 @@ import { useGetUser } from "../../hooks/users/useGetUser";
 import { useCheckUserLike } from "../../hooks/likes/useCheckUserLike";
 import { useLikePost } from "../../hooks/likes/useLikePost";
 import { useDislikePost } from "../../hooks/likes/useDislikePost";
+import { Theme, useMediaQuery } from "@mui/material";
 
-type PostProps = Omit<Post, "_id"> & {id: string, accessToken: string, userId: string};
+type PostProps = Omit<IPost, "_id"> & {id: string, userId: string};
 
 const PostPreview = (props: PostProps) => {
     const context = useContext(PostContext);
     const [likesNumber, setLikesNumber] = useState<number>(props.likesNumber);
     const [isLikedPost, setIsLikedPost] = useState<boolean>(false);
-
-    const likeMutation = useLikePost(props.accessToken);
-    const dislikeMutation = useDislikePost(props.accessToken);
-    const authorQuery = useGetUser(props.authorId, props.accessToken);
+    const navigate = useNavigate();
+    const likeMutation = useLikePost();
+    const dislikeMutation = useDislikePost();
+    const authorQuery = useGetUser(props.authorId);
     const onCheckUserLikeSuccess = (data: { isLiked: boolean }) => {
         setIsLikedPost(data.isLiked);
     };
-    const checkUserLike = useCheckUserLike(props.userId, props.id, props.accessToken, onCheckUserLikeSuccess);
+    const checkUserLike = useCheckUserLike(props.userId, props.id, onCheckUserLikeSuccess);
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
     const handleLikePost = async () => {
         const data = {
@@ -55,7 +57,7 @@ const PostPreview = (props: PostProps) => {
         <Box
             sx={{
                 display: "flex",
-                marginBottom: "20px",
+                marginBottom: isSmallScreen ? "40px" : "20px",
             }}
         >
             <Box
@@ -75,12 +77,19 @@ const PostPreview = (props: PostProps) => {
             >
                 <Box
                     component="img"
-                    sx={{
-                        width: context === "homepage" ? "320px" : "260px",
-                        height: context === "homepage" ? "275px" : "220px",
+                    sx={(theme) => ({
                         objectFit: "cover",
                         borderRadius: "5%",
-                    }}
+                        [theme.breakpoints.up("md")]: {
+                            width: context === "homepage" ? "320px" : "260px",
+                            height: context === "homepage" ? "275px" : "220px",
+                        },
+                        width: "185px",
+                        height: "150px",
+                        [theme.breakpoints.down("sm")]: {
+                            display: "none",
+                        },
+                    })}
                     src={props.postImg}
                     alt=""
                 />
@@ -110,7 +119,7 @@ const PostPreview = (props: PostProps) => {
                 <Typography
                     variant="body2"
                     sx={{
-                        marginBottom: 2,
+                        marginBottom: isSmallScreen ? 1 : 2,
                     }}
                 >
                     <Box
@@ -136,43 +145,68 @@ const PostPreview = (props: PostProps) => {
                 <Typography
                     variant="body1"
                     sx={{
-                        marginBottom: 2,
-                        textAlign: "justify",
+                        marginBottom: isSmallScreen ? 1 : 2,
                         maxWidth: "90%",
                         fontSize: context === "homepage" ? "inherit" : "16px",
                     }}
                 >
                     {props.preview}
                 </Typography>
-                <Stack direction="row" spacing={1}>
-                    <Button
-                        variant="text"
-                        startIcon={
-                            isLikedPost ? (
-                                <FavoriteOutlinedIcon />
-                            ) : (
-                                <FavoriteBorderOutlinedIcon />
-                            )
-                        }
-                        size={context === "homepage" ? "medium" : "small"}
-                        onClick={handleLikePost}
-                    >
-                        {likesNumber}
-                    </Button>
-                    <Button
-                        variant="text"
-                        startIcon={<ChatBubbleOutlineIcon />}
-                        size={context === "homepage" ? "medium" : "small"}
-                    >
-                        {props.comments.length}
-                    </Button>
+                <Stack
+                    direction="row"
+                    spacing={isSmallScreen ? 0 : 1}
+                    alignItems="flex-start"
+                    flexDirection={isSmallScreen ? "column" : "row"}
+                >
+                    <Box>
+                        <Button
+                            variant="text"
+                            startIcon={
+                                isLikedPost ? (
+                                    <FavoriteOutlinedIcon color="error" />
+                                ) : (
+                                    <FavoriteBorderOutlinedIcon />
+                                )
+                            }
+                            size={
+                                context === "homepage"
+                                    ? isSmallScreen
+                                        ? "small"
+                                        : "medium"
+                                    : "small"
+                            }
+                            onClick={handleLikePost}
+                        >
+                            {likesNumber}
+                        </Button>
+                        <Button
+                            variant="text"
+                            startIcon={<ChatBubbleOutlineIcon />}
+                            size={
+                                context === "homepage"
+                                    ? isSmallScreen
+                                        ? "small"
+                                        : "medium"
+                                    : "small"
+                            }
+                            onClick={() => navigate(`/post/${props.id}`)}
+                        >
+                            {props.comments.length}
+                        </Button>
+                    </Box>
                     <Button
                         variant="outlined"
                         color="info"
                         endIcon={<ArrowForwardIosIcon />}
                         component={NavLink}
                         to={`/post/${props.id}`}
-                        size={context === "homepage" ? "medium" : "small"}
+                        size={
+                            context === "homepage"
+                                ? isSmallScreen
+                                    ? "small"
+                                    : "medium"
+                                : "small"
+                        }
                     >
               Read More
                     </Button>
