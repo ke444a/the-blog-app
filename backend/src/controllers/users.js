@@ -21,7 +21,7 @@ export const updateUser = async (req, res) => {
 
         let avatar = "";
         if (req?.file) {
-            avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
+            avatar = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/users/" + req.file.fileName;
         }
 
         const updatedInfo = {
