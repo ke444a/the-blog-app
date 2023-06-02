@@ -4,7 +4,7 @@ import { store } from "../../app/store";
 import { setCredentials } from "../../features/auth/authSlice";
 
 export const customAxios = axios.create({
-    baseURL: import.meta.env.BACKEND_SERVER_PROD,
+    baseURL: import.meta.env.VITE_BACKEND_SERVER_PROD,
     withCredentials: true
 });
 
