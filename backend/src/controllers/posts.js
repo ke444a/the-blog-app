@@ -34,7 +34,7 @@ export const createPost = async (req, res) => {
     try {
         let postImg = "";
         if (req?.file) {
-            postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
+            postImg = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/posts/" + req.file.fileName;
         }
 
         const newPost = new Post({
@@ -52,7 +52,7 @@ export const updatePost = async (req, res) => {
     try {
         let postImg = "";
         if (req?.file) {
-            postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
+            postImg = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/posts/" + req.file.fileName;
         }
 
         const updatedPostData = {
