@@ -91,7 +91,7 @@ const PostPreview = (props: PostProps) => {
                         },
                     })}
                     src={props.postImg}
-                    alt=""
+                    alt="Blog image"
                 />
             </Box>
             <Box>

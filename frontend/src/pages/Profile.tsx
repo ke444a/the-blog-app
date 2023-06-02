@@ -149,7 +149,7 @@ const Profile = () => {
                                         {userInfoQuery.data?.fullName}
                                     </Typography>
                                     <Typography
-                                        variant="h4"
+                                        variant="h3"
                                         sx={(theme) => ({
                                             opacity: 0.5,
                                             marginBottom: "10px",

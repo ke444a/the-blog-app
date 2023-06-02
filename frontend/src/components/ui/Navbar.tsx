@@ -62,14 +62,13 @@ const Navbar = () => {
                             padding: "5px 0",
                         }}
                     >
-              Blog
+              The Blog
                     </Typography>
 
                     <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
                         <IconButton
                             size="large"
-                            aria-label="account of current user"
-                            aria-controls="menu-appbar"
+                            aria-label="Account of current user"
                             aria-haspopup="true"
                             onClick={handleOpenNavMenu}
                             color="inherit"
@@ -77,7 +76,6 @@ const Navbar = () => {
                             <MenuIcon />
                         </IconButton>
                         <Menu
-                            id="menu-appbar"
                             anchorEl={anchorElNav}
                             anchorOrigin={{
                                 vertical: "bottom",
@@ -104,7 +102,7 @@ const Navbar = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                    Feed
+                    FEED
                                 </Box>
                             </MenuItem>
                             <MenuItem onClick={handleCloseNavMenu}>
@@ -117,7 +115,7 @@ const Navbar = () => {
                                         color: "inherit",
                                     }}
                                 >
-                    Profile
+                    PROFILE
                                 </Box>
                             </MenuItem>
                             <MenuItem onClick={handleCloseNavMenu}>
@@ -130,7 +128,7 @@ const Navbar = () => {
                                         textAlign: "center",
                                     }}
                                 >
-                    Editor
+                    EDITOR
                                 </Box>
                             </MenuItem>
                         </Menu>
@@ -149,7 +147,7 @@ const Navbar = () => {
                             padding: "5px 0",
                         }}
                     >
-              Blog
+              The Blog
                     </Typography>
                     <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
                         <Box
@@ -202,13 +200,12 @@ const Navbar = () => {
                     <Box sx={{ flexGrow: 0 }}>
                         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
                             <Avatar
-                                alt=""
+                                alt="Avatar"
                                 src={user?.avatar ? user.avatar : defaultAvatar}
                             />
                         </IconButton>
                         <Menu
                             sx={{ mt: "45px" }}
-                            id="menu-appbar"
                             anchorEl={anchorElUser}
                             anchorOrigin={{
                                 vertical: "top",
