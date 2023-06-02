@@ -1,7 +1,7 @@
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import loginBg from "../../assets/loginBg.jpeg";
+import loginBg from "../../assets/loginBg.webp";
 import { ReactNode } from "react";
 
 const AuthLayout = ({ children }: { children: ReactNode }) => {
@@ -30,7 +30,7 @@ const AuthLayout = ({ children }: { children: ReactNode }) => {
                     }}
                     gutterBottom
                 >
-        Welcome to the Blog!
+        Welcome to The Blog!
                 </Typography>
                 { children }
             </Grid>

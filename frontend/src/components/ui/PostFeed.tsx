@@ -56,7 +56,7 @@ const PostFeed = () => {
                         }
                     }}
                 >
-                    <ExpandCircleDownIcon fontSize="large" />
+                    <ExpandCircleDownIcon fontSize="large" aria-label="Load more" />
                 </IconButton>
             )}
 
