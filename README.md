@@ -12,7 +12,6 @@ To ensure secure authentication, this project implements a "dual-token system". 
 - [Technologies](#technologies)
 - [Setup](#setup)
 - [Contact](#contact)
-- [Sources](#sources)
 
 ## Features
 - Authentication (login, register, logout)
@@ -26,11 +25,17 @@ To ensure secure authentication, this project implements a "dual-token system". 
 - Progressive Web App (PWA) support
 
 ## Demonstration
-### [View the website](https://the-blog-app-zp54.onrender.com)
+
+https://github.com/ke444a/blog-app-mern/assets/81090139/fd3e1ee9-807a-462b-9e2d-99532700c37e
 
 ### Home page
-### Editor page
+<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/33ab6005-81ea-491e-9b32-fb932a05351a">
+
 ### Profile page
+<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/3515b46d-d30b-4b82-b613-30a71602aa23">
+
+### Editor page
+<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/bc5d5fe6-ef8a-4604-b7b0-abf25e351760">
 
 ## Technologies
 * ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
