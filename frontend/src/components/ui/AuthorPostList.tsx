@@ -1,5 +1,5 @@
 import { useGetPostsByUser } from "../../hooks/posts/useGetPostsByUser";
-import { sortByDate } from "../../utils/sortByDate";
+import { sortPostsByDate } from "../../utils/sortByDate";
 import { Spinner } from "./Spinner";
 import PostPreview from "./PostPreview";
 import { Typography } from "@mui/material";
@@ -18,7 +18,7 @@ const AuthorPostList = ({ userProfileId }: { userProfileId: string }) => {
     return (
         <>
             {authorPostsQuery.data.length > 0 ? (
-                sortByDate(authorPostsQuery.data).map((post: IPost) => (
+                sortPostsByDate(authorPostsQuery.data).map((post: IPost) => (
                     <PostPreview
                         key={post._id}
                         id={post._id}

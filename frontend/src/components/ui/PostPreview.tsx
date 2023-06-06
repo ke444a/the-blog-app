@@ -157,6 +157,7 @@ const PostPreview = (props: PostProps) => {
                     spacing={isSmallScreen ? 0 : 1}
                     alignItems="flex-start"
                     flexDirection={isSmallScreen ? "column" : "row"}
+                    mt="auto"
                 >
                     <Box>
                         <Button

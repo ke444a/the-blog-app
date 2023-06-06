@@ -25,6 +25,7 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
         setValue("lastName", props.user?.fullName.split(" ")[1]);
         setValue("username", props.user?.username);
         setValue("bio", props.user?.bio);
+        setValue("avatar", props.user?.avatar);
     }, []);
 
     useEffect(() => {

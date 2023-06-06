@@ -6,7 +6,7 @@ export const createComment = async (req, res) => {
         const newComment = new Comment(req.body);
         const existingPost = await Post.findById(req.body.postId);
         existingPost.comments.push(newComment);
-        await Post.findByIdAndUpdate(req.body.postId, existingPost);
+        await Post.findByIdAndUpdate(req.body.postId, existingPost, { timestamps: false });
         await newComment.save();
         res.status(201).json(newComment);
     } catch (error) {
