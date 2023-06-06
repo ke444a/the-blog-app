@@ -3,6 +3,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import EditIcon from "@mui/icons-material/Edit";
 import { Dispatch, SetStateAction } from "react";
+import remarkGfm from "remark-gfm";
 
 interface IRenderedPostProps {
   title: string;
@@ -34,7 +35,9 @@ const RenderedPost = (props: IRenderedPostProps) => {
                     Edit
                 </Button>
             }
-            <ReactMarkdown>{props.content}</ReactMarkdown>
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {props.content}
+            </ReactMarkdown>
         </>
     );
 };

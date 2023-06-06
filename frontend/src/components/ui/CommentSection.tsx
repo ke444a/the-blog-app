@@ -13,6 +13,7 @@ import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { useMediaQuery, Theme } from "@mui/material";
 import defaultAvatar from "../../assets/default.webp";
+import { sortCommentsByDate } from "../../utils/sortByDate";
 
 const CommentSection = (props: { postId: string }) => {
     const [commentContent, setCommentContent] = useState<string>("");
@@ -86,7 +87,7 @@ const CommentSection = (props: { postId: string }) => {
                 />
             </Box>
             <Stack spacing={3} p={1}>
-                {postCommentsQuery.data.map((comment: IComment) => (
+                {sortCommentsByDate(postCommentsQuery.data).map((comment: IComment) => (
                     <Comment
                         key={comment._id}
                         authorId={comment.authorId}

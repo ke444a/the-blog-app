@@ -15,9 +15,10 @@ import { FormInputField } from "../components/form/FormInputField";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AuthLayout from "../components/ui/AuthLayout";
+import { toast } from "react-toastify";
 
 const Signup = () => {
-    const { handleSubmit, control, register } = useForm();
+    const { handleSubmit, control, register, formState } = useForm();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
@@ -162,7 +163,7 @@ const Signup = () => {
                         placeholder="Tell us about yourself..."
                         multiline
                         rows={2}
-                        maxLength={150}
+                        maxLength={250}
                     />
                     {!preview &&
                         (<Button

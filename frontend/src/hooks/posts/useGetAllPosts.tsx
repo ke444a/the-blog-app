@@ -7,6 +7,6 @@ export const useGetAllPosts = () => {
     return useInfiniteQuery({
         queryKey: QUERY_KEYS,
         queryFn: ({ pageParam = 1}) => getAllPosts(pageParam),
-        getNextPageParam: (lastPage) => lastPage.totalPages === lastPage.page ? undefined: lastPage.page + 1
+        getNextPageParam: (lastPage) => lastPage.totalPages <= lastPage.page ? undefined : lastPage.page + 1
     });
 };

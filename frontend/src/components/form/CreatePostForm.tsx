@@ -28,9 +28,6 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
         toast.success("Post has been created");
         navigate("/home");
     };
-    // const onPostCreateError = () => {
-        
-    // };
     const createPostMutation = useCreatePost(onPostCreateSuccess);
 
     const publishPost = (postData: FieldValues) => {
@@ -76,7 +73,7 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
                 required
                 margin="normal"
                 placeholder="Write your preview here..."
-                maxLength={300}
+                maxLength={500}
                 multiline
                 rows={3}
             />

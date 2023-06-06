@@ -48,7 +48,7 @@ export const EditPostForm = (props: IEditPostForm) => {
     };
 
     return (
-        <Box component="form" onSubmit={handleSubmit(editPost)}>
+        <Box component="form" onSubmit={handleSubmit(editPost)} sx={{ marginBottom: 2 }}>
             <FormInputField
                 name="title"
                 control={control}
@@ -67,7 +67,7 @@ export const EditPostForm = (props: IEditPostForm) => {
                 required
                 margin="normal"
                 placeholder="Write your preview here..."
-                maxLength={300}
+                maxLength={500}
                 multiline
                 rows={3}
             />
