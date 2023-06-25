@@ -22,12 +22,12 @@ export const FormInputField = (props: IInputField) => {
                     size={isSmallScreen ? "small" : "medium"}
                     InputProps={{
                         style: {
-                            fontSize: isSmallScreen ? ".85em" : "1.2em",
+                            fontSize: "1.2em",
                         },
                     }}
                     InputLabelProps={{
                         style: {
-                            fontSize: isSmallScreen ? ".85em" : "1.2em",
+                            fontSize: "1.2em",
                         },
                     }}
                     {...field}

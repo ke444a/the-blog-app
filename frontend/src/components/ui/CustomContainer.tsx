@@ -6,7 +6,7 @@ const CustomContainer = styled(Container)<ContainerProps>(({theme}) => ({
         maxWidth: "90%"
     },
     [theme.breakpoints.down("sm")]: {
-        padding: 0,
+        paddingX: 0,
     },
     maxWidth: "95%",
     width: "100%"

@@ -8,7 +8,6 @@ import { useDispatch, useSelector } from "react-redux";
 import Avatar from "@mui/material/Avatar";
 import { selectCurrentToken, selectCurrentUser } from "../features/auth/authSlice";
 import CustomContainer from "../components/ui/CustomContainer";
-import { PostContext } from "../context/PostContext";
 import { useLogout } from "../hooks/auth/useLogout";
 import { AppDispatch } from "../app/store";
 import { logout } from "../features/auth/authSlice";
@@ -23,6 +22,7 @@ import { Spinner } from "../components/ui/Spinner";
 import { toast } from "react-toastify";
 import AuthorPostList from "../components/ui/AuthorPostList";
 import { useMediaQuery, Theme } from "@mui/material";
+import RssFeedIcon from "@mui/icons-material/RssFeed";
 
 const Profile = () => {
     const userId: string = useLocation().pathname.split("/")[2];
@@ -33,7 +33,7 @@ const Profile = () => {
     const editFormRef = useRef<HTMLFormElement | null>(null);
     const queryClient = useQueryClient();
     const [avatarImg, setAvatarImg] = useState<File | Blob | null>(null);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+    const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up("xl"));
 
     const onEditSuccess = (data: IUser) => {
         dispatch(setCredentials({ user: data, accessToken }));
@@ -71,162 +71,158 @@ const Profile = () => {
 
     if (userInfoQuery.isSuccess) {
         return (
-            <Box
+            <CustomContainer
                 sx={{
-                    display: "flex",
-                    flexDirection: "column",
-                    justifyContent: "center",
-                    alignItems: "center",
+                    display: { sm: "flex" },
+                    pt: 3,
+                    mb: 4
                 }}
             >
                 <Paper
-                    sx={{
-                        padding: "25px 0",
-                        width: "100%",
-                        marginBottom: "20px",
-                    }}
+                    sx={(theme) => ({
+                        flex: { xs: "0 1 45%", md: "0 1 30%" },
+                        marginRight: { xs: 0, sm: theme.spacing(4) },
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        padding: theme.spacing(2),
+                        height: "fit-content",
+                        marginBottom: { xs: theme.spacing(3), sm: 0 },
+                    })}
                     elevation={2}
-                    square
                 >
-                    <CustomContainer
+                    {!isEditMode && (
+                        <Avatar
+                            sx={(theme) => ({
+                                [theme.breakpoints.up("lg")]: {
+                                    width: "220px",
+                                    height: "220px",
+                                },
+                                [theme.breakpoints.up("sm")]: {
+                                    width: "140px",
+                                    height: "140px",
+                                },
+                                borderRadius: "50%",
+                                width: "70px",
+                                height: "70px",
+                                marginBottom: theme.spacing(2),
+                            })}
+                            src={
+                                userInfoQuery.data?.avatar
+                                    ? userInfoQuery.data.avatar
+                                    : defaultAvatar
+                            }
+                            alt="Profile image"
+                        />
+                    )}
+                    <Box
                         sx={{
-                            display: "flex",
-                            flexDirection: "row",
+                            width: "100%",
                         }}
                     >
-                        {!isEditMode && (
-                            <Avatar
-                                sx={(theme) => ({
-                                    [theme.breakpoints.up("lg")]: {
-                                        width: "200px",
-                                        height: "200px",
-                                        marginRight: "25px",
-                                    },
-                                    [theme.breakpoints.up("sm")]: {
-                                        width: "120px",
-                                        height: "120px",
-                                    },
-                                    borderRadius: "50%",
-                                    width: "70px",
-                                    height: "70px",
-                                    marginRight: "15px",
-                                })}
-                                src={
-                                    userInfoQuery.data?.avatar
-                                        ? userInfoQuery.data.avatar
-                                        : defaultAvatar
-                                }
-                                alt=""
+                        {isEditMode ? (
+                            <EditUserForm
+                                user={user}
+                                ref={editFormRef}
+                                avatarImg={avatarImg}
+                                setAvatarImg={setAvatarImg}
                             />
+                        ) : (
+                            <Box>
+                                <Typography
+                                    variant="h2"
+                                    sx={(theme) => ({
+                                        [theme.breakpoints.down("md")]: {
+                                            fontSize: "1.6em",
+                                        },
+                                    })}
+                                >
+                                    {userInfoQuery.data?.fullName}
+                                </Typography>
+                                <Typography
+                                    variant="h3"
+                                    sx={(theme) => ({
+                                        marginBottom: theme.spacing(2),
+                                        fontWeight: 500,
+                                        fontSize: ".9em",
+                                        color: "secondary.main",
+
+                                        [theme.breakpoints.up("md")]: {
+                                            marginBottom: "20px",
+                                        },
+                                    })}
+                                >
+                      @{userInfoQuery.data?.username}
+                                </Typography>
+                                <Typography
+                                    variant="body1"
+                                    sx={(theme) => ({
+                                        fontWeight: 500,
+                                        width: "100%",
+                                        fontSize: "1rem",
+                                        marginBottom: theme.spacing(3),
+                                    })}
+                                >
+                                    {userInfoQuery.data?.bio}
+                                </Typography>
+                            </Box>
                         )}
-                        <Box
+                        {user?._id === userId && (
+                            <Stack spacing={1} direction="row">
+                                <Button
+                                    size="medium"
+                                    color={isEditMode ? "success" : "info"}
+                                    variant="text"
+                                    sx={{
+                                        fontWeight: 500,
+                                        borderRadius: "10px",
+                                        textTransform: "initial",
+                                        width: "50%",
+                                    }}
+                                    type="submit"
+                                    onClick={handleProfileEdit}
+                                >
+                                    {isEditMode ? "Save" : "Edit"}
+                                </Button>
+                                <Button
+                                    size="medium"
+                                    color="error"
+                                    variant="text"
+                                    sx={{
+                                        fontWeight: 500,
+                                        borderRadius: "10px",
+                                        textTransform: "initial",
+                                        width: "50%",
+                                    }}
+                                    onClick={() => logoutQuery.refetch()}
+                                >
+                      Logout
+                                </Button>
+                            </Stack>
+                        )}
+                    </Box>
+                </Paper>
+                <Box>
+                    <Box
+                        sx={{
+                            display: "flex",
+                            alignItems: "center",
+                            mb: 3,
+                        }}
+                    >
+                        <RssFeedIcon fontSize={isLargeScreen ? "large" : "medium"} />
+                        <Typography
+                            variant="h3"
                             sx={{
-                                display: isEditMode ? null : "flex",
-                                justifyContent: isEditMode ? null : "space-between",
-                                width: "100%",
+                                fontWeight: "600",
                             }}
                         >
-                            {isEditMode ? (
-                                <EditUserForm
-                                    user={user}
-                                    ref={editFormRef}
-                                    avatarImg={avatarImg}
-                                    setAvatarImg={setAvatarImg}
-                                />
-                            ) : (
-                                <Box>
-                                    <Typography
-                                        variant="h2"
-                                        sx={(theme) => ({
-                                            [theme.breakpoints.down("md")]: {
-                                                fontSize: "1.5em",
-                                            },
-                                            [theme.breakpoints.down("sm")]: {
-                                                fontSize: "1.1em",
-                                            },
-                                        })}
-                                    >
-                                        {userInfoQuery.data?.fullName}
-                                    </Typography>
-                                    <Typography
-                                        variant="h3"
-                                        sx={(theme) => ({
-                                            opacity: 0.5,
-                                            marginBottom: "10px",
-                                            fontWeight: 500,
-                                            fontSize: ".6em",
-
-                                            [theme.breakpoints.up("md")]: {
-                                                fontSize: ".9em",
-                                                marginBottom: "20px",
-                                            },
-                                        })}
-                                    >
-                        @{userInfoQuery.data?.username}
-                                    </Typography>
-                                    <Typography
-                                        variant="body1"
-                                        sx={(theme) => ({
-                                            fontWeight: 500,
-                                            width: "100%",
-                                            [theme.breakpoints.down("lg")]: {
-                                                fontSize: "1em",
-                                            },
-                                            [theme.breakpoints.down("md")]: {
-                                                fontSize: ".8em",
-                                            },
-                                        })}
-                                    >
-                                        {userInfoQuery.data?.bio}
-                                    </Typography>
-                                </Box>
-                            )}
-                            {user?._id === userId && (
-                                <Stack spacing={1} sx={{ marginLeft: isEditMode ? 0 : 1, marginTop: isEditMode ? 1 : 0 }} direction={isEditMode ? "row" : "column"}>
-                                    <Button
-                                        size={isSmallScreen ? "small" : "medium"}
-                                        color={isEditMode ? "success" : "info"}
-                                        variant="outlined"
-                                        sx={(theme) => ({
-                                            fontWeight: 500,
-                                            borderRadius: "10px",
-                                            textTransform: "initial",
-                                            [theme.breakpoints.down("sm")]: {
-                                                fontSize: ".7em",
-                                            },
-                                        })}
-                                        type="submit"
-                                        onClick={handleProfileEdit}
-                                    >
-                                        {isEditMode ? "Save" : "Edit"}
-                                    </Button>
-                                    <Button
-                                        size={isSmallScreen ? "small" : "medium"}
-                                        color="error"
-                                        variant="outlined"
-                                        sx={(theme) => ({
-                                            fontWeight: 500,
-                                            borderRadius: "10px",
-                                            textTransform: "initial",
-                                            [theme.breakpoints.down("sm")]: {
-                                                fontSize: ".7em",
-                                            },
-                                        })}
-                                        onClick={() => logoutQuery.refetch()}
-                                    >
-                        Logout
-                                    </Button>
-                                </Stack>
-                            )}
-                        </Box>
-                    </CustomContainer>
-                </Paper>
-                <CustomContainer>
-                    <PostContext.Provider value="profile">
-                        <AuthorPostList userProfileId={userInfoQuery.data?._id} />
-                    </PostContext.Provider>
-                </CustomContainer>
-            </Box>
+                  Recently posted
+                        </Typography>
+                    </Box>
+                    <AuthorPostList userProfileId={userInfoQuery.data?._id} />
+                </Box>
+            </CustomContainer>
         );
     }
 

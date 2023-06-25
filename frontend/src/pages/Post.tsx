@@ -39,6 +39,7 @@ const Post = () => {
                     isEditAllowed={post.authorId===user?._id} 
                     isEdit={isEdit}
                     setIsEdit={setIsEdit}
+                    postImage={post.postImg}
                 />}
             {!isEdit && <CommentSection postId={postId} />}
         </CustomContainer>

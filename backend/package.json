@@ -4,6 +4,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "NODE_ENV=dev nodemon src/index.js",
+    "prodTest": "NODE_ENV=prod nodemon src/index.js",
     "start": "NODE_ENV=prod node src/index.js"
   },
   "dependencies": {
@@ -12,9 +13,11 @@
     "cors": "^2.8.5",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
+    "firebase": "^9.23.0",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.1.0",
-    "multer": "^1.4.5-lts.1"
+    "multer": "^1.4.5-lts.1",
+    "sharp": "^0.32.1"
   },
   "devDependencies": {
     "nodemon": "^2.0.22"

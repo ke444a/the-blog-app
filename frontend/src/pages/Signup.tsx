@@ -15,10 +15,9 @@ import { FormInputField } from "../components/form/FormInputField";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AuthLayout from "../components/ui/AuthLayout";
-import { toast } from "react-toastify";
 
 const Signup = () => {
-    const { handleSubmit, control, register, formState } = useForm();
+    const { handleSubmit, control, register } = useForm();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 

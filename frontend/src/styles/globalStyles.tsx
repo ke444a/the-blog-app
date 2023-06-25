@@ -5,6 +5,12 @@ const styles = (theme: Theme) => ({
         [theme.breakpoints.down("lg")]: {
             fontSize: 14,
         },
+        [theme.breakpoints.up("xl")]: {
+            fontSize: 20
+        },
+        [theme.breakpoints.up(2200)]: {
+            fontSize: 24
+        }
     },
     ".MuiSvgIcon-root": {
         [theme.breakpoints.down("md")]: {
@@ -12,7 +18,7 @@ const styles = (theme: Theme) => ({
         },
     },
     ".active": {
-        fontWeight: 700,
+        fontWeight: 500,
     },
 
 });

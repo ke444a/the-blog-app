@@ -1,7 +1,8 @@
 import Post from "../models/Post.js";
+import { uploadImagesToFirebase } from "../utils/uploadImagesToFirebase.js";
 
 export const getAllPosts = async (req, res) => {
-    const { page = 1, pageSize = 5 } = req.query;
+    const { page = 1, pageSize = 6 } = req.query;
     try {
         const pageInt = Number(page);
         const totalPosts = await Post.countDocuments();
@@ -34,7 +35,11 @@ export const createPost = async (req, res) => {
     try {
         let postImg = "";
         if (req?.file) {
-            postImg = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/posts/" + req.file.fileName;
+            if (process.env.NODE_ENV === "dev") {
+                postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
+            } else {
+                postImg = await uploadImagesToFirebase(req.file.buffer);
+            }
         }
 
         const newPost = new Post({
@@ -44,7 +49,7 @@ export const createPost = async (req, res) => {
         await newPost.save();
         res.status(201).json(newPost);
     } catch (error) {
-        res.status(400).json({ message: "Unable to create this post" });
+        res.status(400).json({ message: error.message });
     }
 };
 
@@ -52,7 +57,11 @@ export const updatePost = async (req, res) => {
     try {
         let postImg = "";
         if (req?.file) {
-            postImg = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/posts/" + req.file.fileName;
+            if (process.env.NODE_ENV === "dev") {
+                postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
+            } else {
+                postImg = await uploadImagesToFirebase(req.file.buffer);
+            }
         }
 
         const updatedPostData = {

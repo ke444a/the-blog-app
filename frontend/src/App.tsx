@@ -14,6 +14,7 @@ import "react-toastify/ReactToastify.css";
 import { ToastContainer } from "react-toastify";
 import { globalStyles } from "./styles/globalStyles";
 import Navbar from "./components/ui/Navbar";
+import Footer from "./components/ui/Footer";
 
 const App = () => {
     const token: string = useSelector(selectCurrentToken);
@@ -22,26 +23,35 @@ const App = () => {
         <>
             <CssBaseline />
             {globalStyles}
-            <ToastContainer 
-                limit={1} 
+            <ToastContainer
+                limit={1}
                 position="top-center"
                 autoClose={3000}
                 theme="dark"
             />
-            {token && <Navbar />}
-            <Box>
-                <Routes>
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/register" element={<Signup />} />
+            <Box
+                sx={{
+                    minHeight: "100vh",
+                    display: "flex",
+                    flexDirection: "column",
+                }}
+            >
+                {token && <Navbar />}
+                <Box sx={{ color: "primary.main" }}>
+                    <Routes>
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/register" element={<Signup />} />
 
-                    <Route element={<ProtectedRoute />}>
-                        <Route path="/" index element={<Home />} />
-                        <Route path="/home" element={<Home />} />
-                        <Route path="/profile/:id" element={<Profile />} />
-                        <Route path="/editor" element={<Editor />} />
-                        <Route path="/post/:id" element={<Post />} />
-                    </Route>
-                </Routes>
+                        <Route element={<ProtectedRoute />}>
+                            <Route path="/" index element={<Home />} />
+                            <Route path="/home" element={<Home />} />
+                            <Route path="/profile/:id" element={<Profile />} />
+                            <Route path="/editor" element={<Editor />} />
+                            <Route path="/post/:id" element={<Post />} />
+                        </Route>
+                    </Routes>
+                </Box>
+                <Footer />
             </Box>
         </>
     );

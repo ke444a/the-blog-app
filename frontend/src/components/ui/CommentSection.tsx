@@ -8,12 +8,12 @@ import { usePostComments } from "../../hooks/comments/usePostComments";
 import { useSelector } from "react-redux";
 import { selectCurrentUser } from "../../features/auth/authSlice";
 import { useCreateComment } from "../../hooks/comments/useCreateComment";
-import SendIcon from "@mui/icons-material/Send";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import { useMediaQuery, Theme } from "@mui/material";
 import defaultAvatar from "../../assets/default.webp";
 import { sortCommentsByDate } from "../../utils/sortByDate";
+import AddCommentIcon from "@mui/icons-material/AddComment";
 
 const CommentSection = (props: { postId: string }) => {
     const [commentContent, setCommentContent] = useState<string>("");
@@ -39,8 +39,8 @@ const CommentSection = (props: { postId: string }) => {
     }
 
     return (
-        <Box mt={5} >
-            <Typography variant="body1" fontWeight={500} mb={2}>
+        <Box mt={5}>
+            <Typography variant="body1" fontWeight={600} mb={2}>
                 {postCommentsQuery.data.length} comments
             </Typography>
             <Box
@@ -60,7 +60,7 @@ const CommentSection = (props: { postId: string }) => {
                         borderRadius: "50%",
                         width: "50px",
                         height: "50px",
-                        marginRight: "12px",
+                        marginRight: 2,
                     }}
                 />
                 <TextField
@@ -76,25 +76,29 @@ const CommentSection = (props: { postId: string }) => {
                         endAdornment: (
                             <InputAdornment position="end">
                                 <IconButton onClick={publishComment}>
-                                    <SendIcon fontSize={isSmallScreen ? "small" : "inherit"} />
+                                    <AddCommentIcon
+                                        fontSize={isSmallScreen ? "small" : "inherit"}
+                                    />
                                 </IconButton>
                             </InputAdornment>
                         ),
                         style: {
-                            fontSize: isSmallScreen ? ".85em" : "1.2em"
+                            fontSize: "1.2em",
                         },
                     }}
                 />
             </Box>
-            <Stack spacing={3} p={1}>
-                {sortCommentsByDate(postCommentsQuery.data).map((comment: IComment) => (
-                    <Comment
-                        key={comment._id}
-                        authorId={comment.authorId}
-                        createdAt={comment.createdAt}
-                        content={comment.content}
-                    />
-                ))}
+            <Stack spacing={3} pt={1} mb={2}>
+                {sortCommentsByDate(postCommentsQuery.data).map(
+                    (comment: IComment) => (
+                        <Comment
+                            key={comment._id}
+                            authorId={comment.authorId}
+                            createdAt={comment.createdAt}
+                            content={comment.content}
+                        />
+                    )
+                )}
             </Stack>
         </Box>
     );

@@ -11,6 +11,7 @@ import { useUpdatePost } from "../../hooks/posts/useUpdatePost";
 import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import { Spinner } from "../ui/Spinner";
 
 interface IEditPostForm {
     postId: string;
@@ -46,6 +47,10 @@ export const EditPostForm = (props: IEditPostForm) => {
         }
         updatePostMutation.mutate(formData);
     };
+
+    if (updatePostMutation.isLoading) {
+        return <Spinner />;
+    }
 
     return (
         <Box component="form" onSubmit={handleSubmit(editPost)} sx={{ marginBottom: 2 }}>

@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import { uploadImagesToFirebase } from "../utils/uploadImagesToFirebase.js";
 
 export const getUserById = async (req, res) => {
     try {
@@ -21,7 +22,11 @@ export const updateUser = async (req, res) => {
 
         let avatar = "";
         if (req?.file) {
-            avatar = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/users/" + req.file.fileName;
+            if (process.env.NODE_ENV === "dev") {
+                avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
+            } else {
+                avatar = await uploadImagesToFirebase(req.file.buffer);
+            }
         }
 
         const updatedInfo = {

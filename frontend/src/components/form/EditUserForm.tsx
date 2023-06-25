@@ -63,30 +63,36 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                     })}
                 />
                 <Box>
-                    <Stack
-                        direction="row"
-                        spacing={2}
-                        sx={{
-                            marginBottom: "4px",
-                        }}
-                    >
-                        <FormInputField
-                            name="firstName"
-                            control={control}
-                            fullWidth
-                            required
-                            type="text"
-                            placeholder="First name"
-                        />
-                        <FormInputField
-                            name="lastName"
-                            control={control}
-                            fullWidth
-                            required
-                            type="text"
-                            placeholder="Last name"
-                        />
-                    </Stack>
+                    <FormInputField
+                        name="firstName"
+                        control={control}
+                        fullWidth
+                        required
+                        margin="dense"
+                        type="text"
+                        placeholder="First name"
+                        sx={(theme) => ({
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5"
+                            },
+                        })}
+                    />
+                    <FormInputField
+                        name="lastName"
+                        control={control}
+                        fullWidth
+                        required
+                        margin="dense"
+                        type="text"
+                        placeholder="Last name"
+                        sx={(theme) => ({
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5",
+                            },
+                        })}
+                    />
                     <FormInputField
                         name="username"
                         control={control}
@@ -95,6 +101,12 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                         margin="dense"
                         placeholder="Username"
                         fullWidth
+                        sx={(theme) => ({
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5",
+                            },
+                        })}
                     />
                     <FormInputField
                         name="bio"
@@ -105,7 +117,13 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                         placeholder="Information about yourself"
                         fullWidth
                         multiline
-                        rows={2}
+                        rows={3}
+                        sx={(theme) => ({
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5"
+                            },
+                        })}
                     />
                     <Button
                         variant="outlined"
@@ -114,8 +132,8 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                         fullWidth
                         size={isSmallScreen ? "small" : "large"}
                         sx={{
-                            marginTop: "8px",
-                            marginBottom: "4px",
+                            marginTop: 2,
+                            marginBottom: 1,
                         }}
                     >
               Update avatar

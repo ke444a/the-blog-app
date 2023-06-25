@@ -20,6 +20,7 @@ To ensure secure authentication, this project implements a "dual-token system". 
 - Create and edit blog posts
     - Preview the blog post before publishing
 - View the blog posts published by other users
+    - Pagination for blog posts
 - Like and comment on blog posts
 - View the user profile
 - Responsive design for mobile devices
