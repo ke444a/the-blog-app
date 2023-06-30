@@ -9,6 +9,7 @@ import authRoutes from "./routes/auth.js";
 import likesRoutes from "./routes/likes.js";
 import commentsRoutes from "./routes/comments.js";
 import path from "path";
+import { errorMiddleware } from "./middleware/errorMiddleware.js";
 
 dotenv.config({ path: "../.env" });
 const app = express();
@@ -30,6 +31,7 @@ app.use("/posts", likesRoutes);
 app.use("/users", usersRoutes);
 app.use("/auth", authRoutes);
 app.use("/comments", commentsRoutes);
+app.use(errorMiddleware);
 
 mongoose.connect(MONGODB).then(() => {
     console.log("Connected to MongoDB");

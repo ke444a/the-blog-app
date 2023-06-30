@@ -11,15 +11,26 @@ import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
 import { useMediaQuery, Theme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
-interface CreatehPostFormProps {
+interface CreatePostFormProps {
   user: IUser | null;
   setTitle: Dispatch<SetStateAction<string>>;
   setContent: Dispatch<SetStateAction<string>>;
+  setPostImage: Dispatch<SetStateAction<string>>;
 }
 
-export const CreatePostForm = (props: CreatehPostFormProps) => {
-    const { handleSubmit, control, register, reset, watch } = useForm();
+export const postSchema = yup.object().shape({
+    title: yup.string().required().max(100, "Title must be less than 100 characters"),
+    preview: yup.string().required().max(120, "Preview must be less than 120 characters"),
+    content: yup.string().required(),
+    postImg: yup.mixed().required()
+});
+
+export const CreatePostForm = (props: CreatePostFormProps) => {
+    const { handleSubmit, control, register, reset, watch, formState: { errors } } = useForm({ resolver: yupResolver(postSchema) });
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
     const navigate = useNavigate();
 
@@ -43,6 +54,10 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
     const handleFormChange = () => {
         props.setTitle(watch("title"));
         props.setContent(watch("content"));
+        const postImg = watch("postImg") as FileList;
+        if (postImg.length > 0) {
+            props.setPostImage(URL.createObjectURL(postImg[0]));
+        }
     };
 
     if (createPostMutation.isLoading) {
@@ -54,6 +69,9 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
             component="form"
             onSubmit={handleSubmit(publishPost)}
             onChange={handleFormChange}
+            sx={{
+                mt: 2,
+            }}
         >
             <FormInputField
                 name="title"
@@ -62,9 +80,22 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
                 fullWidth
                 required
                 margin="normal"
-                placeholder="Write your title here..."
-                maxLength={150}
+                placeholder="Title..."
+                variant="standard"
+                sx={{
+                    ".MuiInputBase-input": {
+                        fontWeight: 600,
+                        fontSize: "1.4em",
+                    },
+                }}
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.title?.message}
+            </Typography>
             <FormInputField
                 name="preview"
                 control={control}
@@ -72,11 +103,18 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
                 fullWidth
                 required
                 margin="normal"
-                placeholder="Write your preview here..."
-                maxLength={500}
+                placeholder="Preview..."
                 multiline
-                rows={3}
+                rows={2}
+                variant="standard"
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.preview?.message}
+            </Typography>
             <FormInputField
                 name="content"
                 control={control}
@@ -84,21 +122,22 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
                 fullWidth
                 required
                 margin="normal"
-                placeholder="Write your content here..."
+                placeholder="Content..."
                 multiline
-                rows={16}
+                rows={14}
+                variant="standard"
                 sx={{
                     whiteSpace: "pre-line",
                 }}
             />
             <Stack direction="row" spacing={2} alignItems="center">
                 <Button
-                    variant="outlined"
+                    variant="text"
                     component="label"
                     endIcon={<AttachFileIcon />}
                     size={isSmallScreen ? "small" : "large"}
                 >
-            Upload
+            Add Cover
                     <input
                         {...register("postImg")}
                         name="postImg"
@@ -106,6 +145,7 @@ export const CreatePostForm = (props: CreatehPostFormProps) => {
                         accept="image/*"
                         multiple
                         type="file"
+                        required
                     />
                 </Button>
                 <Button

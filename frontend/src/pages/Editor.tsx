@@ -31,6 +31,7 @@ const Editor = () => {
     const [value, setValue] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
+    const [postImage, setPostImage] = useState<string>("");
 
     const handleSwitch = (event: React.SyntheticEvent, newValue: number) => {
         event.preventDefault();
@@ -40,14 +41,14 @@ const Editor = () => {
     return (
         <CustomContainer>
             <Box
-                sx={{
-                    margin: "1.5em 0",
-                }}
+                sx={(theme) => ({
+                    margin: theme.spacing(3, 0),
+                })}
             >
-                <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
+                <Box>
                     <Tabs value={value} onChange={handleSwitch}>
-                        <Tab label="Write" />
-                        <Tab label="Preview" />
+                        <Tab label="Write" sx={{ fontSize: "1em" }} />
+                        <Tab label="Preview" sx={{ fontSize: "1em" }}  />
                     </Tabs>
                 </Box>
 
@@ -56,17 +57,15 @@ const Editor = () => {
                         user={useSelector(selectCurrentUser)}
                         setTitle={setTitle}
                         setContent={setContent}
+                        setPostImage={setPostImage}
                     />
                 </TabPanel>
                 <TabPanel value={value} index={1}>
-                    <Box sx={{
-                        border: (title || content) && "1px solid #333",
-                        borderRadius: "5px",
-                        padding: "20px",
-                        marginTop: "15px"
-                    }}>
-                        <RenderedPost title={title} content={content} />
-                    </Box>
+                    <RenderedPost
+                        title={title}
+                        content={content}
+                        postImage={postImage}
+                    />
                 </TabPanel>
             </Box>
         </CustomContainer>

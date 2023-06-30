@@ -3,7 +3,7 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 import Typography from "@mui/material/Typography";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import { FormInputField } from "../components/form/FormInputField";
 import { useDispatch } from "react-redux";
@@ -13,7 +13,7 @@ import { useLogin } from "../hooks/auth/useLogin";
 import AuthLayout from "../components/ui/AuthLayout";
 
 const Login = () => {
-    const { handleSubmit, control } = useForm();
+    const { handleSubmit, control, setValue } = useForm();
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
@@ -22,6 +22,17 @@ const Login = () => {
         navigate("/home", { replace: true });
     };
     const loginMutation = useLogin(onLoginSuccess);
+
+    const loginSubmit = (data: FieldValues) => {
+        data.username = data.username.trim();
+        data.password = data.password.trim();
+        loginMutation.mutate(data as IUserLoginCredentials);
+    };
+
+    const handleDemoAccountClick = () => {
+        setValue("username", "bobsmith");
+        setValue("password", "Password@123");
+    };
 
     return (
         <AuthLayout>
@@ -48,9 +59,7 @@ const Login = () => {
                 </Typography>
                 <Box
                     component="form"
-                    onSubmit={handleSubmit((data) =>
-                        loginMutation.mutate(data as IUserLoginCredentials)
-                    )}
+                    onSubmit={handleSubmit(loginSubmit)}
                     noValidate
                     sx={{ mt: 1 }}
                 >
@@ -74,11 +83,21 @@ const Login = () => {
                         type="password"
                     />
                     <Button
+                        type="button"
+                        fullWidth
+                        variant="outlined"
+                        color="primary"
+                        sx={{ mt: 3 }}
+                        onClick={handleDemoAccountClick}
+                    >
+              Use Demo Account
+                    </Button>
+                    <Button
                         type="submit"
                         fullWidth
                         variant="contained"
                         color="primary"
-                        sx={{ mt: 3, mb: 2 }}
+                        sx={{ mt: 1, mb: 2 }}
                     >
               Login
                     </Button>

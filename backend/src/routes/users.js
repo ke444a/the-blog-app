@@ -1,7 +1,6 @@
 import {
     getUserById,
-    updateUser,
-    // getUserByUsername
+    updateUser
 } from "../controllers/users.js";
 import { authMiddleware } from "../middleware/authMiddleware.js";
 import express from "express";

@@ -1,6 +1,7 @@
 import jwt from "jsonwebtoken";
 import bcrypt from "bcryptjs";
 import User from "../models/User.js";
+import { uploadUserToFirebase } from "../utils/uploadImagesToFirebase.js";
 
 const generateJwtToken = (userId, TOKEN_SECRET, expiryTime) => {
     return jwt.sign(
@@ -25,7 +26,11 @@ export const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(registeringUser.password, 10);
         let avatar = "";
         if (req?.file) {
-            avatar = process.env.NODE_ENV==="dev" ? req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename : process.env.BACKEND_SERVER_PROD + "/uploads/users/" + req.file.fileName;
+            if (process.env.NODE_ENV === "dev") {
+                avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
+            } else {
+                avatar = await uploadUserToFirebase(req.file.buffer, registeringUser.username);
+            }
         }
         
         const newUser = new User({

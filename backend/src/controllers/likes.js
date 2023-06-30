@@ -9,8 +9,8 @@ export const likePost = async (req, res) => {
             return res.status(400).json({ message: "Like already exists" });
         }
 
-        const existingPost = await Post.findById(postId);
-        existingPost.likesNumber += 1;
+        // const existingPost = await Post.findById(postId);
+        // existingPost.likesNumber += 1;
         await Post.findByIdAndUpdate(postId, {$inc: { likesNumber: 1} }, { new: true, timestamps: false });
         
         const like = new Like({

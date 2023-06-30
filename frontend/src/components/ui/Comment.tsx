@@ -4,6 +4,7 @@ import Stack from "@mui/material/Stack";
 import { useGetUser } from "../../hooks/users/useGetUser";
 import { formatDate } from "../../utils/formatDate";
 import defaultAvatar from "../../assets/default.webp";
+import { Link } from "react-router-dom";
 
 interface CommentProps {
     authorId: string;
@@ -20,32 +21,34 @@ const Comment = (props: CommentProps) => {
 
     return (
         <Stack direction="row">
-            <Box 
-                component="img" 
+            <Box
+                component="img"
                 src={authorQuery.data.avatar || defaultAvatar}
-                alt="" 
+                alt=""
                 sx={{
                     width: "50px",
                     height: "50px",
                     borderRadius: "50%",
-                    marginRight: "12px"
-                }} 
+                    marginRight: "12px",
+                }}
             />
             <Box>
                 <Stack direction="row" spacing={1}>
                     <Typography
                         variant="body2"
                         sx={{
-                            fontWeight: 700
+                            fontWeight: 700,
                         }}
                     >
-                        {authorQuery.data.username}
+                        <Link to={`/profile/${props.authorId}`} style={{ color: "inherit", textDecoration: "none" }}>
+                            {authorQuery.data.username}
+                        </Link>
                     </Typography>
                     <Typography
                         variant="body2"
                         sx={{
                             fontWeight: 500,
-                            opacity: .8
+                            opacity: 0.8,
                         }}
                     >
                         {formatDate(props.createdAt)}
@@ -55,8 +58,8 @@ const Comment = (props: CommentProps) => {
                     variant="body1"
                     sx={(theme) => ({
                         [theme.breakpoints.down("sm")]: {
-                            fontSize: "1em"
-                        }
+                            fontSize: "1em",
+                        },
                     })}
                 >
                     {props.content}

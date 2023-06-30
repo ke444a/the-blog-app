@@ -3,27 +3,44 @@ import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import { useForm } from "react-hook-form";
+import { FieldValues, useForm } from "react-hook-form";
 import { FormInputField } from "./FormInputField";
-import { useState, useEffect, forwardRef, ForwardedRef, Dispatch, SetStateAction } from "react";
+import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import defaultAvatar from "../../assets/default.webp";
 import { useMediaQuery, Theme } from "@mui/material";
+import Typography from "@mui/material/Typography";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
 
 interface IUserFormProps {
     avatarImg: Blob | File | null;
     setAvatarImg: Dispatch<SetStateAction<File | null | Blob>>;
     user: IUser | null;
+    handleProfileEdit: (data: FieldValues) => void;
 }
 
-export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef<HTMLFormElement>) => {
+const userSchema = yup.object().shape({
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    username: yup.string().required(),
+    bio: yup.string().max(120, "Bio must be less than 120 characters"),
+    avatar: yup.mixed(),
+});
+
+export const EditUserForm = (props: IUserFormProps) => {
     const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar || "");
-    const { register, control, setValue } = useForm();
+    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm({ resolver: yupResolver(userSchema) });
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
 
     useEffect(() => {
-        setValue("firstName", props.user?.fullName.split(" ")[0]);
-        setValue("lastName", props.user?.fullName.split(" ")[1]);
-        setValue("username", props.user?.username);
+        if (props.user?.fullName) {
+            const fullName = props.user.fullName.split(" ");
+            setValue("firstName", fullName[0]);
+            setValue("lastName", fullName[1]);
+        }
+        if (props.user?.username) {
+            setValue("username", props.user.username);
+        }
         setValue("bio", props.user?.bio);
         setValue("avatar", props.user?.avatar);
     }, []);
@@ -41,7 +58,7 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
     }, [props.avatarImg]);
 
     return (
-        <Box component="form" ref={ref}>
+        <Box component="form" onSubmit={handleSubmit(props.handleProfileEdit)}>
             <Stack direction="column" spacing={1}>
                 <Avatar
                     src={preview ? (preview as string) : defaultAvatar}
@@ -63,30 +80,37 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                     })}
                 />
                 <Box>
-                    <Stack
-                        direction="row"
-                        spacing={2}
+                    <FormInputField
+                        name="firstName"
+                        control={control}
+                        fullWidth
+                        required
+                        margin="dense"
+                        type="text"
+                        placeholder="First name"
                         sx={{
-                            marginBottom: "4px",
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5",
+                            },
                         }}
-                    >
-                        <FormInputField
-                            name="firstName"
-                            control={control}
-                            fullWidth
-                            required
-                            type="text"
-                            placeholder="First name"
-                        />
-                        <FormInputField
-                            name="lastName"
-                            control={control}
-                            fullWidth
-                            required
-                            type="text"
-                            placeholder="Last name"
-                        />
-                    </Stack>
+                    />
+
+                    <FormInputField
+                        name="lastName"
+                        control={control}
+                        fullWidth
+                        required
+                        margin="dense"
+                        type="text"
+                        placeholder="Last name"
+                        sx={{
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5",
+                            },
+                        }}
+                    />
                     <FormInputField
                         name="username"
                         control={control}
@@ -95,6 +119,12 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                         margin="dense"
                         placeholder="Username"
                         fullWidth
+                        sx={{
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5",
+                            },
+                        }}
                     />
                     <FormInputField
                         name="bio"
@@ -105,8 +135,22 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                         placeholder="Information about yourself"
                         fullWidth
                         multiline
-                        rows={2}
+                        rows={3}
+                        maxLength={120}
+                        sx={{
+                            ".MuiInputBase-input": {
+                                fontSize: "1rem",
+                                lineHeight: "1.5",
+                            },
+                        }}
                     />
+                    <Typography
+                        color="error"
+                        variant="body1"
+                        sx={{ fontWeight: 500, pb: 1 }}
+                    >
+                        {errors.bio?.message}
+                    </Typography>
                     <Button
                         variant="outlined"
                         component="label"
@@ -114,8 +158,8 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                         fullWidth
                         size={isSmallScreen ? "small" : "large"}
                         sx={{
-                            marginTop: "8px",
-                            marginBottom: "4px",
+                            marginTop: 2,
+                            marginBottom: 1,
                         }}
                     >
               Update avatar
@@ -135,8 +179,21 @@ export const EditUserForm = forwardRef((props: IUserFormProps, ref: ForwardedRef
                             }}
                         />
                     </Button>
+                    <Button
+                        type="submit"
+                        size="medium"
+                        color="success"
+                        variant="outlined"
+                        sx={{
+                            fontWeight: 500,
+                            width: "100%",
+                            py: 1
+                        }}
+                    >
+                        Submit
+                    </Button>
                 </Box>
             </Stack>
         </Box>
     );
-});
+};

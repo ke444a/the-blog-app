@@ -15,10 +15,26 @@ import { FormInputField } from "../components/form/FormInputField";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import AuthLayout from "../components/ui/AuthLayout";
-import { toast } from "react-toastify";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup"; 
+
+const signupSchema = yup.object().shape({
+    username: yup.string().required(),
+    password: yup.string().required(),
+    password2: yup
+        .string()
+        .required()
+        .oneOf([yup.ref("password")], "Passwords do not match"),
+    firstName: yup.string().required(),
+    lastName: yup.string().required(),
+    bio: yup.string().max(120, "Bio must be less than 120 characters"),
+    avatar: yup.mixed()
+});
 
 const Signup = () => {
-    const { handleSubmit, control, register, formState } = useForm();
+    const { handleSubmit, control, register, formState: { errors } } = useForm({
+        resolver: yupResolver(signupSchema)
+    });
     const dispatch = useDispatch<AppDispatch>();
     const navigate = useNavigate();
 
@@ -33,14 +49,14 @@ const Signup = () => {
 
     const handleRegister = (registerData: FieldValues) => {
         const formData = new FormData();
-        formData.append("username", registerData.username);
-        formData.append("password", registerData.password);
-        formData.append("fullName", registerData.firstName + " " + registerData.lastName);
+        formData.append("username", registerData.username.trim());
+        formData.append("password", registerData.password.trim());
+        formData.append("fullName", registerData.firstName.trim() + " " + registerData.lastName.trim());
         if (avatarImg) {
             formData.append("avatar", avatarImg);
         }
         if (registerData?.bio) {
-            formData.append("bio", registerData.bio);
+            formData.append("bio", registerData.bio.trim());
         }
         registerMutation.mutate(formData);
     };
@@ -66,35 +82,36 @@ const Signup = () => {
                     alignItems: "center",
                     color: "primary.main",
                     padding: "0 20px",
-                    justifyContent: "center"
+                    justifyContent: "center",
                 }}
             >
-                {preview ? 
+                {preview ? (
                     <Avatar
                         src={preview as string}
                         onClick={() => setAvatarImg(null)}
                         sx={{
-                            width: "90px",
-                            height: "90px",
+                            width: { xs: "90px", md: "130px" },
+                            height: { xs: "90px", md: "130px" },
                             borderRadius: "50%",
                             margin: "4px",
-                            cursor: "pointer"
+                            cursor: "pointer",
                         }}
                     />
-                    : 
-                    <Avatar sx={{ m: 1, bgcolor: "info.light" }}>
-                        <LockOutlinedIcon />
-                    </Avatar>
-                }
-
-                <Typography
-                    variant="h2"
-                    sx={{
-                        color: "info.light",
-                    }}
-                >
-              Sign Up
-                </Typography>
+                ) : (
+                    <>
+                        <Avatar sx={{ m: 1, bgcolor: "info.light" }}>
+                            <LockOutlinedIcon />
+                        </Avatar>
+                        <Typography
+                            variant="h2"
+                            sx={{
+                                color: "info.light",
+                            }}
+                        >
+                Sign Up
+                        </Typography>
+                    </>
+                )}
                 <Box
                     component="form"
                     onSubmit={handleSubmit(handleRegister)}
@@ -128,6 +145,13 @@ const Signup = () => {
                         margin="dense"
                         type="password"
                     />
+                    <Typography
+                        color="error"
+                        variant="body1"
+                        sx={{ fontWeight: 500, pb: 1 }}
+                    >
+                        {errors.password2?.message}
+                    </Typography>
                     <Stack
                         direction="row"
                         spacing={2}
@@ -165,8 +189,15 @@ const Signup = () => {
                         rows={2}
                         maxLength={250}
                     />
-                    {!preview &&
-                        (<Button
+                    <Typography
+                        color="error"
+                        variant="body1"
+                        sx={{ fontWeight: 500, pb: 1 }}
+                    >
+                        {errors.bio?.message}
+                    </Typography>
+                    {!preview && (
+                        <Button
                             variant="outlined"
                             component="label"
                             endIcon={<AddAPhotoIcon />}
@@ -177,7 +208,7 @@ const Signup = () => {
                                 marginBottom: "4px",
                             }}
                         >
-                            Upload
+                Upload
                             <input
                                 {...register("avatar")}
                                 name="avatar"
@@ -193,7 +224,8 @@ const Signup = () => {
                                     }
                                 }}
                             />
-                        </Button>)}
+                        </Button>
+                    )}
                     <Button
                         type="submit"
                         fullWidth
@@ -201,16 +233,16 @@ const Signup = () => {
                         color="primary"
                         sx={{ mt: 3, mb: 2 }}
                     >
-                Sign Up
+              Sign Up
                     </Button>
                 </Box>
                 <Box
                     sx={{
                         fontWeight: 500,
-                        textAlign: "center"
+                        textAlign: "center",
                     }}
                 >
-              Already have an account?{" "}
+            Already have an account?{" "}
                     <Box
                         component={Link}
                         to="/login"
@@ -219,7 +251,7 @@ const Signup = () => {
                             textUnderlineOffset: "0.2em",
                         }}
                     >
-                Login
+              Login
                     </Box>
                 </Box>
             </Box>
