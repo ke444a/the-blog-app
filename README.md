@@ -29,17 +29,21 @@ To ensure secure authentication, this project implements a system with two token
 - Progressive Web App (PWA) support
 
 ## Demonstration
+### [View the website](https://the-blog-app-zp54.onrender.com)
 
-https://github.com/ke444a/blog-app-mern/assets/81090139/fd3e1ee9-807a-462b-9e2d-99532700c37e
+https://github.com/ke444a/blog-app-mern/assets/81090139/a3f7b095-ed37-4243-ba6c-18630f4c65b1
 
 ### Home page
-<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/33ab6005-81ea-491e-9b32-fb932a05351a">
+<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/910f03fe-015e-4115-a3fe-a38ef5439f4c">
+
 
 ### Profile page
-<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/3515b46d-d30b-4b82-b613-30a71602aa23">
+<img width="60%" height="50%" alt="blog-app-demo-3" src="https://github.com/ke444a/blog-app-mern/assets/81090139/753e6b82-3244-44f6-958c-8fa895fa2941">
+
 
 ### Editor page
-<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/bc5d5fe6-ef8a-4604-b7b0-abf25e351760">
+<img width="60%" height="50%" alt="blog-app-demo-2" src="https://github.com/ke444a/blog-app-mern/assets/81090139/d0576668-f59f-444b-9643-5f16cf8dbdaf">
+
 
 ## Technologies
 * ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
