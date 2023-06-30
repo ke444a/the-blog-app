@@ -1,4 +1,4 @@
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
 import CssBaseline from "@mui/material/CssBaseline";
 import Box from "@mui/material/Box";
 import Home from "./pages/Home";
@@ -18,6 +18,7 @@ import Footer from "./components/ui/Footer";
 
 const App = () => {
     const token: string = useSelector(selectCurrentToken);
+    const location = useLocation();
 
     return (
         <>
@@ -25,7 +26,7 @@ const App = () => {
             {globalStyles}
             <ToastContainer
                 limit={1}
-                position="top-center"
+                position="top-right"
                 autoClose={3000}
                 theme="dark"
             />
@@ -51,7 +52,7 @@ const App = () => {
                         </Route>
                     </Routes>
                 </Box>
-                <Footer />
+                { location.pathname!=="/login" && location.pathname!=="/register" && <Footer />}
             </Box>
         </>
     );

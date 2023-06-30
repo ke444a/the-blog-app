@@ -4,8 +4,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "server": "NODE_ENV=dev nodemon src/index.js",
-    "prodTest": "NODE_ENV=prod nodemon src/index.js",
-    "start": "NODE_ENV=prod node src/index.js"
+    "start": "NODE_ENV=prod node src/index.js",
+    "seed": "node src/seed/seedData.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",
@@ -20,6 +20,7 @@
     "sharp": "^0.32.1"
   },
   "devDependencies": {
+    "@faker-js/faker": "^8.0.2",
     "nodemon": "^2.0.22"
   }
 }

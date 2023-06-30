@@ -4,7 +4,7 @@ import { useMediaQuery, Theme } from "@mui/material";
 
 interface IInputField extends React.ComponentProps<typeof TextField> {
     name: string;
-    control: Control;
+    control: Control<any>;
     maxLength?: number;
     multiline?: boolean;
     rows?: number;

@@ -11,6 +11,9 @@ import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
 import { useMediaQuery, Theme } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import Typography from "@mui/material/Typography";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 interface CreatePostFormProps {
   user: IUser | null;
@@ -19,8 +22,15 @@ interface CreatePostFormProps {
   setPostImage: Dispatch<SetStateAction<string>>;
 }
 
+export const postSchema = yup.object().shape({
+    title: yup.string().required().max(100, "Title must be less than 100 characters"),
+    preview: yup.string().required().max(120, "Preview must be less than 120 characters"),
+    content: yup.string().required(),
+    postImg: yup.mixed().required()
+});
+
 export const CreatePostForm = (props: CreatePostFormProps) => {
-    const { handleSubmit, control, register, reset, watch } = useForm();
+    const { handleSubmit, control, register, reset, watch, formState: { errors } } = useForm({ resolver: yupResolver(postSchema) });
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
     const navigate = useNavigate();
 
@@ -44,8 +54,9 @@ export const CreatePostForm = (props: CreatePostFormProps) => {
     const handleFormChange = () => {
         props.setTitle(watch("title"));
         props.setContent(watch("content"));
-        if (watch("postImg").length > 0) {
-            props.setPostImage(URL.createObjectURL(watch("postImg")[0]));
+        const postImg = watch("postImg") as FileList;
+        if (postImg.length > 0) {
+            props.setPostImage(URL.createObjectURL(postImg[0]));
         }
     };
 
@@ -59,7 +70,7 @@ export const CreatePostForm = (props: CreatePostFormProps) => {
             onSubmit={handleSubmit(publishPost)}
             onChange={handleFormChange}
             sx={{
-                mt:2
+                mt: 2,
             }}
         >
             <FormInputField
@@ -70,15 +81,21 @@ export const CreatePostForm = (props: CreatePostFormProps) => {
                 required
                 margin="normal"
                 placeholder="Title..."
-                maxLength={100}
                 variant="standard"
                 sx={{
                     ".MuiInputBase-input": {
                         fontWeight: 600,
-                        fontSize: "1.4em"
+                        fontSize: "1.4em",
                     },
                 }}
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.title?.message}
+            </Typography>
             <FormInputField
                 name="preview"
                 control={control}
@@ -87,11 +104,17 @@ export const CreatePostForm = (props: CreatePostFormProps) => {
                 required
                 margin="normal"
                 placeholder="Preview..."
-                maxLength={100}
                 multiline
                 rows={2}
                 variant="standard"
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.preview?.message}
+            </Typography>
             <FormInputField
                 name="content"
                 control={control}
@@ -122,6 +145,7 @@ export const CreatePostForm = (props: CreatePostFormProps) => {
                         accept="image/*"
                         multiple
                         type="file"
+                        required
                     />
                 </Button>
                 <Button

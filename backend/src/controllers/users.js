@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import { uploadImagesToFirebase } from "../utils/uploadImagesToFirebase.js";
+import { uploadUserToFirebase } from "../utils/uploadImagesToFirebase.js";
 
 export const getUserById = async (req, res) => {
     try {
@@ -20,19 +20,15 @@ export const updateUser = async (req, res) => {
             return res.status(400).json({ message: "Username and full name are required"});
         }
 
-        let avatar = "";
+        let updatedInfo = { ...req.body };
         if (req?.file) {
             if (process.env.NODE_ENV === "dev") {
-                avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
+                updatedInfo.avatar = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/users/` + req.file.filename;
             } else {
-                avatar = await uploadImagesToFirebase(req.file.buffer);
+                updatedInfo.avatar = await uploadUserToFirebase(req.file.buffer, req.body.username);
             }
         }
 
-        const updatedInfo = {
-            ...req.body,
-            avatar
-        };
         const foundUser = await User.findByIdAndUpdate(req.params.id, updatedInfo, { new: true });
         res.status(200).json(foundUser);
     } catch (error) {

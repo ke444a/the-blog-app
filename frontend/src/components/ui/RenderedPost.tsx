@@ -25,13 +25,17 @@ const RenderedPost = (props: IRenderedPostProps) => {
                     src={props.postImage}
                     alt="Post image"
                     sx={{
-                        width: "100%",
-                        height: "300px",
+                        display: "flex",
+                        width: "auto",
+                        maxWidth: "100%",
                         objectFit: "cover",
+                        height: "400px",
+                        borderRadius: "10px",
+                        marginX: "auto"
                     }}
                 />
             )}
-            <Stack direction="row" justifyContent="space-between" py={3}>
+            <Stack direction={{xs: "column", md: "row"}} justifyContent="space-between" py={3}>
                 <Typography
                     variant="h1"
                     sx={{
@@ -46,6 +50,9 @@ const RenderedPost = (props: IRenderedPostProps) => {
                         endIcon={<EditIcon />}
                         size="medium"
                         color="primary"
+                        sx={{
+                            width: "fit-content"
+                        }}
                         onClick={() =>
                             props.setIsEdit
                                 ? props.setIsEdit((prevState) => !prevState)

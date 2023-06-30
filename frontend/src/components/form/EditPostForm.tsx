@@ -12,6 +12,9 @@ import { toast } from "react-toastify";
 import { Dispatch, SetStateAction } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { Spinner } from "../ui/Spinner";
+import { postSchema } from "./CreatePostForm";
+import { yupResolver } from "@hookform/resolvers/yup";
+import Typography from "@mui/material/Typography";
 
 interface IEditPostForm {
     postId: string;
@@ -24,7 +27,7 @@ interface IEditPostForm {
 export const EditPostForm = (props: IEditPostForm) => {
     const queryClient = useQueryClient();
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-    const { register, control, setValue, handleSubmit } = useForm();
+    const { register, control, setValue, handleSubmit, formState: { errors } } = useForm({ resolver: yupResolver(postSchema) });
     useEffect(() => {
         setValue("title", props.title);
         setValue("preview", props.preview);
@@ -53,7 +56,11 @@ export const EditPostForm = (props: IEditPostForm) => {
     }
 
     return (
-        <Box component="form" onSubmit={handleSubmit(editPost)} sx={{ marginBottom: 2 }}>
+        <Box
+            component="form"
+            onSubmit={handleSubmit(editPost)}
+            sx={{ marginBottom: 2 }}
+        >
             <FormInputField
                 name="title"
                 control={control}
@@ -62,8 +69,14 @@ export const EditPostForm = (props: IEditPostForm) => {
                 required
                 margin="normal"
                 placeholder="Write your title here..."
-                maxLength={150}
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.title?.message}
+            </Typography>
             <FormInputField
                 name="preview"
                 control={control}
@@ -72,10 +85,16 @@ export const EditPostForm = (props: IEditPostForm) => {
                 required
                 margin="normal"
                 placeholder="Write your preview here..."
-                maxLength={500}
                 multiline
                 rows={3}
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.preview?.message}
+            </Typography>
             <FormInputField
                 name="content"
                 control={control}

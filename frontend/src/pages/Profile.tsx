@@ -11,7 +11,7 @@ import CustomContainer from "../components/ui/CustomContainer";
 import { useLogout } from "../hooks/auth/useLogout";
 import { AppDispatch } from "../app/store";
 import { logout } from "../features/auth/authSlice";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { EditUserForm } from "../components/form/EditUserForm";
 import { setCredentials } from "../features/auth/authSlice";
 import { useUpdateUser } from "../hooks/users/useUpdateUser";
@@ -23,6 +23,7 @@ import { toast } from "react-toastify";
 import AuthorPostList from "../components/ui/AuthorPostList";
 import { useMediaQuery, Theme } from "@mui/material";
 import RssFeedIcon from "@mui/icons-material/RssFeed";
+import { FieldValues } from "react-hook-form";
 
 const Profile = () => {
     const userId: string = useLocation().pathname.split("/")[2];
@@ -30,7 +31,6 @@ const Profile = () => {
     const user = useSelector(selectCurrentUser);
     const dispatch = useDispatch<AppDispatch>();
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
-    const editFormRef = useRef<HTMLFormElement | null>(null);
     const queryClient = useQueryClient();
     const [avatarImg, setAvatarImg] = useState<File | Blob | null>(null);
     const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up("xl"));
@@ -41,21 +41,20 @@ const Profile = () => {
         toast.success("User has been updated");
     };
     const updateUserMutation = useUpdateUser(user?._id || "", onEditSuccess);
-    const handleProfileEdit = () => {
-        if (isEditMode) {
-            if (editFormRef.current) {
-                const formData = new FormData(editFormRef.current);
-                formData.append("fullName", formData.get("firstName") + " " + formData.get("lastName"));
-                if (avatarImg) {
-                    formData.delete("avatar");
-                    formData.append("avatar", avatarImg);
-                }
-                updateUserMutation.mutate(formData);
-            }
-            setIsEditMode(false);
-        } else {
-            setIsEditMode(true);
+
+    const handleProfileEdit = (userData: FieldValues) => {
+        const formData = new FormData();
+        formData.append("username", userData.username);
+        formData.append("fullName", userData.firstName + " " + userData.lastName);
+        if (avatarImg) {
+            console.log(avatarImg);
+            formData.append("avatar", avatarImg);
         }
+        if (userData.bio) {
+            formData.append("bio", userData.bio);
+        }
+        updateUserMutation.mutate(formData);
+        setIsEditMode(false);
     };
 
     const onLogoutSuccess = () => {
@@ -80,7 +79,7 @@ const Profile = () => {
             >
                 <Paper
                     sx={(theme) => ({
-                        flex: { xs: "0 1 45%", md: "0 1 30%" },
+                        flex: { xs: "0 1 45%", md: "0 0 30%" },
                         marginRight: { xs: 0, sm: theme.spacing(4) },
                         display: "flex",
                         flexDirection: "column",
@@ -103,8 +102,8 @@ const Profile = () => {
                                     height: "140px",
                                 },
                                 borderRadius: "50%",
-                                width: "70px",
-                                height: "70px",
+                                width: "120px",
+                                height: "120px",
                                 marginBottom: theme.spacing(2),
                             })}
                             src={
@@ -123,9 +122,9 @@ const Profile = () => {
                         {isEditMode ? (
                             <EditUserForm
                                 user={user}
-                                ref={editFormRef}
                                 avatarImg={avatarImg}
                                 setAvatarImg={setAvatarImg}
+                                handleProfileEdit={handleProfileEdit}
                             />
                         ) : (
                             <Box>
@@ -167,11 +166,11 @@ const Profile = () => {
                                 </Typography>
                             </Box>
                         )}
-                        {user?._id === userId && (
+                        {user?._id === userId && !isEditMode && (
                             <Stack spacing={1} direction="row">
                                 <Button
                                     size="medium"
-                                    color={isEditMode ? "success" : "info"}
+                                    color="info"
                                     variant="text"
                                     sx={{
                                         fontWeight: 500,
@@ -180,7 +179,7 @@ const Profile = () => {
                                         width: "50%",
                                     }}
                                     type="submit"
-                                    onClick={handleProfileEdit}
+                                    onClick={() => setIsEditMode(prevEditMode => !prevEditMode)}
                                 >
                                     {isEditMode ? "Save" : "Edit"}
                                 </Button>
@@ -202,7 +201,9 @@ const Profile = () => {
                         )}
                     </Box>
                 </Paper>
-                <Box>
+                <Box sx={{
+                    flexGrow: 1
+                }}>
                     <Box
                         sx={{
                             display: "flex",

@@ -1,8 +1,8 @@
 import Post from "../models/Post.js";
-import { uploadImagesToFirebase } from "../utils/uploadImagesToFirebase.js";
+import { uploadPostToFirebase } from "../utils/uploadImagesToFirebase.js";
 
 export const getAllPosts = async (req, res) => {
-    const { page = 1, pageSize = 6 } = req.query;
+    const { page = 1, pageSize = 9 } = req.query;
     try {
         const pageInt = Number(page);
         const totalPosts = await Post.countDocuments();
@@ -38,7 +38,7 @@ export const createPost = async (req, res) => {
             if (process.env.NODE_ENV === "dev") {
                 postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
             } else {
-                postImg = await uploadImagesToFirebase(req.file.buffer);
+                postImg = await uploadPostToFirebase(req.file.buffer);
             }
         }
 
@@ -60,7 +60,7 @@ export const updatePost = async (req, res) => {
             if (process.env.NODE_ENV === "dev") {
                 postImg = req.protocol + "://" + req.hostname + `:${process.env.PORT}/uploads/posts/` + req.file.filename;
             } else {
-                postImg = await uploadImagesToFirebase(req.file.buffer);
+                postImg = await uploadPostToFirebase(req.file.buffer);
             }
         }
 
