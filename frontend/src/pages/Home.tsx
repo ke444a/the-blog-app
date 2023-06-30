@@ -2,7 +2,6 @@ import Box from "@mui/material/Box";
 import CustomContainer from "../components/ui/CustomContainer";
 import PostFeed from "../components/ui/PostFeed";
 import Header from "../components/ui/Header";
-import Footer from "../components/ui/Footer";
 import { Typography } from "@mui/material";
 
 const Home = () => {    
