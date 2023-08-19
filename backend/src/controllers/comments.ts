@@ -12,25 +12,6 @@ export const createComment = async (req: Request, res: Response, next: NextFunct
     }
 };
 
-// export const getComment = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const foundComment = await prisma.comment.findUnique({
-//             where: {
-//                 id: req.params.id
-//             },
-//             include: {
-//                 author: true
-//             }
-//         });
-//         if (!foundComment) {
-//             return res.status(404).json({ message: "Comment not found" });
-//         }
-//         res.status(200).json(foundComment);
-//     } catch (error) {
-//         next(error);
-//     }
-// };
-
 export const getPostComments = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const postComments = await prisma.comment.findMany({

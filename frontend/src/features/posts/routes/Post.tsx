@@ -7,14 +7,14 @@ import { CommentSection } from "../../comments/components/CommentSection";
 import RenderedPost from "../components/RenderedPost";
 import { Spinner } from "../../../components/Elements/Spinner";
 import { useState } from "react";
-import { EditPostForm } from "../components/EditPostForm";
+import EditorTabs from "../components/EditorTabs";
 
 const Post = () => {
     const { postId } = useParams();
     const user = useSelector(selectCurrentUser);
     const [isEdit, setIsEdit] = useState<boolean>(false);
 
-    const { data: post, isSuccess, isLoading } = useGetSinglePostQuery(postId || "");
+    const { data: post, isSuccess, isLoading } = useGetSinglePostQuery(postId);
     if (!isSuccess) {
         return null;
     }
@@ -25,23 +25,23 @@ const Post = () => {
     return (
         <CustomContainer maxWidth="xl">
             {isEdit ?
-                <EditPostForm 
+                <EditorTabs 
                     postId={post.id}
-                    title={post.title}
-                    content={post.content}
-                    preview={post.preview}
-                    setIsEdit={setIsEdit}
+                    isEdit={isEdit}
                 />
                 :
-                <RenderedPost 
-                    title={post.title}
-                    content={post.content}
-                    isEditAllowed={post.author.id===user?.id} 
-                    isEdit={isEdit}
-                    setIsEdit={setIsEdit}
-                    postImage={post.postImg}
-                />}
-            {!isEdit && <CommentSection postId={postId || ""} />}
+                <>
+                    <RenderedPost 
+                        title={post.title}
+                        content={post.content}
+                        isEditAllowed={post.author.id===user?.id} 
+                        isEdit={isEdit}
+                        setIsEdit={setIsEdit}
+                        postImg={post.postImg}
+                    />
+                    <CommentSection postId={postId || ""} />
+                </>
+            }
         </CustomContainer>
     );
 };

@@ -20,7 +20,6 @@ const styles = (theme: Theme) => ({
     ".active": {
         fontWeight: 500,
     },
-
 });
 
 export const globalStyles = <GlobalStyles styles={styles} />;

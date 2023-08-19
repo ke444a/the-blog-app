@@ -18,7 +18,7 @@ const PostPreview = (props: IPost) => {
     const { mutate: likePost } = useLikePostMutation();
     const { mutate: dislikePost } = useDislikePostMutation();
     const user = useSelector(selectCurrentUser);
-    const { data: isLiked, isSuccess: isCheckLikeSuccess } = useCheckLikeQuery(user?.id || "", props.id);
+    const { data: isPostLiked } = useCheckLikeQuery(user?.id || "", props.id);
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
 
     const handleLikePost = async () => {
@@ -27,16 +27,12 @@ const PostPreview = (props: IPost) => {
             userId: user?.id
         };
 
-        if (isLiked) {
+        if (isPostLiked) {
             dislikePost(data);
         } else {
             likePost(data);
         }
     };
-
-    if (!isCheckLikeSuccess) {
-        return null;
-    }
 
     return (
         <Box
@@ -71,7 +67,7 @@ const PostPreview = (props: IPost) => {
                         },
                         height: "200px",
                     })}
-                    src={props.postImg}
+                    src={props.postImg as string}
                     alt="Blog image"
                 />
             </Box>
@@ -178,8 +174,8 @@ const PostPreview = (props: IPost) => {
                         <Button
                             variant="text"
                             startIcon={
-                                isLiked ? (
-                                    <FavoriteOutlinedIcon color="error" />
+                                isPostLiked ? (
+                                    <FavoriteOutlinedIcon color="info" />
                                 ) : (
                                     <FavoriteBorderOutlinedIcon />
                                 )

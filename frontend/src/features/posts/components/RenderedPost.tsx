@@ -7,10 +7,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import { Dispatch, SetStateAction } from "react";
 import remarkGfm from "remark-gfm";
 
-interface IRenderedPostProps {
-  title: string;
-  content: string;
-  postImage: string;
+interface IRenderedPostProps extends Partial<IPost> {
   isEdit?: boolean;
   setIsEdit?: Dispatch<SetStateAction<boolean>>;
   isEditAllowed?: boolean;
@@ -19,10 +16,10 @@ interface IRenderedPostProps {
 const RenderedPost = (props: IRenderedPostProps) => {
     return (
         <Box sx={{ mt: 2 }}>
-            {props.postImage && (
+            {props.postImg && (
                 <Box
                     component="img"
-                    src={props.postImage}
+                    src={props.postImg as string}
                     alt="Post image"
                     sx={{
                         display: "flex",
@@ -75,7 +72,7 @@ const RenderedPost = (props: IRenderedPostProps) => {
                 }}
                 remarkPlugins={[remarkGfm]}
             >
-                {props.content}
+                {props.content || ""}
             </ReactMarkdown>
         </Box>
     );

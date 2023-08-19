@@ -3,20 +3,21 @@ import Stack from "@mui/material/Stack";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
-import { FieldValues, useForm } from "react-hook-form";
-import { FormInputField } from "../../../components/Elements/FormInputField";
+import TextField from "@mui/material/TextField";
+import { useForm } from "react-hook-form";
 import { useState, useEffect, Dispatch, SetStateAction } from "react";
 import defaultAvatar from "../../../assets/images/default_avatar.webp";
-import { useMediaQuery, Theme } from "@mui/material";
+import { Theme } from "@mui/material";
 import Typography from "@mui/material/Typography";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import useMediaQuery from "@mui/material/useMediaQuery";
+import { Spinner } from "../../../components/Elements/Spinner";
+import { useUpdateUserMutation } from "../api/updateUser";
 
-interface IUserFormProps {
-    avatarImg: Blob | File | null;
-    setAvatarImg: Dispatch<SetStateAction<File | null | Blob>>;
-    user: IUser | null;
-    handleProfileEdit: (data: FieldValues) => void;
+type Props = {
+    user: IUser;
+    setIsEditMode: Dispatch<SetStateAction<boolean>>;
 }
 
 const userSchema = yup.object({
@@ -26,66 +27,62 @@ const userSchema = yup.object({
     bio: yup.string().max(120, "Bio must be less than 120 characters"),
     avatar: yup.mixed(),
 });
-type IUserForm = yup.InferType<typeof userSchema>;
+type UserForm = yup.InferType<typeof userSchema>;
 
-export const EditUserForm = (props: IUserFormProps) => {
-    const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user?.avatar as string || "");
-    const { register, handleSubmit, control, setValue, formState: { errors } } = useForm<IUserForm>({ 
-        resolver: yupResolver<IUserForm>(userSchema) 
+export const EditUserForm = (props: Props) => {
+    const [avatarImg, setAvatarImg] = useState<File | Blob | null>(null);
+    const { mutate: updateUser, isLoading: isUserUpdating } = useUpdateUserMutation(props.user.id || "");
+    const { register, handleSubmit, formState: { errors, isDirty }, setValue } = useForm<UserForm>({ 
+        resolver: yupResolver<UserForm>(userSchema) ,
+        defaultValues: {
+            firstName: props.user.fullName.split(" ")[0],
+            lastName: props.user.fullName.split(" ")[1],
+            username: props.user.username,
+            bio: props.user.bio || "",
+            avatar: props.user.avatar
+        }
     });
     const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
+    const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user.avatar as string || null);
 
-    useEffect(() => {
-        if (props.user?.fullName) {
-            const fullName = props.user.fullName.split(" ");
-            setValue("firstName", fullName[0]);
-            setValue("lastName", fullName[1]);
-        }
-        if (props.user?.username) {
-            setValue("username", props.user.username);
-        }
-        setValue("bio", props.user?.bio);
-        setValue("avatar", props.user?.avatar);
-    }, []);
+    const editProfile = (formData: UserForm) => {
+        const { firstName, lastName, ...newFormData } = formData;
+        const userData = { 
+            ...newFormData,
+            fullName: `${firstName} ${lastName}` ,
+            id: props.user.id
+        };
 
-    useEffect(() => {
-        if (props.avatarImg) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                setPreview(reader.result);
-            };
-            reader.readAsDataURL(props.avatarImg);
-        } else if (preview!==props.user?.avatar) {
-            setPreview(null);
+        if (avatarImg) {
+            userData.avatar = avatarImg;
         }
-    }, [props.avatarImg]);
+        
+        if (isDirty || avatarImg) {
+            updateUser({
+                ...userData,
+                avatarPath: preview as string
+            });
+        }
+        props.setIsEditMode(false);
+    };
+
+    if (isUserUpdating) {
+        return <Spinner />;
+    }
 
     return (
-        <Box component="form" onSubmit={handleSubmit(props.handleProfileEdit)}>
+        <Box component="form" onSubmit={handleSubmit(editProfile)}>
             <Stack direction="column" spacing={1}>
-                <Avatar
-                    src={preview ? (preview as string) : defaultAvatar}
-                    onClick={() => (preview ? props.setAvatarImg(null) : null)}
-                    alt=""
-                    sx={(theme) => ({
-                        [theme.breakpoints.up("lg")]: {
-                            width: "200px",
-                            height: "200px",
-                        },
-                        [theme.breakpoints.up("sm")]: {
-                            width: "120px",
-                            height: "120px",
-                        },
-                        borderRadius: "50%",
-                        width: "70px",
-                        height: "70px",
-                        margin: "0 auto 10px",
-                    })}
+                <PreviewAvatar 
+                    avatarImg={avatarImg}
+                    setAvatarImg={setAvatarImg}
+                    preview={preview}
+                    setPreview={setPreview}
+                    currentAvatar={props.user.avatar as string || ""}
                 />
                 <Box>
-                    <FormInputField
-                        name="firstName"
-                        control={control}
+                    <TextField 
+                        {...register("firstName")}
                         fullWidth
                         required
                         margin="dense"
@@ -95,13 +92,11 @@ export const EditUserForm = (props: IUserFormProps) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            },
+                            }
                         }}
                     />
-
-                    <FormInputField
-                        name="lastName"
-                        control={control}
+                    <TextField 
+                        {...register("lastName")}
                         fullWidth
                         required
                         margin="dense"
@@ -111,12 +106,11 @@ export const EditUserForm = (props: IUserFormProps) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            },
+                            }
                         }}
                     />
-                    <FormInputField
-                        name="username"
-                        control={control}
+                    <TextField 
+                        {...register("username")}
                         type="text"
                         required
                         margin="dense"
@@ -126,12 +120,11 @@ export const EditUserForm = (props: IUserFormProps) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            },
+                            }
                         }}
                     />
-                    <FormInputField
-                        name="bio"
-                        control={control}
+                    <TextField 
+                        {...register("bio")}
                         type="text"
                         required
                         margin="dense"
@@ -139,12 +132,11 @@ export const EditUserForm = (props: IUserFormProps) => {
                         fullWidth
                         multiline
                         rows={3}
-                        maxLength={120}
                         sx={{
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            },
+                            }
                         }}
                     />
                     <Typography
@@ -168,16 +160,17 @@ export const EditUserForm = (props: IUserFormProps) => {
               Update avatar
                         <input
                             {...register("avatar")}
-                            name="avatar"
                             hidden
                             accept="image/*"
                             multiple
                             type="file"
                             onChange={(e) => {
                                 if (!e.target.files) {
-                                    props.setAvatarImg(null);
+                                    setAvatarImg(null);
+                                    setValue("avatar", null);
                                 } else {
-                                    props.setAvatarImg(e.target.files[0]);
+                                    setAvatarImg(e.target.files[0]);
+                                    setValue("avatar", e.target.files[0]);
                                 }
                             }}
                         />
@@ -198,5 +191,49 @@ export const EditUserForm = (props: IUserFormProps) => {
                 </Box>
             </Stack>
         </Box>
+    );
+};
+
+type AvatarProps = {
+  avatarImg: File | Blob | null;
+  setAvatarImg: Dispatch<SetStateAction<File | Blob | null>>;
+  preview: string | ArrayBuffer | null;
+  setPreview: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
+  currentAvatar: string;
+};
+
+const PreviewAvatar = (props: AvatarProps) => {
+    useEffect(() => {
+        if (props.avatarImg) {
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                props.setPreview(reader.result);
+            };
+            reader.readAsDataURL(props.avatarImg);
+        } else if (props.preview !== props.currentAvatar) {
+            props.setPreview(null);
+        }
+    }, [props.avatarImg]);
+
+    return (
+        <Avatar
+            src={props.preview ? (props.preview as string) : defaultAvatar}
+            onClick={() => (props.preview ? props.setAvatarImg(null) : null)}
+            alt=""
+            sx={(theme) => ({
+                [theme.breakpoints.up("lg")]: {
+                    width: "200px",
+                    height: "200px",
+                },
+                [theme.breakpoints.up("sm")]: {
+                    width: "120px",
+                    height: "120px",
+                },
+                borderRadius: "50%",
+                width: "70px",
+                height: "70px",
+                margin: "0 auto 10px",
+            })}
+        />
     );
 };

@@ -79,28 +79,3 @@ export const logout = async (req: Request, res: Response, next: NextFunction) =>
         next(error);
     }
 };
-
-// export const handleRefreshToken = async (req: Request, res: Response) => {
-//     const cookies = req.cookies;
-//     if (!cookies?.jwt) {
-//         return res.status(401).json({ message: "No refresh token!" });
-//     }
-
-//     const refreshToken = cookies.jwt;
-//     const foundUser = await User.findOne({ refreshToken }).exec();
-//     if (!foundUser) {
-//         return res.status(200).json({ message: "No user with given refresh token"} );
-//     }
-
-//     jwt.verify(
-//         refreshToken,
-//         process.env.REFRESH_TOKEN_SECRET || "",
-//         (err: Error | null, decoded: any) => {
-//             if (err) {
-//                 return res.status(403).json({ message: err.message });
-//             }
-//             const accessToken = generateJwtToken(decoded.id, process.env.ACCESS_TOKEN_SECRET || "", "30s");
-//             res.status(201).json({ accessToken });
-//         }
-//     );
-// };

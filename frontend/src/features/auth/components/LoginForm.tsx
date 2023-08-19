@@ -1,10 +1,11 @@
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import TextField from "@mui/material/TextField";
 import { useForm } from "react-hook-form";
-import { FormInputField } from "../../../components/Elements/FormInputField";
 import { useLoginMutation } from "../api/login";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { useMediaQuery, Theme } from "@mui/material";
 
 const loginFormSchema = yup.object({
     username: yup.string().required("Username is required"),
@@ -14,9 +15,10 @@ type ILoginForm = yup.InferType<typeof loginFormSchema>;
 
 
 export const LoginForm = () => {
-    const { handleSubmit, control, setValue } = useForm<ILoginForm>({
-        resolver: yupResolver(loginFormSchema),
+    const { handleSubmit, setValue, register } = useForm<ILoginForm>({
+        resolver: yupResolver(loginFormSchema)
     });
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
     const { mutate: login } = useLoginMutation();
 
     const loginSubmit = (loginData: ILoginForm) => {
@@ -38,24 +40,31 @@ export const LoginForm = () => {
             noValidate
             sx={{ mt: 1 }}
         >
-            <FormInputField
-                name="username"
-                control={control}
+            <TextField
+                {...register("username")}
+                size={isSmallScreen ? "small" : "medium"}
                 label="Username"
+                type="text"
                 fullWidth
                 required
                 margin="normal"
                 autoFocus
-                type="text"
+                InputLabelProps={{
+                    shrink: true
+                }}
             />
-            <FormInputField
-                name="password"
-                control={control}
+            <TextField
+                {...register("password")}
+                size={isSmallScreen ? "small" : "medium"}
                 label="Password"
+                type="password"
                 fullWidth
                 required
                 margin="normal"
-                type="password"
+                autoFocus
+                InputLabelProps={{
+                    shrink: true
+                }}
             />
             <Button
                 type="button"
@@ -65,7 +74,7 @@ export const LoginForm = () => {
                 sx={{ mt: 3 }}
                 onClick={handleDemoAccountClick}
             >
-            Use Demo Account
+          Use Demo Account
             </Button>
             <Button
                 type="submit"
@@ -74,9 +83,8 @@ export const LoginForm = () => {
                 color="primary"
                 sx={{ mt: 1, mb: 2 }}
             >
-            Login
+          Login
             </Button>
         </Box>
-
     );
 };

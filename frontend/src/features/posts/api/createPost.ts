@@ -12,6 +12,6 @@ const createPost = async (data: FormData): Promise<IPost> => {
 
 export const useCreatePostMutation = () => {
     return useMutation({
-        mutationFn: (postData: FormData) => createPost(postData),
+        mutationFn: (postData: FormData) => createPost(postData)
     });
 };

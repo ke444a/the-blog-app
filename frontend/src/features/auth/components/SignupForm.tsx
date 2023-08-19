@@ -5,11 +5,14 @@ import Box from "@mui/material/Box";
 import Stack from "@mui/material/Stack";
 import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 import Button from "@mui/material/Button";
-import { FormInputField } from "../../../components/Elements/FormInputField";
+import TextField from "@mui/material/TextField";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { convertToFormData } from "../../../utils/convertToFormData";
 import { Dispatch, SetStateAction } from "react";
+import { useMediaQuery, Theme } from "@mui/material";
+import { Spinner } from "../../../components/Elements/Spinner";
+
 
 const signupFormSchema = yup.object({
     username: yup.string().required(),
@@ -34,13 +37,13 @@ type Props = {
 export const SignupForm = (props: Props) => {
     const {
         handleSubmit,
-        control,
         register,
         formState: { errors },
     } = useForm<ISignupForm>({
         resolver: yupResolver<ISignupForm>(signupFormSchema),
     });
-    const { mutate: registerUser } = useRegisterMutation();
+    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
+    const { mutate: registerUser, isLoading } = useRegisterMutation();
     const handleRegister = (signupData: ISignupForm) => {
         const signupDataTrim = {
             avatar: props.avatarImg || "",
@@ -51,41 +54,49 @@ export const SignupForm = (props: Props) => {
         registerUser(convertToFormData(signupDataTrim));
     };
 
+    if (isLoading) {
+        return <Spinner />;
+    }
+
     return (
         <Box
             component="form"
             onSubmit={handleSubmit(handleRegister)}
             sx={{ mt: 1 }}
         >
-            <FormInputField
-                name="username"
-                control={control}
+            <TextField
+                {...register("username")}
+                size={isSmallScreen ? "small" : "medium"}
+                type="text"
                 label="Username"
                 fullWidth
                 required
                 margin="dense"
                 autoFocus
-                type="text"
             />
-            <FormInputField
-                name="password"
-                control={control}
+            <TextField
+                {...register("password")}
+                size={isSmallScreen ? "small" : "medium"}
+                type="password"
                 label="Password"
                 fullWidth
                 required
                 margin="dense"
-                type="password"
             />
-            <FormInputField
-                name="password2"
-                control={control}
-                label="Confirm password"
+            <TextField
+                {...register("password2")}
+                size={isSmallScreen ? "small" : "medium"}
+                type="password"
+                label="Password"
                 fullWidth
                 required
                 margin="dense"
-                type="password"
             />
-            <Typography color="error" variant="body1" sx={{ fontWeight: 500, pb: 1 }}>
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
                 {errors.password2?.message}
             </Typography>
             <Stack
@@ -96,36 +107,40 @@ export const SignupForm = (props: Props) => {
                     marginBottom: "4px",
                 }}
             >
-                <FormInputField
-                    name="firstName"
-                    control={control}
+                <TextField 
+                    {...register("firstName")}
+                    size={isSmallScreen ? "small" : "medium"}
+                    type="text"
                     label="First Name"
                     fullWidth
                     required
-                    type="text"
                 />
-                <FormInputField
-                    name="lastName"
-                    control={control}
+                <TextField 
+                    {...register("lastName")}
+                    size={isSmallScreen ? "small" : "medium"}
+                    type="text"
                     label="Last Name"
                     fullWidth
                     required
-                    type="text"
                 />
             </Stack>
-            <FormInputField
-                name="bio"
-                control={control}
+            <TextField 
+                {...register("bio")}
+                size={isSmallScreen ? "small" : "medium"}
+                type="text"
                 label="Bio"
                 fullWidth
-                type="text"
+                required
                 margin="dense"
                 placeholder="Tell us about yourself..."
                 multiline
                 rows={2}
-                maxLength={250}
             />
-            <Typography color="error" variant="body1" sx={{ fontWeight: 500, pb: 1 }}>
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
                 {errors.bio?.message}
             </Typography>
             {!props.preview && (
@@ -140,7 +155,7 @@ export const SignupForm = (props: Props) => {
                         marginBottom: "4px",
                     }}
                 >
-          Upload
+            Upload
                     <input
                         {...register("avatar")}
                         name="avatar"
@@ -165,7 +180,7 @@ export const SignupForm = (props: Props) => {
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
             >
-        Sign Up
+          Sign Up
             </Button>
         </Box>
     );

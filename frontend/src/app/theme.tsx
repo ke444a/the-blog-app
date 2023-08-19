@@ -56,6 +56,22 @@ const theme = createTheme({
             main: "#6941C6",
         },
     },
+    components: {
+        MuiInput: {
+            styleOverrides: {
+                root: {
+                    fontSize: "1.2em"
+                }
+            }
+        },
+        MuiInputLabel: {
+            styleOverrides: {
+                root: {
+                    fontSize: "1.2em"
+                }   
+            }
+        }
+    }
 });
 
 export default theme;

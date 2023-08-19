@@ -53,6 +53,7 @@ const seed = async () => {
         await prisma.post.create({
             data: {
                 ...post,
+                updatedAt: new Date(),
                 likes: {
                     create: likesData
                 },
