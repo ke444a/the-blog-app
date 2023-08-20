@@ -13,7 +13,7 @@ import { errorMiddleware } from "./middleware/errorMiddleware";
 import { v2 as cloudinary } from "cloudinary";
 
 const app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -43,6 +43,6 @@ app.use("/auth", authRoutes);
 app.use("/comments", commentsRoutes);
 app.use(errorMiddleware);
 
-app.listen(PORT, () => {
+app.listen({ address: "0.0.0.0", port: PORT }, () => {
     console.log(`Server running on port: ${PORT}`);
 });

@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
   url      = env("DATABASE_URL")
 }
 
@@ -14,7 +14,7 @@ model User {
   id       String    @id @default(cuid())
   username String    @unique
   password String
-  bio      String?   @db.VarChar(120)
+  bio      String?   @db.Char(120)
   avatar   String?
   fullName String
   posts    Post[]
@@ -24,9 +24,9 @@ model User {
 
 model Post {
   id          String    @id @default(cuid())
-  title       String    @db.VarChar(100)
+  title       String    @db.Char(100)
   content     String
-  preview     String    @db.VarChar(120)
+  preview     String    @db.Char(120)
   likesNumber Int       @default(0)
   postImg     String
   author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
@@ -48,7 +48,7 @@ model Comment {
 }
 
 model Like {
-  id     Int    @id @default(autoincrement())
+  id     BigInt    @id @default(sequence())
   post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
   postId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
