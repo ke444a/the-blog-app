@@ -30,7 +30,7 @@ const Navbar = () => {
                     }}
                     fontSize="1.2em"
                 >
-            Home
+                    Home
                 </Box>
                 <Box
                     component={NavLink}
@@ -43,7 +43,7 @@ const Navbar = () => {
                     }}
                     fontSize="1.2em"
                 >
-            Editor
+                    Editor
                 </Box>
                 <Box
                     component={NavLink}
@@ -56,7 +56,7 @@ const Navbar = () => {
                     }}
                     fontSize="1.2em"
                 >
-            Profile
+                    Profile
                 </Box>
             </Box>
         </CustomContainer>

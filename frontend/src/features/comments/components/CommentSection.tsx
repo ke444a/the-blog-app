@@ -7,7 +7,9 @@ import { sortCommentsByDate } from "../../../utils/sortByDate";
 import CommentForm from "./CommentForm";
 
 export const CommentSection = (props: { postId: string }) => {
-    const { data: postComments, isSuccess } = usePostCommentsQuery(props.postId);   
+    const { data: postComments, isSuccess } = usePostCommentsQuery(
+        props.postId,
+    );
     if (!isSuccess) {
         return null;
     }
@@ -19,14 +21,9 @@ export const CommentSection = (props: { postId: string }) => {
             </Typography>
             <CommentForm postId={props.postId} />
             <Stack spacing={3} pt={1} mb={2}>
-                {sortCommentsByDate(postComments).map(
-                    (comment: IComment) => (
-                        <Comment
-                            key={comment.id}
-                            {...comment}
-                        />
-                    )
-                )}
+                {sortCommentsByDate(postComments).map((comment: IComment) => (
+                    <Comment key={comment.id} {...comment} />
+                ))}
             </Stack>
         </Box>
     );

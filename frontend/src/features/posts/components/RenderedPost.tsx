@@ -8,9 +8,9 @@ import { Dispatch, SetStateAction } from "react";
 import remarkGfm from "remark-gfm";
 
 interface IRenderedPostProps extends Partial<IPost> {
-  isEdit?: boolean;
-  setIsEdit?: Dispatch<SetStateAction<boolean>>;
-  isEditAllowed?: boolean;
+    isEdit?: boolean;
+    setIsEdit?: Dispatch<SetStateAction<boolean>>;
+    isEditAllowed?: boolean;
 }
 
 const RenderedPost = (props: IRenderedPostProps) => {
@@ -28,11 +28,15 @@ const RenderedPost = (props: IRenderedPostProps) => {
                         objectFit: "cover",
                         height: "400px",
                         borderRadius: "10px",
-                        marginX: "auto"
+                        marginX: "auto",
                     }}
                 />
             )}
-            <Stack direction={{xs: "column", md: "row"}} justifyContent="space-between" py={3}>
+            <Stack
+                direction={{ xs: "column", md: "row" }}
+                justifyContent="space-between"
+                py={3}
+            >
                 <Typography
                     variant="h1"
                     sx={{
@@ -48,7 +52,7 @@ const RenderedPost = (props: IRenderedPostProps) => {
                         size="medium"
                         color="primary"
                         sx={{
-                            width: "fit-content"
+                            width: "fit-content",
                         }}
                         onClick={() =>
                             props.setIsEdit
@@ -56,17 +60,27 @@ const RenderedPost = (props: IRenderedPostProps) => {
                                 : null
                         }
                     >
-              Edit
+                        Edit
                     </Button>
                 )}
             </Stack>
+            <Typography
+                variant="body1"
+                sx={{
+                    fontWeight: "500",
+                    fontStyle: "italic",
+                    pb: 3,
+                }}
+            >
+                {props.preview}
+            </Typography>
             <ReactMarkdown
                 components={{
                     p: ({ node, ...props }) => (
                         <Typography
                             variant="body1"
                             {...props}
-                            sx={{ fontSize: "1.15em", py: .5 }}
+                            sx={{ fontSize: "1.15em", py: 0.5 }}
                         />
                     ),
                 }}

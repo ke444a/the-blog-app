@@ -21,16 +21,24 @@ const PostFeed = () => {
                 {allPostsQuery.data?.pages.map((page) => {
                     return (
                         <Fragment key={page.page}>
-                            {page.posts.length > 0 && page.posts.map((post: IPost) => {
-                                return (
-                                    <Grid item key={post.id} xs={12} sm={6} md={4} xl={3}>
-                                        <PostPreview
+                            {page.posts.length > 0 &&
+                                page.posts.map((post: IPost) => {
+                                    return (
+                                        <Grid
+                                            item
                                             key={post.id}
-                                            {...post}
-                                        />
-                                    </Grid>
-                                );
-                            })}
+                                            xs={12}
+                                            sm={6}
+                                            md={4}
+                                            xl={3}
+                                        >
+                                            <PostPreview
+                                                key={post.id}
+                                                {...post}
+                                            />
+                                        </Grid>
+                                    );
+                                })}
                         </Fragment>
                     );
                 })}

@@ -8,9 +8,11 @@ import { useNavigate } from "react-router-dom";
 type ILoginCredentials = {
     username: string;
     password: string;
-}
+};
 
-const login = async (credentials: ILoginCredentials): Promise<{ user: IUser }> => {
+const login = async (
+    credentials: ILoginCredentials,
+): Promise<{ user: IUser }> => {
     const response = await api.post("/auth/login", credentials);
     return response.data;
 };
@@ -24,6 +26,6 @@ export const useLoginMutation = () => {
         onSuccess: (data) => {
             dispatch(setCredentials({ user: data.user }));
             navigate("/");
-        }
+        },
     });
 };

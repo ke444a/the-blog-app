@@ -4,7 +4,7 @@ import PostFeed from "../../posts/components/PostFeed";
 import Header from "../../../components/Layout/Header";
 import { Typography } from "@mui/material";
 
-const Home = () => {    
+const Home = () => {
     return (
         <CustomContainer>
             <Header />
@@ -14,7 +14,7 @@ const Home = () => {
                         paddingX: "20px",
                         margin: "15px 0",
                     },
-                    padding: "20px 0"
+                    padding: "20px 0",
                 })}
             >
                 <Typography
@@ -24,7 +24,7 @@ const Home = () => {
                         mb: 3,
                     }}
                 >
-              Latest posts
+                    Latest posts
                 </Typography>
                 <PostFeed />
             </Box>

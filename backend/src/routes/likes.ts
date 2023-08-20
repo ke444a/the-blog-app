@@ -1,8 +1,4 @@
-import {
-    likePost,
-    dislikePost,
-    checkLike
-} from "../controllers/likes";
+import { likePost, dislikePost, checkLike } from "../controllers/likes";
 import { authMiddleware } from "../middleware/authMiddleware";
 import express from "express";
 

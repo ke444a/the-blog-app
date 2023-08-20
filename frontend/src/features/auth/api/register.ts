@@ -8,8 +8,8 @@ import { useNavigate } from "react-router-dom";
 const register = async (credentials: FormData): Promise<{ user: IUser }> => {
     const response = await api.post("/auth/register", credentials, {
         headers: {
-            "Content-Type": "multipart/form-data"
-        }
+            "Content-Type": "multipart/form-data",
+        },
     });
     return response.data;
 };
@@ -23,6 +23,6 @@ export const useRegisterMutation = () => {
         onSuccess: (data) => {
             dispatch(setCredentials({ user: data.user }));
             navigate("/");
-        }
+        },
     });
 };

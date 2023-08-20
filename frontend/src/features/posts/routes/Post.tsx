@@ -24,24 +24,22 @@ const Post = () => {
 
     return (
         <CustomContainer maxWidth="xl">
-            {isEdit ?
-                <EditorTabs 
-                    postId={post.id}
-                    isEdit={isEdit}
-                />
-                :
+            {isEdit ? (
+                <EditorTabs postId={post.id} isEdit={isEdit} />
+            ) : (
                 <>
-                    <RenderedPost 
+                    <RenderedPost
                         title={post.title}
                         content={post.content}
-                        isEditAllowed={post.author.id===user?.id} 
+                        preview={post.preview}
+                        isEditAllowed={post.author.id === user?.id}
                         isEdit={isEdit}
                         setIsEdit={setIsEdit}
                         postImg={post.postImg}
                     />
                     <CommentSection postId={postId || ""} />
                 </>
-            }
+            )}
         </CustomContainer>
     );
 };

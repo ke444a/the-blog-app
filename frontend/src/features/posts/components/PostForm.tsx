@@ -18,47 +18,83 @@ import { useUpdatePostMutation } from "../api/updatePost";
 import { useNavigate } from "react-router-dom";
 
 interface IPostFormProps extends Partial<IPost> {
-  setTitle: Dispatch<SetStateAction<string>>;
-  setContent: Dispatch<SetStateAction<string>>;
-  setPostImg: Dispatch<SetStateAction<string | File>>;
-  isEdit?: boolean;
-  setIsEdit?: Dispatch<SetStateAction<boolean>>;
+    setTitle: Dispatch<SetStateAction<string>>;
+    setPreview: Dispatch<SetStateAction<string>>;
+    setContent: Dispatch<SetStateAction<string>>;
+    setPostImg: Dispatch<SetStateAction<string | File>>;
+    isEdit?: boolean;
+    setIsEdit?: Dispatch<SetStateAction<boolean>>;
 }
 
 export const postValidationSchema = yup.object({
-    title: yup.string().required().max(100, "Title must be less than 100 characters"),
-    preview: yup.string().required().max(120, "Preview must be less than 120 characters"),
-    content: yup.string().required(),
-    postImg: yup.mixed().required()
+    title: yup
+        .string()
+        .required("Title is required")
+        .max(100, "Title must be less than 100 characters"),
+    preview: yup
+        .string()
+        .required("Preview is required")
+        .max(120, "Preview must be less than 120 characters"),
+    content: yup.string().required("Content is required"),
+    postImg: yup
+        .mixed()
+        .test("postImgLength", "Post image is required", (value) => {
+            if (value instanceof FileList) {
+                return value.length > 0;
+            }
+            return true;
+        }),
 });
-export type IPostForm = yup.InferType<typeof postValidationSchema>;
+export type PostForm = yup.InferType<typeof postValidationSchema>;
 
 export const PostForm = (props: IPostFormProps) => {
-    const { handleSubmit, register, formState: { errors }, watch } = useForm<IPostForm>({ 
-        resolver: yupResolver<IPostForm>(postValidationSchema),
+    const {
+        handleSubmit,
+        register,
+        formState: { errors, isDirty },
+        watch,
+    } = useForm<PostForm>({
+        resolver: yupResolver<PostForm>(postValidationSchema),
         defaultValues: {
             title: props.title || "",
             preview: props.preview || "",
-            content: props.content || ""
-        }
+            content: props.content || "",
+            postImg: props.postImg,
+        },
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));
-    const { mutate: createPost, isLoading: isPostCreating, isSuccess: isCreatingSuccess } = useCreatePostMutation();
-    const { mutate: updatePost, isLoading: isPostUpdating, isSuccess: isUpdatingSuccess } = useUpdatePostMutation(props.id || "");
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.down("sm"),
+    );
+    const {
+        mutate: createPost,
+        isLoading: isPostCreating,
+        isSuccess: isCreatingSuccess,
+    } = useCreatePostMutation();
+    const {
+        mutate: updatePost,
+        isLoading: isPostUpdating,
+        isSuccess: isUpdatingSuccess,
+    } = useUpdatePostMutation(props.id || "");
     const user = useSelector(selectCurrentUser);
     const navigate = useNavigate();
 
-    const handleFormSubmit = (formData: IPostForm) => {
+    const handleFormSubmit = (formData: PostForm) => {
         const postData = {
             ...formData,
-            postImg: (formData.postImg as FileList)[0]
+            postImg: (formData.postImg as FileList)[0],
         };
 
-        props.isEdit ?
-            updatePost(convertToFormData(postData)) :
-            createPost(convertToFormData({ ...postData, authorId: user?.id }));
+        if (!isDirty && props.setIsEdit) {
+            props.setIsEdit(false);
+        }
+
+        props.isEdit
+            ? updatePost(convertToFormData(postData))
+            : createPost(
+                convertToFormData({ ...postData, authorId: user?.id }),
+            );
     };
-    
+
     useEffect(() => {
         const postImg = watch("postImg");
         if (postImg instanceof FileList && postImg.length > 0) {
@@ -70,6 +106,7 @@ export const PostForm = (props: IPostFormProps) => {
         props.setTitle(props.title || "");
         props.setContent(props.content || "");
         props.setPostImg(props.postImg || "");
+        props.setPreview(props.preview || "");
     }, []);
 
     useEffect(() => {
@@ -82,8 +119,6 @@ export const PostForm = (props: IPostFormProps) => {
         return <Spinner />;
     }
 
-
-
     return (
         <Box
             component="form"
@@ -93,7 +128,7 @@ export const PostForm = (props: IPostFormProps) => {
             }}
             noValidate
         >
-            <TextField 
+            <TextField
                 {...register("title")}
                 size={isSmallScreen ? "small" : "medium"}
                 type="text"
@@ -106,7 +141,7 @@ export const PostForm = (props: IPostFormProps) => {
                     ".MuiInputBase-input": {
                         fontWeight: 600,
                         fontSize: "1.4em",
-                    }
+                    },
                 }}
                 onChange={(e) => props.setTitle(e.target.value)}
             />
@@ -117,7 +152,7 @@ export const PostForm = (props: IPostFormProps) => {
             >
                 {errors.title?.message}
             </Typography>
-            <TextField 
+            <TextField
                 {...register("preview")}
                 size={isSmallScreen ? "small" : "medium"}
                 type="text"
@@ -128,6 +163,7 @@ export const PostForm = (props: IPostFormProps) => {
                 multiline
                 rows={2}
                 variant="standard"
+                onChange={(e) => props.setPreview(e.target.value)}
             />
             <Typography
                 color="error"
@@ -136,7 +172,7 @@ export const PostForm = (props: IPostFormProps) => {
             >
                 {errors.preview?.message}
             </Typography>
-            <TextField 
+            <TextField
                 {...register("content")}
                 type="text"
                 fullWidth
@@ -147,10 +183,17 @@ export const PostForm = (props: IPostFormProps) => {
                 rows={14}
                 variant="standard"
                 sx={{
-                    whiteSpace: "pre-line"
+                    whiteSpace: "pre-line",
                 }}
                 onChange={(e) => props.setContent(e.target.value)}
             />
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.content?.message}
+            </Typography>
             <Stack direction="row" spacing={2} alignItems="center">
                 <Button
                     variant="text"
@@ -158,7 +201,7 @@ export const PostForm = (props: IPostFormProps) => {
                     endIcon={<AttachFileIcon />}
                     size={isSmallScreen ? "small" : "large"}
                 >
-            Add Cover
+                    Add Cover
                     <input
                         {...register("postImg")}
                         hidden
@@ -175,9 +218,16 @@ export const PostForm = (props: IPostFormProps) => {
                     endIcon={<SendSharpIcon />}
                     size={isSmallScreen ? "small" : "large"}
                 >
-            Publish
+                    Publish
                 </Button>
             </Stack>
+            <Typography
+                color="error"
+                variant="body1"
+                sx={{ fontWeight: 500, pb: 1 }}
+            >
+                {errors.postImg?.message}
+            </Typography>
         </Box>
     );
 };

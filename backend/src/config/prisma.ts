@@ -7,12 +7,12 @@ declare const global: {
 let prisma: PrismaClient;
 if (process.env.NODE_ENV === "prod") {
     prisma = new PrismaClient({
-        errorFormat: "minimal"
+        errorFormat: "minimal",
     });
 } else {
     if (!global.prisma) {
         global.prisma = new PrismaClient({
-            errorFormat: "minimal"
+            errorFormat: "minimal",
         });
     }
     prisma = global.prisma;

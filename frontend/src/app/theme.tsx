@@ -60,18 +60,18 @@ const theme = createTheme({
         MuiInput: {
             styleOverrides: {
                 root: {
-                    fontSize: "1.2em"
-                }
-            }
+                    fontSize: "1.2em",
+                },
+            },
         },
         MuiInputLabel: {
             styleOverrides: {
                 root: {
-                    fontSize: "1.2em"
-                }   
-            }
-        }
-    }
+                    fontSize: "1.2em",
+                },
+            },
+        },
+    },
 });
 
 export default theme;

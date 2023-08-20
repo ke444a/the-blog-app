@@ -15,21 +15,24 @@ import { v2 as cloudinary } from "cloudinary";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 
 const corsOptions = {
-    origin: ["http://localhost:5173", "http://localhost:4173", process.env.FRONTEND_SERVER_PROD || ""],
+    origin: [
+        "http://localhost:5173",
+        "http://localhost:4173",
+        process.env.FRONTEND_SERVER_PROD || "",
+    ],
     credentials: true,
 };
 app.use(cors(corsOptions));
 
-cloudinary.config({ 
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME, 
-    api_key: process.env.CLOUDINARY_API_KEY, 
-    api_secret: process.env.CLOUDINARY_API_SECRET
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
 app.use("/uploads/", express.static(path.join(process.cwd(), "/uploads/")));

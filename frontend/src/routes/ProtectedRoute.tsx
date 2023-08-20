@@ -6,5 +6,9 @@ export const ProtectedRoute = () => {
     const user = useSelector(selectCurrentUser);
     const location = useLocation();
 
-    return user ? <Outlet /> : <Navigate to="/auth/login" state={{ from: location }} />;
-}; 
+    return user ? (
+        <Outlet />
+    ) : (
+        <Navigate to="/auth/login" state={{ from: location }} />
+    );
+};

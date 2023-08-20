@@ -13,12 +13,13 @@ const loginFormSchema = yup.object({
 });
 type ILoginForm = yup.InferType<typeof loginFormSchema>;
 
-
 export const LoginForm = () => {
     const { handleSubmit, setValue, register } = useForm<ILoginForm>({
-        resolver: yupResolver(loginFormSchema)
+        resolver: yupResolver(loginFormSchema),
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.down("sm"),
+    );
     const { mutate: login } = useLoginMutation();
 
     const loginSubmit = (loginData: ILoginForm) => {
@@ -50,7 +51,7 @@ export const LoginForm = () => {
                 margin="normal"
                 autoFocus
                 InputLabelProps={{
-                    shrink: true
+                    shrink: true,
                 }}
             />
             <TextField
@@ -63,7 +64,7 @@ export const LoginForm = () => {
                 margin="normal"
                 autoFocus
                 InputLabelProps={{
-                    shrink: true
+                    shrink: true,
                 }}
             />
             <Button
@@ -74,7 +75,7 @@ export const LoginForm = () => {
                 sx={{ mt: 3 }}
                 onClick={handleDemoAccountClick}
             >
-          Use Demo Account
+                Use Demo Account
             </Button>
             <Button
                 type="submit"
@@ -83,7 +84,7 @@ export const LoginForm = () => {
                 color="primary"
                 sx={{ mt: 1, mb: 2 }}
             >
-          Login
+                Login
             </Button>
         </Box>
     );

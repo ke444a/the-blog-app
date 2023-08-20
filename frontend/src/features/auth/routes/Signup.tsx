@@ -30,7 +30,7 @@ const Signup = () => {
                     preview={preview}
                     setPreview={setPreview}
                 />
-                <SignupForm 
+                <SignupForm
                     preview={preview}
                     avatarImg={avatarImg}
                     setAvatarImg={setAvatarImg}
@@ -41,7 +41,7 @@ const Signup = () => {
                         textAlign: "center",
                     }}
                 >
-            Already have an account?{" "}
+                    Already have an account?{" "}
                     <Box
                         component={Link}
                         to="/auth/login"
@@ -50,7 +50,7 @@ const Signup = () => {
                             textUnderlineOffset: "0.2em",
                         }}
                     >
-              Login
+                        Login
                     </Box>
                 </Box>
             </Box>
@@ -59,10 +59,10 @@ const Signup = () => {
 };
 
 type AvatarProps = {
-  avatarImg: File | null;
-  setAvatarImg: Dispatch<SetStateAction<File | null>>;
-  preview: string | ArrayBuffer | null;
-  setPreview: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
+    avatarImg: File | null;
+    setAvatarImg: Dispatch<SetStateAction<File | null>>;
+    preview: string | ArrayBuffer | null;
+    setPreview: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
 };
 
 const PreviewAvatar = (props: AvatarProps) => {
@@ -103,7 +103,7 @@ const PreviewAvatar = (props: AvatarProps) => {
                             color: "info.light",
                         }}
                     >
-            Sign Up
+                        Sign Up
                     </Typography>
                 </>
             )}

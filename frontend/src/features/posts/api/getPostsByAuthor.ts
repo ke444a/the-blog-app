@@ -9,6 +9,6 @@ const getPostsByAuthor = async (authorId: string): Promise<IPost[]> => {
 export const useGetPostsByAuthorQuery = (authorId: string) => {
     return useQuery({
         queryKey: ["posts", authorId],
-        queryFn: () => getPostsByAuthor(authorId)
+        queryFn: () => getPostsByAuthor(authorId),
     });
 };

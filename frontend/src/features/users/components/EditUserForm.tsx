@@ -18,49 +18,56 @@ import { useUpdateUserMutation } from "../api/updateUser";
 type Props = {
     user: IUser;
     setIsEditMode: Dispatch<SetStateAction<boolean>>;
-}
+};
 
 const userSchema = yup.object({
-    firstName: yup.string().required(),
-    lastName: yup.string().required(),
-    username: yup.string().required(),
+    firstName: yup.string().required("First name is required"),
+    lastName: yup.string().required("Last name is required"),
+    username: yup.string().required("Username is required"),
     bio: yup.string().max(120, "Bio must be less than 120 characters"),
-    avatar: yup.mixed(),
+    avatar: yup.mixed().nullable(),
 });
 type UserForm = yup.InferType<typeof userSchema>;
 
 export const EditUserForm = (props: Props) => {
-    const [avatarImg, setAvatarImg] = useState<File | Blob | null>(null);
-    const { mutate: updateUser, isLoading: isUserUpdating } = useUpdateUserMutation(props.user.id || "");
-    const { register, handleSubmit, formState: { errors, isDirty }, setValue } = useForm<UserForm>({ 
-        resolver: yupResolver<UserForm>(userSchema) ,
+    const { mutate: updateUser, isLoading: isUserUpdating } =
+        useUpdateUserMutation(props.user.id || "");
+    const {
+        register,
+        handleSubmit,
+        formState: { errors, isDirty },
+        setValue,
+    } = useForm<UserForm>({
+        resolver: yupResolver<UserForm>(userSchema),
         defaultValues: {
             firstName: props.user.fullName.split(" ")[0],
             lastName: props.user.fullName.split(" ")[1],
             username: props.user.username,
             bio: props.user.bio || "",
-            avatar: props.user.avatar
-        }
+            avatar: props.user.avatar,
+        },
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
-    const [preview, setPreview] = useState<string | ArrayBuffer | null>(props.user.avatar as string || null);
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.down("sm"),
+    );
+    const [avatarImg, setAvatarImg] = useState<File | Blob | null>(null);
+    const [preview, setPreview] = useState<string | ArrayBuffer | null>(
+        (props.user.avatar as string) || null,
+    );
 
     const editProfile = (formData: UserForm) => {
         const { firstName, lastName, ...newFormData } = formData;
-        const userData = { 
+        const userData = {
             ...newFormData,
-            fullName: `${firstName} ${lastName}` ,
-            id: props.user.id
+            fullName: `${firstName} ${lastName}`,
+            id: props.user.id,
         };
 
-        if (avatarImg) {
-            userData.avatar = avatarImg;
-        }
-        
         if (isDirty || avatarImg) {
             updateUser({
                 ...userData,
-                avatarPath: preview as string
+                ...(avatarImg && { avatar: avatarImg as any }),
+                avatarPath: preview as string,
             });
         }
         props.setIsEditMode(false);
@@ -70,18 +77,22 @@ export const EditUserForm = (props: Props) => {
         return <Spinner />;
     }
 
+    useEffect(() => {
+        console.log(errors);
+    }, [errors]);
+
     return (
-        <Box component="form" onSubmit={handleSubmit(editProfile)}>
+        <Box component="form" noValidate onSubmit={handleSubmit(editProfile)}>
             <Stack direction="column" spacing={1}>
-                <PreviewAvatar 
+                <PreviewAvatar
                     avatarImg={avatarImg}
                     setAvatarImg={setAvatarImg}
                     preview={preview}
                     setPreview={setPreview}
-                    currentAvatar={props.user.avatar as string || ""}
+                    currentAvatar={(props.user.avatar as string) || ""}
                 />
                 <Box>
-                    <TextField 
+                    <TextField
                         {...register("firstName")}
                         fullWidth
                         required
@@ -92,10 +103,17 @@ export const EditUserForm = (props: Props) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            }
+                            },
                         }}
                     />
-                    <TextField 
+                    <Typography
+                        color="error"
+                        variant="body1"
+                        sx={{ fontWeight: 500, pb: 1 }}
+                    >
+                        {errors.firstName?.message}
+                    </Typography>
+                    <TextField
                         {...register("lastName")}
                         fullWidth
                         required
@@ -106,10 +124,17 @@ export const EditUserForm = (props: Props) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            }
+                            },
                         }}
                     />
-                    <TextField 
+                    <Typography
+                        color="error"
+                        variant="body1"
+                        sx={{ fontWeight: 500, pb: 1 }}
+                    >
+                        {errors.lastName?.message}
+                    </Typography>
+                    <TextField
                         {...register("username")}
                         type="text"
                         required
@@ -120,10 +145,17 @@ export const EditUserForm = (props: Props) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            }
+                            },
                         }}
                     />
-                    <TextField 
+                    <Typography
+                        color="error"
+                        variant="body1"
+                        sx={{ fontWeight: 500, pb: 1 }}
+                    >
+                        {errors.username?.message}
+                    </Typography>
+                    <TextField
                         {...register("bio")}
                         type="text"
                         required
@@ -136,7 +168,7 @@ export const EditUserForm = (props: Props) => {
                             ".MuiInputBase-input": {
                                 fontSize: "1rem",
                                 lineHeight: "1.5",
-                            }
+                            },
                         }}
                     />
                     <Typography
@@ -157,7 +189,7 @@ export const EditUserForm = (props: Props) => {
                             marginBottom: 1,
                         }}
                     >
-              Update avatar
+                        Update avatar
                         <input
                             {...register("avatar")}
                             hidden
@@ -183,7 +215,7 @@ export const EditUserForm = (props: Props) => {
                         sx={{
                             fontWeight: 500,
                             width: "100%",
-                            py: 1
+                            py: 1,
                         }}
                     >
                         Submit
@@ -195,11 +227,11 @@ export const EditUserForm = (props: Props) => {
 };
 
 type AvatarProps = {
-  avatarImg: File | Blob | null;
-  setAvatarImg: Dispatch<SetStateAction<File | Blob | null>>;
-  preview: string | ArrayBuffer | null;
-  setPreview: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
-  currentAvatar: string;
+    avatarImg: File | Blob | null;
+    setAvatarImg: Dispatch<SetStateAction<File | Blob | null>>;
+    preview: string | ArrayBuffer | null;
+    setPreview: Dispatch<SetStateAction<string | ArrayBuffer | null>>;
+    currentAvatar: string;
 };
 
 const PreviewAvatar = (props: AvatarProps) => {

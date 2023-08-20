@@ -6,11 +6,11 @@ const styles = (theme: Theme) => ({
             fontSize: 14,
         },
         [theme.breakpoints.up("xl")]: {
-            fontSize: 20
+            fontSize: 20,
         },
         [theme.breakpoints.up(2200)]: {
-            fontSize: 24
-        }
+            fontSize: 24,
+        },
     },
     ".MuiSvgIcon-root": {
         [theme.breakpoints.down("md")]: {
@@ -23,4 +23,3 @@ const styles = (theme: Theme) => ({
 });
 
 export const globalStyles = <GlobalStyles styles={styles} />;
- 

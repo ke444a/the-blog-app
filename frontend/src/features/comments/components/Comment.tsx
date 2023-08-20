@@ -10,7 +10,7 @@ export const Comment = (props: IComment) => {
         <Stack direction="row">
             <Box
                 component="img"
-                src={props.author.avatar as string || defaultAvatar}
+                src={(props.author.avatar as string) || defaultAvatar}
                 alt=""
                 sx={{
                     width: "50px",
@@ -27,7 +27,10 @@ export const Comment = (props: IComment) => {
                             fontWeight: 700,
                         }}
                     >
-                        <Link to={`/users/${props.author.id}`} style={{ color: "inherit", textDecoration: "none" }}>
+                        <Link
+                            to={`/users/${props.author.id}`}
+                            style={{ color: "inherit", textDecoration: "none" }}
+                        >
                             {props.author.username}
                         </Link>
                     </Typography>

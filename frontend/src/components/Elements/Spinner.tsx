@@ -7,10 +7,5 @@ export const Spinner = () => {
         margin: "40px auto",
     };
 
-    return (
-        <FadeLoader 
-            color="#333"
-            cssOverride={stylesOverride}
-        />
-    );
+    return <FadeLoader color="#333" cssOverride={stylesOverride} />;
 };

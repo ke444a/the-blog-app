@@ -4,5 +4,5 @@ interface IUser {
     fullName: string;
     password: string;
     bio: string;
-    avatar: string | File;
+    avatar: string | File | null;
 }

@@ -13,7 +13,6 @@ import { Dispatch, SetStateAction } from "react";
 import { useMediaQuery, Theme } from "@mui/material";
 import { Spinner } from "../../../components/Elements/Spinner";
 
-
 const signupFormSchema = yup.object({
     username: yup.string().required(),
     password: yup.string().required(),
@@ -29,9 +28,9 @@ const signupFormSchema = yup.object({
 type ISignupForm = yup.InferType<typeof signupFormSchema>;
 
 type Props = {
-  preview: string | ArrayBuffer | null;
-  avatarImg: File | null;
-  setAvatarImg: Dispatch<SetStateAction<File | null>>;
+    preview: string | ArrayBuffer | null;
+    avatarImg: File | null;
+    setAvatarImg: Dispatch<SetStateAction<File | null>>;
 };
 
 export const SignupForm = (props: Props) => {
@@ -42,7 +41,9 @@ export const SignupForm = (props: Props) => {
     } = useForm<ISignupForm>({
         resolver: yupResolver<ISignupForm>(signupFormSchema),
     });
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("sm"));  
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.down("sm"),
+    );
     const { mutate: registerUser, isLoading } = useRegisterMutation();
     const handleRegister = (signupData: ISignupForm) => {
         const signupDataTrim = {
@@ -50,6 +51,7 @@ export const SignupForm = (props: Props) => {
             username: signupData.username.trim(),
             password: signupData.password.trim(),
             fullName: `${signupData.firstName.trim()} ${signupData.lastName.trim()}`,
+            bio: signupData.bio,
         };
         registerUser(convertToFormData(signupDataTrim));
     };
@@ -107,7 +109,7 @@ export const SignupForm = (props: Props) => {
                     marginBottom: "4px",
                 }}
             >
-                <TextField 
+                <TextField
                     {...register("firstName")}
                     size={isSmallScreen ? "small" : "medium"}
                     type="text"
@@ -115,7 +117,7 @@ export const SignupForm = (props: Props) => {
                     fullWidth
                     required
                 />
-                <TextField 
+                <TextField
                     {...register("lastName")}
                     size={isSmallScreen ? "small" : "medium"}
                     type="text"
@@ -124,7 +126,7 @@ export const SignupForm = (props: Props) => {
                     required
                 />
             </Stack>
-            <TextField 
+            <TextField
                 {...register("bio")}
                 size={isSmallScreen ? "small" : "medium"}
                 type="text"
@@ -155,7 +157,7 @@ export const SignupForm = (props: Props) => {
                         marginBottom: "4px",
                     }}
                 >
-            Upload
+                    Upload
                     <input
                         {...register("avatar")}
                         name="avatar"
@@ -180,7 +182,7 @@ export const SignupForm = (props: Props) => {
                 color="primary"
                 sx={{ mt: 3, mb: 2 }}
             >
-          Sign Up
+                Sign Up
             </Button>
         </Box>
     );

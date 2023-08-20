@@ -7,9 +7,9 @@ import RenderedPost from "./RenderedPost";
 import { useGetSinglePostQuery } from "..";
 
 type TabPanelProps = {
-  children?: React.ReactNode;
-  index: number;
-  value: number;
+    children?: React.ReactNode;
+    index: number;
+    value: number;
 };
 
 const TabPanel = (props: TabPanelProps) => {
@@ -22,11 +22,12 @@ const TabPanel = (props: TabPanelProps) => {
     );
 };
 
-const EditorTabs = (props: { postId?: string, isEdit?: boolean }) => {
+const EditorTabs = (props: { postId?: string; isEdit?: boolean }) => {
     const [tabValue, setTabValue] = useState<number>(0);
     const [title, setTitle] = useState<string>("");
     const [content, setContent] = useState<string>("");
     const [postImg, setPostImg] = useState<string | File>("");
+    const [preview, setPreview] = useState<string>("");
     const { data: post } = useGetSinglePostQuery(props.postId);
 
     const handleTabSwitch = (event: React.SyntheticEvent, newValue: number) => {
@@ -53,6 +54,7 @@ const EditorTabs = (props: { postId?: string, isEdit?: boolean }) => {
                     setTitle={setTitle}
                     setContent={setContent}
                     setPostImg={setPostImg}
+                    setPreview={setPreview}
                     title={post?.title}
                     preview={post?.preview}
                     content={post?.content}
@@ -61,12 +63,14 @@ const EditorTabs = (props: { postId?: string, isEdit?: boolean }) => {
                 />
             </TabPanel>
             <TabPanel value={tabValue} index={1}>
-                <RenderedPost title={title} content={content} postImg={postImg} />
+                <RenderedPost
+                    title={title}
+                    content={content}
+                    postImg={postImg}
+                />
             </TabPanel>
         </Box>
     );
 };
 
 export default EditorTabs;
-
-

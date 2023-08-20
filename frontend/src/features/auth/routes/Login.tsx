@@ -28,7 +28,7 @@ const Login = () => {
                         color: "info.light",
                     }}
                 >
-          Login
+                    Login
                 </Typography>
                 <LoginForm />
                 <Box
@@ -36,7 +36,7 @@ const Login = () => {
                         fontWeight: 500,
                     }}
                 >
-          Don't have an account?{" "}
+                    Don't have an account?{" "}
                     <Box
                         component={Link}
                         to="/auth/register"
@@ -46,7 +46,7 @@ const Login = () => {
                             textAlign: "center",
                         }}
                     >
-            Sign up
+                        Sign up
                     </Box>
                 </Box>
             </Box>

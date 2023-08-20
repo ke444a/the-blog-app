@@ -19,8 +19,8 @@ export const authSlice = createSlice({
         },
         logout: (state) => {
             state.user = null;
-        }
-    }
+        },
+    },
 });
 
 export const selectCurrentUser = (state: RootState) => state.auth.user;

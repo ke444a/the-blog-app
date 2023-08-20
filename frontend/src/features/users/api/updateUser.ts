@@ -3,25 +3,32 @@ import { api } from "../../../app/api";
 import { useDispatch } from "react-redux";
 import { AppDispatch } from "../../../app/store";
 import { setCredentials } from "../../auth/slices/authSlice";
-import { toast } from "react-toastify";
 import { convertToFormData } from "../../../utils/convertToFormData";
 
-const updateUser = async (data: Partial<IUser> & { avatarPath: string }, userId: string): Promise<IUser> => {
+const updateUser = async (
+    data: Partial<IUser> & { avatarPath: string },
+    userId: string,
+): Promise<IUser> => {
     const { avatarPath, ...userData } = data;
-    const response = await api.patch(`/users/${userId}`, convertToFormData(userData), {
-        headers: {
-            "Content-Type": "multipart/form-data"
-        }
-    });
+    const response = await api.patch(
+        `/users/${userId}`,
+        convertToFormData(userData),
+        {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
+        },
+    );
     return response.data;
 };
 
 export const useUpdateUserMutation = (userId: string) => {
     const dispatch = useDispatch<AppDispatch>();
-    const queryClient = useQueryClient(); 
+    const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (userData: Partial<IUser> & { avatarPath: string }) => updateUser(userData, userId),
+        mutationFn: (userData: Partial<IUser> & { avatarPath: string }) =>
+            updateUser(userData, userId),
         onMutate: async (updatedUser) => {
             const queryKeys = ["users", "user", updatedUser.id];
             await queryClient.cancelQueries(queryKeys);
@@ -31,7 +38,7 @@ export const useUpdateUserMutation = (userId: string) => {
                     const newUser = {
                         ...updatedUser,
                         id: oldUser?.id,
-                        avatar: updatedUser.avatarPath
+                        avatar: updatedUser.avatarPath,
                     };
                     return newUser as IUser;
                 });
@@ -40,7 +47,10 @@ export const useUpdateUserMutation = (userId: string) => {
         },
         onError: (_err, newUser, context) => {
             if (context?.previousUser) {
-                queryClient.setQueryData<IUser>(["users", "user", newUser.id], context.previousUser);
+                queryClient.setQueryData<IUser>(
+                    ["users", "user", newUser.id],
+                    context.previousUser,
+                );
             }
         },
         onSettled: (newUser) => {
@@ -48,7 +58,6 @@ export const useUpdateUserMutation = (userId: string) => {
         },
         onSuccess: (data) => {
             dispatch(setCredentials({ user: data }));
-            toast.success("Your profile has been successfully updated");
-        }
+        },
     });
 };

@@ -13,7 +13,10 @@ import { ReactNode } from "react";
 export const MainLayout = (props: { children: ReactNode }) => {
     const user = useSelector(selectCurrentUser);
     const location = useLocation();
-    const isShowNav = user && location.pathname !== "/auth/login" && location.pathname !== "/auth/register";
+    const isShowNav =
+        user &&
+        location.pathname !== "/auth/login" &&
+        location.pathname !== "/auth/register";
 
     return (
         <>

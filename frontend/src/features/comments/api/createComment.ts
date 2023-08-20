@@ -18,31 +18,43 @@ export const useCreateCommentMutation = () => {
         onMutate: async (comment) => {
             const queryKeys = ["comments", "post", comment.postId];
             await queryClient.cancelQueries(queryKeys);
-            const previousComments = queryClient.getQueryData<IComment[]>(queryKeys);
+            const previousComments =
+                queryClient.getQueryData<IComment[]>(queryKeys);
             if (previousComments) {
-                queryClient.setQueryData<IComment[]>(queryKeys, (oldComments) => {
-                    const commentsCopy: IComment[] = JSON.parse(JSON.stringify(oldComments));
-                    const newComment = {
-                        ...comment,
-                        id: cuid(),
-                        updatedAt: new Date().toISOString(),
-                        author
-                    };
-                    commentsCopy.push(newComment as IComment);
-                    return commentsCopy;
-                });
+                queryClient.setQueryData<IComment[]>(
+                    queryKeys,
+                    (oldComments) => {
+                        const commentsCopy: IComment[] = JSON.parse(
+                            JSON.stringify(oldComments),
+                        );
+                        const newComment = {
+                            ...comment,
+                            id: cuid(),
+                            updatedAt: new Date().toISOString(),
+                            author,
+                        };
+                        commentsCopy.push(newComment as IComment);
+                        return commentsCopy;
+                    },
+                );
             }
 
             return { previousComments };
         },
         onError: (_err, newComment, context) => {
             if (context?.previousComments) {
-                queryClient.setQueryData<IComment[]>(["comments", "post", newComment.postId], context.previousComments);
+                queryClient.setQueryData<IComment[]>(
+                    ["comments", "post", newComment.postId],
+                    context.previousComments,
+                );
             }
         },
         onSettled: (newComment) => {
-            queryClient.invalidateQueries(["comments", "post", newComment?.postId]);
-        }
+            queryClient.invalidateQueries([
+                "comments",
+                "post",
+                newComment?.postId,
+            ]);
+        },
     });
 };
-

@@ -7,7 +7,11 @@ import FavoriteOutlinedIcon from "@mui/icons-material/FavoriteOutlined";
 import FavoriteBorderOutlinedIcon from "@mui/icons-material/FavoriteBorderOutlined";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import { formatDate } from "../../../utils/formatDate";
-import { useCheckLikeQuery, useLikePostMutation, useDislikePostMutation } from "../../likes";
+import {
+    useCheckLikeQuery,
+    useLikePostMutation,
+    useDislikePostMutation,
+} from "../../likes";
 import { Theme, useMediaQuery } from "@mui/material";
 import ArrowOutwardIcon from "@mui/icons-material/ArrowOutward";
 import { useSelector } from "react-redux";
@@ -19,12 +23,15 @@ const PostPreview = (props: IPost) => {
     const { mutate: dislikePost } = useDislikePostMutation();
     const user = useSelector(selectCurrentUser);
     const { data: isPostLiked } = useCheckLikeQuery(user?.id || "", props.id);
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.down("md"),
+    );
 
     const handleLikePost = async () => {
         const data = {
             postId: props.id,
-            userId: user?.id
+            userId: user?.id,
+            authorId: props.authorId,
         };
 
         if (isPostLiked) {
@@ -77,7 +84,7 @@ const PostPreview = (props: IPost) => {
                         display: "flex",
                         color: "highlight.main",
                         mb: { xs: 1, md: 2 },
-                        alignItems: "center"
+                        alignItems: "center",
                     }}
                 >
                     <Box
@@ -91,7 +98,7 @@ const PostPreview = (props: IPost) => {
                             "&:hover": {
                                 textDecoration: "underline",
                             },
-                            flexShrink: 0
+                            flexShrink: 0,
                         }}
                     >
                         <Typography
@@ -150,7 +157,9 @@ const PostPreview = (props: IPost) => {
                             },
                         }}
                     >
-                        <ArrowOutwardIcon fontSize={isSmallScreen ? "small" : "medium"} />
+                        <ArrowOutwardIcon
+                            fontSize={isSmallScreen ? "small" : "medium"}
+                        />
                     </Box>
                 </Stack>
                 <Typography

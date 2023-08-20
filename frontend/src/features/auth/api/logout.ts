@@ -15,6 +15,6 @@ export const useLogoutQuery = () => {
         queryKey: ["auth", "logout"],
         queryFn: logout,
         enabled: false,
-        onSuccess: () => dispatch(logoutRedux())
+        onSuccess: () => dispatch(logoutRedux()),
     });
 };

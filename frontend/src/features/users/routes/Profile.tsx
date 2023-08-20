@@ -22,9 +22,15 @@ const Profile = () => {
     const { userId } = useParams();
     const user = useSelector(selectCurrentUser);
     const [isEditMode, setIsEditMode] = useState<boolean>(false);
-    const isLargeScreen = useMediaQuery((theme: Theme) => theme.breakpoints.up("xl"));
+    const isLargeScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.up("xl"),
+    );
     const { refetch: logout } = useLogoutQuery();
-    const { data: userProfile, isLoading: isLoadingUser, isSuccess: isUserLoaded } = useGetUserQuery(userId || "");
+    const {
+        data: userProfile,
+        isLoading: isLoadingUser,
+        isSuccess: isUserLoaded,
+    } = useGetUserQuery(userId || "");
 
     if (isLoadingUser) {
         return <Spinner />;
@@ -114,7 +120,7 @@ const Profile = () => {
                                     },
                                 })}
                             >
-                    @{userProfile?.username}
+                                @{userProfile?.username}
                             </Typography>
                             <Typography
                                 variant="body1"
@@ -143,7 +149,9 @@ const Profile = () => {
                                 }}
                                 type="submit"
                                 onClick={() =>
-                                    setIsEditMode((prevEditMode) => !prevEditMode)
+                                    setIsEditMode(
+                                        (prevEditMode) => !prevEditMode,
+                                    )
                                 }
                             >
                                 {isEditMode ? "Save" : "Edit"}
@@ -160,7 +168,7 @@ const Profile = () => {
                                 }}
                                 onClick={() => logout()}
                             >
-                    Logout
+                                Logout
                             </Button>
                         </Stack>
                     )}
@@ -178,14 +186,16 @@ const Profile = () => {
                         mb: 3,
                     }}
                 >
-                    <RssFeedIcon fontSize={isLargeScreen ? "large" : "medium"} />
+                    <RssFeedIcon
+                        fontSize={isLargeScreen ? "large" : "medium"}
+                    />
                     <Typography
                         variant="h3"
                         sx={{
                             fontWeight: "600",
                         }}
                     >
-                Recently posted
+                        Recently posted
                     </Typography>
                 </Box>
                 <AuthorPostList userProfileId={userProfile?.id || ""} />

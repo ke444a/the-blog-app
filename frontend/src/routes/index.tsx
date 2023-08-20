@@ -5,7 +5,6 @@ import { PostRoutes } from "../features/posts";
 import { UserRoutes } from "../features/users";
 import Home from "../features/misc/routes/Home";
 
-
 export const AppRoutes = () => {
     return (
         <Routes>

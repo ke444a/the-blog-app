@@ -1,7 +1,4 @@
-import { 
-    createComment,
-    getPostComments,
-} from "../controllers/comments";
+import { createComment, getPostComments } from "../controllers/comments";
 import { authMiddleware } from "../middleware/authMiddleware";
 import express from "express";
 

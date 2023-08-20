@@ -12,7 +12,7 @@ import Box from "@mui/material/Box";
 
 type Props = {
     postId: string;
-}
+};
 
 const CommentForm = (props: Props) => {
     const user = useSelector(selectCurrentUser);
@@ -20,16 +20,20 @@ const CommentForm = (props: Props) => {
     const { mutate: createComment } = useCreateCommentMutation();
     const publishComment = (event: React.SyntheticEvent) => {
         event.preventDefault();
-        const commentData = {
-            authorId: user?.id || "",
-            postId: props.postId,
-            content: commentContent,
-        };
-        createComment(commentData);
-        setCommentContent("");
+        if (commentContent) {
+            const commentData = {
+                authorId: user?.id || "",
+                postId: props.postId,
+                content: commentContent,
+            };
+            createComment(commentData);
+            setCommentContent("");
+        }
     };
 
-    const isSmallScreen = useMediaQuery((theme: Theme) => theme.breakpoints.down("md"));
+    const isSmallScreen = useMediaQuery((theme: Theme) =>
+        theme.breakpoints.down("md"),
+    );
 
     return (
         <Box
@@ -66,7 +70,9 @@ const CommentForm = (props: Props) => {
                         <InputAdornment position="end">
                             <IconButton onClick={publishComment}>
                                 <AddCommentIcon
-                                    fontSize={isSmallScreen ? "small" : "inherit"}
+                                    fontSize={
+                                        isSmallScreen ? "small" : "inherit"
+                                    }
                                 />
                             </IconButton>
                         </InputAdornment>
