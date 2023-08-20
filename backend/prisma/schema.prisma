@@ -1,0 +1,58 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "cockroachdb"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id       String    @id @default(cuid())
+  username String    @unique
+  password String
+  bio      String?   @db.Char(120)
+  avatar   String?
+  fullName String
+  posts    Post[]
+  likes    Like[]
+  comments Comment[]
+}
+
+model Post {
+  id          String    @id @default(cuid())
+  title       String    @db.Char(100)
+  content     String
+  preview     String    @db.Char(120)
+  likesNumber Int       @default(0)
+  postImg     String
+  author      User      @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId    String
+  comments    Comment[]
+  likes       Like[]
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime
+}
+
+model Comment {
+  id        String   @id @default(cuid())
+  content   String
+  post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId    String
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Cascade)
+  authorId  String
+  updatedAt DateTime @default(now())
+}
+
+model Like {
+  id     BigInt    @id @default(sequence())
+  post   Post   @relation(fields: [postId], references: [id], onDelete: Cascade)
+  postId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId String
+
+  @@unique([postId, userId], name: "likeId")
+}
