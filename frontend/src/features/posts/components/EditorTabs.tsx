@@ -66,6 +66,7 @@ const EditorTabs = (props: { postId?: string; isEdit?: boolean }) => {
                 <RenderedPost
                     title={title}
                     content={content}
+                    preview={preview}
                     postImg={postImg}
                 />
             </TabPanel>
