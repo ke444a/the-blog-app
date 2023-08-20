@@ -50,7 +50,7 @@ export const register = async (
         res.cookie("jwt", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000,
         });
         res.status(201).json({ user: newUser });
@@ -101,7 +101,7 @@ export const login = async (
         res.cookie("jwt", token, {
             httpOnly: true,
             secure: true,
-            sameSite: "strict",
+            sameSite: "none",
             maxAge: 24 * 60 * 60 * 1000,
         });
         res.status(200).json({ user: userWithoutPassword });
