@@ -1,6 +1,6 @@
 {
   "scripts": {
-    "dev": "concurrently \"cd ./backend && npm run server\" \"cd ./frontend && npm run dev\"",
+    "dev": "concurrently \"cd ./backend && npm run prodTest\" \"cd ./frontend && npm run dev\"",
     "postinstall": "(npm install) && (cd frontend && npm install); (cd backend && npm install)"
   },
   "devDependencies": {
