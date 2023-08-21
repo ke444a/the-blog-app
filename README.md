@@ -1,10 +1,8 @@
 # Blog Application
 
-This is a full-stack MERN web application that showcases the functionality of a blogging platform. Users can create their own blog posts, explore posts from other users, engage with them by liking and commenting, and manage their profile information.
+This is a full-stack web application built with React, Node.js, Express, and PostgreSQL that showcases the functionality of a blogging platform. Users can create their own blog posts, explore posts from other users, engage with them by liking and commenting, and manage their profile information.
 </br>
-The application incorporates various technologies. Redux Toolkit is utilized to store authenticated user data and their access token. Firebase Storage is used for storing user-uploaded images, such as profile avatars and post images. Requests to the API are handled using React Query, while React Hook Form manages form submissions. For seamless navigation, React Router is employed. Material UI is responsible for styling the application.
-</br>
-To ensure secure authentication, this project implements a system with two tokens. Users are assigned an access token and a refresh token. The access token serves as a means of authentication, granting the user access to the application. Meanwhile, the refresh token is used to renew an expired access token.
+The application incorporates various technologies. Redux Toolkit is utilized to store the data of an authenticated user. Cloudinary is used for storing user-uploaded images, such as profile avatars and post images. Requests to the API are handled using React Query, while React Hook Form manages form submissions. For seamless navigation, React Router is employed. Material UI is responsible for styling the application.
 </br>
 
 ## Table of Contents
@@ -14,12 +12,11 @@ To ensure secure authentication, this project implements a system with two token
 -   [Technologies](#technologies)
 -   [Setup](#setup)
 -   [Contact](#contact)
--   [Sources](#sources)
 
 ## Features
 
 -   Authentication (login, register, logout)
-    -   Authentication system with access token to access the application and refresh token to renew the access token
+    -   Authentication system with access tokens sent via cookies.
 -   Create and edit blog posts
     -   Preview the blog post before publishing
     -   Upload image to the blog post
@@ -29,18 +26,22 @@ To ensure secure authentication, this project implements a system with two token
 -   View the user profile
     -   Update the user profile information
     -   Upload profile avatar
+-   Optimistic updates using React Query for enhanced user experience
 -   Responsive design for mobile devices
 -   Progressive Web App (PWA) support
 
 ## Demonstration
-
 ### [View the website](https://the-blog-app-zp54.onrender.com)
+https://github.com/ke444a/blog-app-mern/assets/81090139/e625485f-cd81-4e23-aef0-7f3a3a50f248
 
 ### Home page
+<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/5baf049b-647e-4b94-a6c6-ebd5747eaa56">
 
 ### Editor page
+![editor](https://github.com/ke444a/blog-app-mern/assets/81090139/1cc9c789-d310-4ae3-ae43-3a72fea9a6aa)
 
 ### Profile page
+<img width="60%" height="50%" src="https://github.com/ke444a/blog-app-mern/assets/81090139/4ca42abd-187a-4f1c-9d85-02553e8d0978">
 
 ## Technologies
 
@@ -50,8 +51,8 @@ To ensure secure authentication, this project implements a system with two token
 -   ![Redux](https://img.shields.io/badge/redux-%23593d88.svg?style=for-the-badge&logo=redux&logoColor=white)
 -   ![NodeJS](https://img.shields.io/badge/node.js-6DA55F?style=for-the-badge&logo=node.js&logoColor=white)
 -   ![Express.js](https://img.shields.io/badge/express.js-%23404d59.svg?style=for-the-badge&logo=express&logoColor=%2361DAFB)
--   ![MongoDB](https://img.shields.io/badge/MongoDB-%234ea94b.svg?style=for-the-badge&logo=mongodb&logoColor=white)
--   ![Firebase](https://img.shields.io/badge/firebase-%23039BE5.svg?style=for-the-badge&logo=firebase&logoColor=white)
+-   ![PostgreSQL](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
+-   ![Prisma](https://img.shields.io/badge/Prisma-3982CE?style=for-the-badge&logo=Prisma&logoColor=white)
 -   ![React Query](https://img.shields.io/badge/-React%20Query-FF4154?style=for-the-badge&logo=react%20query&logoColor=white)
 -   ![React Hook Form](https://img.shields.io/badge/React_Hook_Form-0088CC?style=for-the-badge&logo=react-hook-form&logoColor=white)
 -   ![React Router](https://img.shields.io/badge/React_Router-CA4245?style=for-the-badge&logo=react-router&logoColor=white)
@@ -77,23 +78,11 @@ $ cd blog-app-mern/
 $ npm run postinstall
 ```
 
-Create a new application using Firebase and update the Firebase configuration in `backend/src/config/firebase.js` with the provided details specific to your project
-
-```javascript
-const firebaseConfig = {
-    apiKey: process.env.FIREBASE_API_KEY,
-    authDomain: "...",
-    projectId: "...",
-    storageBucket: "...",
-    messagingSenderId: "...",
-    appId: "...",
-};
-```
-
-Seed the database:
+Run the database migrations and populate the data:
 
 ```bash
-# Seed the database with dummy data
+$ cd backend/
+$ npx prisma migrate dev
 $ npm run seed
 ```
 
@@ -104,6 +93,10 @@ Run the application:
 $ cd blog-app-mern/
 $ npm run dev
 ```
+
+### Cloudinary Setup
+
+Sign up on [Cloudinary](https://cloudinary.com/) to create an account. Once registered, you can find your API key, API secret, and cloud name in your account settings.
 
 ### Environment Variables
 
@@ -118,13 +111,14 @@ Add the following environment variables:
 ```bash
 # PORT to run backend on
 PORT=5000
-# URI to your MongoDB database
-MONGODB_URI=YOUR_MONGODB_URI
-# Secret keys to sign tokens (random strings)
-ACCESS_TOKEN_SECRET=SECRET_KEY_TO_SIGN_ACCESS_TOKENS
-REFRESH_TOKEN_SECRET=SECRET_KEY_TO_SIGN_REFRESH_TOKENS
-# Firebase configuration
-FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+# Connection URL to PostgreSQL database
+DATABASE_URL=YOUR_POSTGRES_URL
+# Secret key to sign tokens (random string)
+TOKEN_SECRET=YOUR_TOKEN_STRING
+# Cloudinary configuration
+CLOUDINARY_API_KEY=API_KEY
+CLOUDINARY_API_SECRET=API_SECRET
+CLOUDINARY_CLOUD_NAME=CLOUD_NAME
 ```
 
 ## Contact
